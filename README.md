@@ -11,3 +11,5 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
  - [ ] Label EQ
  - [ ] Custom output select
  - [ ] Allow multiple outputs
+ - [ ] Add A2DP Support
+ - [ ] Allow change of input device / file during runtime
