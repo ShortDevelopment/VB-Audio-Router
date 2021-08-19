@@ -8,3 +8,6 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
  - [ ] Node z-index reorder on click
  - [ ] Background audio (❗)
  - [ ] Draw line between nodes (❗)
+ - [ ] Label EQ
+ - [ ] Custom output select
+ - [ ] Allow multiple outputs
