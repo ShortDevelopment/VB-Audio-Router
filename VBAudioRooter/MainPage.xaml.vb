@@ -4,6 +4,8 @@ Imports VBAudioRooter.Controls
 Imports Windows.Media
 Imports Windows.Media.Audio
 Imports Windows.Media.MediaProperties
+Imports Windows.UI
+Imports Windows.UI.Xaml.Shapes
 
 Public NotInheritable Class MainPage
     Inherits Page
@@ -92,7 +94,9 @@ Public NotInheritable Class MainPage
         Dim tag As String = DirectCast(DirectCast(sender, MenuFlyoutItem).Tag, String)
         If Not String.IsNullOrEmpty(tag) Then
             Dim nodeEle As New NodeControl()
-            nodeEle.NodeContent = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRooter.Controls.{tag}")), UserControl)
+            Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRooter.Controls.{tag}")), IAudioNodeControl)
+            contentEle.Canvas = ConnectionCanvas
+            nodeEle.NodeContent = contentEle
             nodeEle.HorizontalAlignment = HorizontalAlignment.Left
             nodeEle.VerticalAlignment = VerticalAlignment.Top
             NodeContainer.Children.Add(nodeEle)

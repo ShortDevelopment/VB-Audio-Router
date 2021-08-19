@@ -138,7 +138,6 @@
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GraphEdge.vb" />
     <Compile Include="Controls\FileInputNodeControl.xaml.vb">
       <DependentUpon>FileInputNodeControl.xaml</DependentUpon>
     </Compile>

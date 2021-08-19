@@ -12,6 +12,7 @@ Namespace AudioGraphControl
         Sub OnStartNotify()
         ReadOnly Property OutgoingConnector As ConnectorControl
         ReadOnly Property IngoingConnector As ConnectorControl
+        Property Canvas As Canvas
     End Interface
 
 End Namespace

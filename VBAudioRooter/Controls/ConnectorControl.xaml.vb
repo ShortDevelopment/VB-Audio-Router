@@ -1,5 +1,7 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
+Imports Windows.UI
+Imports Windows.UI.Xaml.Shapes
 
 Namespace Controls
 
@@ -18,6 +20,17 @@ Namespace Controls
             Get
                 Return LinkedNode IsNot Nothing
             End Get
+        End Property
+
+        Public Shared Property ConnectorPositionProperty As DependencyProperty = DependencyProperty.Register("ConnectorPosition", GetType(ConnectorControl), GetType(NodeControl), Nothing)
+        Public Property ConnectorPosition As Point
+            Get
+                Return GetValue(ConnectorPositionProperty)
+            End Get
+            Set(value As Point)
+                SetValue(ConnectorPositionProperty, value)
+                OnPropertyChanged()
+            End Set
         End Property
 
 #Region "INotifyPropertyChanged"
@@ -50,10 +63,43 @@ Namespace Controls
 
         Private Sub Grid_Drop(sender As Object, e As DragEventArgs)
             If Not IsOutgoing AndAlso e.DataView IsNot Nothing AndAlso e.DataView.Properties IsNot Nothing Then
-                LinkedNode = DirectCast(e.DataView.Properties("AttachedNode"), IAudioNodeControl)
-                DirectCast(e.DataView.Properties("Connector"), ConnectorControl).LinkedNode = AttachedNode
+                Dim remoteNode = DirectCast(e.DataView.Properties("AttachedNode"), IAudioNodeControl)
+                LinkedNode = remoteNode
+                Dim remoteConnector = DirectCast(e.DataView.Properties("Connector"), ConnectorControl)
+                remoteConnector.LinkedNode = AttachedNode
+
+                Dim line As New Line()
+                line.StrokeThickness = 1
+                line.Stroke = New SolidColorBrush(Colors.White)
+                BindingOperations.SetBinding(line, Line.X1Property, New Binding() With {
+                    .Source = remoteConnector,
+                    .Path = New PropertyPath("ConnectorPosition.X")
+                })
+                BindingOperations.SetBinding(line, Line.Y1Property, New Binding() With {
+                    .Source = remoteConnector,
+                    .Path = New PropertyPath("ConnectorPosition.Y")
+                })
+                BindingOperations.SetBinding(line, Line.X2Property, New Binding() With {
+                    .Source = Me,
+                    .Path = New PropertyPath("ConnectorPosition.X")
+                })
+                BindingOperations.SetBinding(line, Line.Y2Property, New Binding() With {
+                    .Source = Me,
+                    .Path = New PropertyPath("ConnectorPosition.Y")
+                })
+                AttachedNode.Canvas.Children.Add(line)
             End If
             e.AcceptedOperation = DataTransfer.DataPackageOperation.None
+        End Sub
+
+        Private Sub UserControl_LayoutUpdated(sender As Object, e As Object)
+            RecalculatePosition()
+        End Sub
+
+        Public Sub RecalculatePosition()
+            If AttachedNode.Canvas Is Nothing Then Exit Sub
+            ConnectorPosition = Me.TransformToVisual(AttachedNode.Canvas).TransformPoint(New Point(ActualWidth / 2, ActualHeight / 2))
+            Debug.Print(ConnectorPosition.ToString())
         End Sub
     End Class
 

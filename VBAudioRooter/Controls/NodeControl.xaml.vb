@@ -9,12 +9,12 @@ Namespace Controls
         Inherits UserControl
         Implements INotifyPropertyChanged
 
-        Public Shared Property NodeContentProperty As DependencyProperty = DependencyProperty.Register("NodeContent", GetType(Object), GetType(NodeControl), Nothing)
-        Public Property NodeContent As Object
+        Public Shared Property NodeContentProperty As DependencyProperty = DependencyProperty.Register("NodeContent", GetType(UIElement), GetType(NodeControl), Nothing)
+        Public Property NodeContent As UIElement
             Get
                 Return GetValue(NodeContentProperty)
             End Get
-            Set(value As Object)
+            Set(value As UIElement)
                 SetValue(NodeContentProperty, value)
                 OnPropertyChanged()
             End Set
@@ -31,7 +31,7 @@ Namespace Controls
             End Set
         End Property
 
-        Public Shared Property TitleBrushProperty As DependencyProperty = DependencyProperty.Register("TitleBrushProperty", GetType(Brush), GetType(NodeControl), Nothing)
+        Public Shared Property TitleBrushProperty As DependencyProperty = DependencyProperty.Register("TitleBrush", GetType(Brush), GetType(NodeControl), Nothing)
         Public Property TitleBrush As Brush
             Get
                 Return GetValue(TitleBrushProperty)
@@ -59,6 +59,7 @@ Namespace Controls
         Private Sub UserControl_ManipulationDelta(sender As Object, e As ManipulationDeltaRoutedEventArgs)
             positionTransform.TranslateX += e.Delta.Translation.X
             positionTransform.TranslateY += e.Delta.Translation.Y
+            If NodeContent IsNot Nothing Then NodeContent.InvalidateArrange()
         End Sub
     End Class
 

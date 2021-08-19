@@ -13,7 +13,7 @@ Namespace Controls
         Public Property CurrentFile As StorageFile
 
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
-
+        Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property Node As IAudioNode Implements IAudioNodeControl.Node
 
         Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
