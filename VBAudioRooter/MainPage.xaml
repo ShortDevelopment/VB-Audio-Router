@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="VBAudioRooter.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VBAudioRooter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls1="using:VBAudioRooter.Controls"
+    mc:Ignorable="d"
+    Background="#232323"
+    RequestedTheme="Dark">
+
+    <Grid>
+        <Canvas x:Name="ConnectionCanvas" />
+        <Grid x:Name="NodeContainer" Background="Transparent">
+            <Grid.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutSubItem Text="Input">
+                        <MenuFlyoutItem Text="Microphone" Tag="InputNodeControl" Click="MenuFlyoutItem_Click" />
+                        <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
+                    </MenuFlyoutSubItem>
+                    <MenuFlyoutSubItem Text="Effects">
+                        <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
+                        <MenuFlyoutItem Text="Limiter" />
+                        <MenuFlyoutItem Text="Echo" />
+                        <MenuFlyoutItem Text="Reverb" />
+                    </MenuFlyoutSubItem>
+                </MenuFlyout>
+            </Grid.ContextFlyout>
+
+            <controls1:NodeControl Title="Mic" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <controls1:InputNodeControl />
+            </controls1:NodeControl>
+
+            <controls1:NodeControl Title="File" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <controls1:FileInputNodeControl />
+            </controls1:NodeControl>
+
+            <controls1:NodeControl Title="EQ" TitleBrush="#8D802F" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <controls1:EQNodeControl />
+            </controls1:NodeControl>
+
+            <controls1:NodeControl Title="Output" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <controls1:OutputNodeControl />
+            </controls1:NodeControl>
+        </Grid>        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="#333333">
+            <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="#89D185" LabelPosition="Collapsed" />
+            <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="#D97C6A" IsEnabled="False" LabelPosition="Collapsed" />
+        </StackPanel>
+    </Grid>
+</Page>
