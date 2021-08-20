@@ -6,7 +6,20 @@
     <Application.Resources>
         <controls:XamlControlsResources>
             <controls:XamlControlsResources.MergedDictionaries>
-                <!-- Other app resources here -->
+                <ResourceDictionary>
+                    <Color x:Key="DarkThemeColor">#232323</Color>
+                    <Color x:Key="LightThemeColor">#232323</Color>
+                    <Color x:Key="MenuBackground">#333333</Color>
+                    <Color x:Key="NodeTitleBarColor">#9E343E</Color>
+                    <Color x:Key="NodeTitleBarColor2">#8D802F</Color>
+                    <Color x:Key="PositiveColor">#89D185</Color>
+                    <Color x:Key="NegativeColor">#D97C6A</Color>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{StaticResource DarkThemeColor}" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>                
             </controls:XamlControlsResources.MergedDictionaries>
         </controls:XamlControlsResources>
     </Application.Resources>

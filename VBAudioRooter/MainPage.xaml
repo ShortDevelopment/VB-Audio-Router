@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls1="using:VBAudioRooter.Controls"
     mc:Ignorable="d"
-    Background="#232323"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">
 
     <Grid>
@@ -27,26 +27,13 @@
                     </MenuFlyoutSubItem>
                 </MenuFlyout>
             </Grid.ContextFlyout>
-
-            <controls1:NodeControl Title="Mic" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <controls1:InputNodeControl Canvas="{x:Bind ConnectionCanvas}" />
-            </controls1:NodeControl>
-
-            <controls1:NodeControl Title="File" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <controls1:FileInputNodeControl Canvas="{x:Bind ConnectionCanvas}" />
-            </controls1:NodeControl>
-
-            <controls1:NodeControl Title="EQ" TitleBrush="#8D802F" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <controls1:EQNodeControl Canvas="{x:Bind ConnectionCanvas}" />
-            </controls1:NodeControl>
-
-            <controls1:NodeControl Title="Output" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <controls1:NodeControl Title="Output" TitleBrush="{StaticResource NodeTitleBarColor}" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" />
             </controls1:NodeControl>
-        </Grid>        
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="#333333">
-            <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="#89D185" LabelPosition="Collapsed" />
-            <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="#D97C6A" IsEnabled="False" LabelPosition="Collapsed" />
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
+            <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
+            <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed" />
         </StackPanel>
     </Grid>
 </Page>
