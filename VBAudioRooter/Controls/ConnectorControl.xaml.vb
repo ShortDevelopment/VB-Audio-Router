@@ -99,7 +99,6 @@ Namespace Controls
         Public Sub RecalculatePosition()
             If AttachedNode.Canvas Is Nothing Then Exit Sub
             ConnectorPosition = Me.TransformToVisual(AttachedNode.Canvas).TransformPoint(New Point(ActualWidth / 2, ActualHeight / 2))
-            Debug.Print(ConnectorPosition.ToString())
         End Sub
     End Class
 
