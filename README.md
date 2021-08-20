@@ -9,7 +9,7 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
     - [ ] Add rest of Windows build-in effects
     - [ ] Add custom effects
  - [ ] Graphics
-    - [ ] Branding
+    - [x] Branding
     - [ ] Node z-index reorder on click
     - [x] Draw line between nodes (❗)
     - [ ] Label EQ
@@ -21,3 +21,4 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
     - [ ] Delete Nodes
  - [ ] Nice to have
     - [ ] Add A2DP Support
+    - [ ] Add Text2Speech Support
