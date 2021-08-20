@@ -33,8 +33,6 @@ Namespace Controls
             End Get
         End Property
 
-        Public ReadOnly Property IngoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.IngoingConnector
-
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
             DirectCast(Me.Node, AudioDeviceInputNode).AddOutgoingConnection(node.Node)
         End Sub
@@ -52,9 +50,6 @@ Namespace Controls
             Dim result = Await graph.CreateDeviceInputNodeAsync(Windows.Media.Capture.MediaCategory.Other, graph.EncodingProperties, AudioCaptureDevices.Item(InputDevices.SelectedIndex))
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _Node = result.DeviceInputNode
-            If reconnect AndAlso OutgoingConnector.IsConnected AndAlso OutgoingConnector.LinkedNode.Node IsNot Nothing Then
-                DirectCast(Node, AudioDeviceInputNode).AddOutgoingConnection(OutgoingConnector.LinkedNode.Node)
-            End If
             DirectCast(Node, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
             DirectCast(Node, AudioDeviceInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
         End Function
@@ -74,7 +69,7 @@ Namespace Controls
             DirectCast(Node, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
         End Sub
 
-        Public Sub OnStartNotify() Implements IAudioNodeControl.OnStartNotify : End Sub
+        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
     End Class
 
 End Namespace

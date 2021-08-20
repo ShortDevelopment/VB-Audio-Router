@@ -22,8 +22,6 @@ Namespace Controls
             End Get
         End Property
 
-        Public ReadOnly Property IngoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.IngoingConnector
-
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
             DirectCast(Me.Node, AudioFileInputNode).AddOutgoingConnection(node.Node)
         End Sub
@@ -42,9 +40,6 @@ Namespace Controls
             Dim result = Await graph.CreateFileInputNodeAsync(CurrentFile)
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _Node = result.FileInputNode
-            If OutgoingConnector.IsConnected AndAlso OutgoingConnector.LinkedNode.Node IsNot Nothing Then
-                DirectCast(Node, AudioFileInputNode).AddOutgoingConnection(OutgoingConnector.LinkedNode.Node)
-            End If
             DirectCast(Node, AudioFileInputNode).OutgoingGain = GainSlider.Value
             DirectCast(Node, AudioFileInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
             AddHandler DirectCast(Node, AudioFileInputNode).FileCompleted, Sub()
@@ -136,7 +131,7 @@ Namespace Controls
         End Sub
 #End Region
 
-        Public Sub OnStartNotify() Implements IAudioNodeControl.OnStartNotify
+        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged
             PlayButton_Click(Nothing, Nothing)
         End Sub
 

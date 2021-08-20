@@ -131,7 +131,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AudioGraphControl\AudioGraphControlType.vb" />
+    <Compile Include="AudioGraphControl\GraphState.vb" />
     <Compile Include="AudioGraphControl\IAudioGraphControl.vb" />
+    <Compile Include="AudioGraphControl\NodeConnection.vb" />
     <Compile Include="Controls\ConnectorControl.xaml.vb">
       <DependentUpon>ConnectorControl.xaml</DependentUpon>
     </Compile>

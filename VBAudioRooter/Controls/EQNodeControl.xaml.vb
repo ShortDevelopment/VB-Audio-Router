@@ -19,12 +19,6 @@ Namespace Controls
             End Get
         End Property
 
-        Public ReadOnly Property IngoingConnector As ConnectorControl Implements IAudioNodeControl.IngoingConnector
-            Get
-                Return IngoingConnectorControl
-            End Get
-        End Property
-
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
             DirectCast(Me.Node, AudioSubmixNode).AddOutgoingConnection(node.Node)
         End Sub
@@ -54,7 +48,7 @@ Namespace Controls
             band.Gain = e.Y.Map(0.0, 1.0, fxeq_min_gain, fxeq_max_gain)
         End Sub
 
-        Public Sub OnStartNotify() Implements IAudioNodeControl.OnStartNotify : End Sub
+        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
     End Class
 
 End Namespace

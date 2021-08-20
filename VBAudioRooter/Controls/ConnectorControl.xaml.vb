@@ -15,10 +15,13 @@ Namespace Controls
                 Return DirectCast(DirectCast(DataContext, NodeControl).NodeContent, IAudioNodeControl)
             End Get
         End Property
-        Public Property LinkedNode As IAudioNodeControl = Nothing
+
+        Public Property AllowMultipleConnections As Boolean = False
+
+        Public Property Connections As New List(Of NodeConnection)
         Public ReadOnly Property IsConnected As Boolean
             Get
-                Return LinkedNode IsNot Nothing
+                Return Connections.Count > 0
             End Get
         End Property
 
@@ -46,11 +49,9 @@ Namespace Controls
                 args.AllowedOperations = DataTransfer.DataPackageOperation.Link
                 args.Data.Properties.Add("AttachedNode", AttachedNode)
                 args.Data.Properties.Add("Connector", Me)
-
-                Exit Sub
-            ElseIf LinkedNode IsNot Nothing Then
+            Else
+                args.Cancel = True
             End If
-            args.Cancel = True
         End Sub
 
         Private Sub Grid_DragOver(sender As Object, e As DragEventArgs)
@@ -63,40 +64,60 @@ Namespace Controls
 
         Private Sub Grid_Drop(sender As Object, e As DragEventArgs)
             If Not IsOutgoing AndAlso e.DataView IsNot Nothing AndAlso e.DataView.Properties IsNot Nothing Then
-                Dim remoteNode = DirectCast(e.DataView.Properties("AttachedNode"), IAudioNodeControl)
-                LinkedNode = remoteNode
-                Dim remoteConnector = DirectCast(e.DataView.Properties("Connector"), ConnectorControl)
-                remoteConnector.LinkedNode = AttachedNode
+                ' If we may only create a single connection remove the previous one
+                If IsConnected AndAlso Not AllowMultipleConnections Then DeleteConnection(Connections.First())
 
-                Dim line As New Line()
-                line.StrokeThickness = 1
-                line.Stroke = New SolidColorBrush(Colors.White)
-                BindingOperations.SetBinding(line, Line.X1Property, New Binding() With {
-                    .Source = remoteConnector,
-                    .Path = New PropertyPath("ConnectorPosition.X")
-                })
-                BindingOperations.SetBinding(line, Line.Y1Property, New Binding() With {
-                    .Source = remoteConnector,
-                    .Path = New PropertyPath("ConnectorPosition.Y")
-                })
-                BindingOperations.SetBinding(line, Line.X2Property, New Binding() With {
-                    .Source = Me,
-                    .Path = New PropertyPath("ConnectorPosition.X")
-                })
-                BindingOperations.SetBinding(line, Line.Y2Property, New Binding() With {
-                    .Source = Me,
-                    .Path = New PropertyPath("ConnectorPosition.Y")
-                })
-                AttachedNode.Canvas.Children.Add(line)
+                Dim remoteNode = DirectCast(e.DataView.Properties("AttachedNode"), IAudioNodeControl)
+                Dim remoteConnector = DirectCast(e.DataView.Properties("Connector"), ConnectorControl)
+
+                ' Create Connection
+                Dim connection As New NodeConnection()
+                connection.SourceConnector = remoteConnector
+                connection.DestinationConnector = Me
+                connection.Line = CreateConnection(remoteConnector)
+
+                ' Add connection to list
+                Connections.Add(connection)
+                remoteConnector.Connections.Add(connection)
             End If
             e.AcceptedOperation = DataTransfer.DataPackageOperation.None
         End Sub
 
-        Private Sub UserControl_LayoutUpdated(sender As Object, e As Object)
-            RecalculatePosition()
+        Private Function CreateConnection(remoteConnector As ConnectorControl) As Line
+            Dim line As New Line()
+            line.StrokeThickness = 1
+            line.Stroke = New SolidColorBrush(Colors.White)
+            BindingOperations.SetBinding(line, Line.X1Property, New Binding() With {
+                .Source = remoteConnector,
+                .Path = New PropertyPath("ConnectorPosition.X")
+            })
+            BindingOperations.SetBinding(line, Line.Y1Property, New Binding() With {
+                .Source = remoteConnector,
+                .Path = New PropertyPath("ConnectorPosition.Y")
+            })
+            BindingOperations.SetBinding(line, Line.X2Property, New Binding() With {
+                .Source = Me,
+                .Path = New PropertyPath("ConnectorPosition.X")
+            })
+            BindingOperations.SetBinding(line, Line.Y2Property, New Binding() With {
+                .Source = Me,
+                .Path = New PropertyPath("ConnectorPosition.Y")
+            })
+            AttachedNode.Canvas.Children.Add(line)
+            Return line
+        End Function
+
+        Public Sub DeleteConnection(connection As NodeConnection)
+            ' Ignore if connection does not exist on this node
+            If Not Connections.Contains(connection) Then Exit Sub
+
+            AttachedNode.Canvas.Children.Remove(connection.Line)
+            connection.SourceConnector.Connections.Remove(connection)
+            Connections.Remove(connection)
         End Sub
 
-        Public Sub RecalculatePosition()
+        Private Sub UserControl_LayoutUpdated(sender As Object, e As Object)
+            If DesignMode.DesignModeEnabled Or DesignMode.DesignMode2Enabled Then Exit Sub
             If AttachedNode.Canvas Is Nothing Then Exit Sub
             ConnectorPosition = Me.TransformToVisual(AttachedNode.Canvas).TransformPoint(New Point(ActualWidth / 2, ActualHeight / 2))
         End Sub

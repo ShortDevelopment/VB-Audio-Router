@@ -9,9 +9,8 @@ Namespace AudioGraphControl
         ReadOnly Property Node As IAudioNode
         Sub AddOutgoingConnection(node As IAudioNodeControl)
         Function Initialize(graph As AudioGraph) As Task
-        Sub OnStartNotify()
+        Sub OnStateChanged(state As GraphState)
         ReadOnly Property OutgoingConnector As ConnectorControl
-        ReadOnly Property IngoingConnector As ConnectorControl
         Property Canvas As Canvas
     End Interface
 

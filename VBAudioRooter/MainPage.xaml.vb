@@ -56,7 +56,6 @@ Public NotInheritable Class MainPage
                     Dim node As IAudioNodeControl = DirectCast(control.NodeContent, IAudioNodeControl)
                     ' Ignore not connected nodes
                     If node.OutgoingConnector IsNot Nothing AndAlso Not node.OutgoingConnector.IsConnected Then Continue For
-                    If node.IngoingConnector IsNot Nothing AndAlso Not node.IngoingConnector.IsConnected Then Continue For
                     Await DirectCast(control.NodeContent, IAudioNodeControl).Initialize(CurrentAudioGraph)
                 End If
             End If
@@ -68,11 +67,12 @@ Public NotInheritable Class MainPage
                 If control.NodeContent IsNot Nothing AndAlso GetType(IAudioNodeControl).IsAssignableFrom(control.NodeContent.GetType()) Then
                     Dim node As IAudioNodeControl = DirectCast(control.NodeContent, IAudioNodeControl)
                     If node.OutgoingConnector IsNot Nothing AndAlso Not node.OutgoingConnector.IsConnected Then Continue For
-                    If node.IngoingConnector IsNot Nothing AndAlso Not node.IngoingConnector.IsConnected Then Continue For
                     If node.OutgoingConnector IsNot Nothing AndAlso node.OutgoingConnector.IsConnected Then
-                        node.AddOutgoingConnection(node.OutgoingConnector.LinkedNode)
+                        For Each connection In node.OutgoingConnector.Connections
+                            node.AddOutgoingConnection(connection.DestinationConnector.AttachedNode)
+                        Next
                     End If
-                    node.OnStartNotify()
+                    node.OnStateChanged(GraphState.Started)
                 End If
             End If
         Next

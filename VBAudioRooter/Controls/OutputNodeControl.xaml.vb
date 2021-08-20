@@ -28,12 +28,6 @@ Namespace Controls
 
         Public ReadOnly Property OutgoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.OutgoingConnector
 
-        Public ReadOnly Property IngoingConnector As ConnectorControl Implements IAudioNodeControl.IngoingConnector
-            Get
-                Return IngoingConnectorInternal
-            End Get
-        End Property
-
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
             Throw New NotImplementedException()
         End Sub
@@ -50,7 +44,7 @@ Namespace Controls
             _Node = result.DeviceOutputNode
         End Function
 
-        Public Sub OnStartNotify() Implements IAudioNodeControl.OnStartNotify : End Sub
+        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
         Private Sub OutputDevices_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
 
