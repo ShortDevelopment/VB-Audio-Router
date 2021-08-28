@@ -140,6 +140,9 @@
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ReverbNodeControl.xaml.vb">
+      <DependentUpon>ReverbNodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FileInputNodeControl.xaml.vb">
       <DependentUpon>FileInputNodeControl.xaml</DependentUpon>
     </Compile>
@@ -233,6 +236,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ReverbNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\FileInputNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -291,6 +298,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.7.0-prerelease.210827001</Version>

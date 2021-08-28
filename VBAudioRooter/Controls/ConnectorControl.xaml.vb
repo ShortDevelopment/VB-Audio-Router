@@ -25,7 +25,7 @@ Namespace Controls
             End Get
         End Property
 
-        Public Shared Property ConnectorPositionProperty As DependencyProperty = DependencyProperty.Register("ConnectorPosition", GetType(ConnectorControl), GetType(NodeControl), Nothing)
+        Public Shared Property ConnectorPositionProperty As DependencyProperty = DependencyProperty.Register("ConnectorPosition", GetType(Point), GetType(ConnectorControl), Nothing)
         Public Property ConnectorPosition As Point
             Get
                 Return GetValue(ConnectorPositionProperty)

@@ -21,9 +21,9 @@
                     </MenuFlyoutSubItem>
                     <MenuFlyoutSubItem Text="Effects">
                         <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
-                        <MenuFlyoutItem Text="Limiter" />
+                        <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
                         <MenuFlyoutItem Text="Echo" />
-                        <MenuFlyoutItem Text="Reverb" />
+                        <MenuFlyoutItem Text="Limiter" />
                     </MenuFlyoutSubItem>
                 </MenuFlyout>
             </Grid.ContextFlyout>
