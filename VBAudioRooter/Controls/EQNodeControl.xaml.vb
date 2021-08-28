@@ -2,6 +2,7 @@
 Imports VBAudioRooter.AudioGraphControl
 Imports VBAudioRooter.Utils
 Imports Windows.Media.Audio
+Imports VBAudioRooter.Utils.GainControl
 
 Namespace Controls
 
@@ -32,9 +33,6 @@ Namespace Controls
 
         Private Const MinFreq As Integer = 100
         Private Const MaxFreq As Integer = 12000
-        ' These are the same values as the ones in xapofx.h
-        Private Const fxeq_min_gain As Double = 0.126
-        Private Const fxeq_max_gain As Double = 7.94
 
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()

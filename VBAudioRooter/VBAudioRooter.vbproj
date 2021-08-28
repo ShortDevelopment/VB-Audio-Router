@@ -221,6 +221,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Compile Include="Utils\GainControl.vb" />
     <Content Include="My Project\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>

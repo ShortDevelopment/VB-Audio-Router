@@ -1,5 +1,6 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
+Imports VBAudioRooter.Utils
 Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
 Imports Windows.Media.Devices
@@ -57,6 +58,7 @@ Namespace Controls
             _BaseAudioNode = result.DeviceInputNode
             DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
             DirectCast(BaseAudioNode, AudioDeviceInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
+            GainSlider.Value = GainSlider.Maximum
         End Function
 
         Private Async Sub InputDevices_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -71,7 +73,7 @@ Namespace Controls
 
         Private Sub Slider_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
             If BaseAudioNode Is Nothing Then Exit Sub
-            DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
+            DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value.Map(0, 100, 0, GainControl.fxeq_max_gain)
         End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub

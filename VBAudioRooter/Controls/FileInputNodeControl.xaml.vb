@@ -1,5 +1,6 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
+Imports VBAudioRooter.Utils
 Imports Windows.Media.Audio
 Imports Windows.Storage
 Imports Windows.Storage.Pickers
@@ -61,6 +62,7 @@ Namespace Controls
                                                                                     End Sub
             ' UI
             PositionSlider.Maximum = DirectCast(BaseAudioNode, AudioFileInputNode).Duration.TotalMilliseconds
+            GainSlider.Value = GainSlider.Maximum
         End Function
 
         Private Async Sub InputDevices_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -75,7 +77,7 @@ Namespace Controls
 
         Private Sub Slider_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
             If BaseAudioNode Is Nothing Then Exit Sub
-            DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingGain = GainSlider.Value
+            DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingGain = GainSlider.Value.Map(0, 100, 0, GainControl.fxeq_max_gain)
         End Sub
 
         Private Async Sub Button_Click(sender As Object, e As RoutedEventArgs)
@@ -118,6 +120,11 @@ Namespace Controls
         Dim SliderAdjustedByHand As Boolean = False
         Private Sub PositionSlider_ManipulationStarting(sender As Object, e As ManipulationStartingRoutedEventArgs)
             SliderAdjustedByHand = True
+        End Sub
+
+        Private Sub PositionSlider_Tapped(sender As Object, e As TappedRoutedEventArgs)
+            DirectCast(BaseAudioNode, AudioFileInputNode).Seek(TimeSpan.FromMilliseconds(PositionSlider.Value))
+            SliderAdjustedByHand = False
         End Sub
 
         Private Sub PositionSlider_ManipulationCompleted(sender As Object, e As ManipulationCompletedRoutedEventArgs)

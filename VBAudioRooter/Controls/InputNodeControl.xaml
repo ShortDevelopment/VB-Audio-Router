@@ -19,7 +19,7 @@
             <ComboBox x:Name="InputDevices" HorizontalAlignment="Center" PlaceholderText="Input Device" Width="160" SelectionChanged="InputDevices_SelectionChanged" />
             <UserControl Height="20" />
             <ToggleButton Content="Mute" HorizontalAlignment="Center" x:Name="MuteToggleButton" Click="MuteToggleButton_Click" />
-            <Slider Header="Gain" TickFrequency="0.1" TickPlacement="Outside" Minimum="0" Value="1" Maximum="2" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
+            <Slider Header="Gain" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="0" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
         </StackPanel>
         <StackPanel Grid.Column="2">
             <controls:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
