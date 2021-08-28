@@ -99,6 +99,10 @@ Public NotInheritable Class MainPage
             nodeEle.NodeContent = contentEle
             nodeEle.HorizontalAlignment = HorizontalAlignment.Left
             nodeEle.VerticalAlignment = VerticalAlignment.Top
+            nodeEle.Title = String.Join("", contentEle.GetType().Name.Replace("NodeControl", "").ToCharArray().Select(Function(x) If(Char.IsUpper(x), " " + x, x.ToString())))
+            If contentEle.NodeType = NodeTypeEnum.Effect Then
+                nodeEle.TitleBrush = New SolidColorBrush(DirectCast(Application.Current.Resources("NodeTitleBarColor2"), Color))
+            End If
             NodeContainer.Children.Add(nodeEle)
         End If
     End Sub

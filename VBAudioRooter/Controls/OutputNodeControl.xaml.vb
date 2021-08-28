@@ -23,8 +23,13 @@ Namespace Controls
         End Sub
 
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
+        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
+            Get
+                Return NodeTypeEnum.Output
+            End Get
+        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
-        Public ReadOnly Property Node As IAudioNode Implements IAudioNodeControl.Node
+        Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
         Public ReadOnly Property OutgoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.OutgoingConnector
 
@@ -35,13 +40,13 @@ Namespace Controls
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             Me.Graph = graph
-            If Node IsNot Nothing Then
-                Node.Stop()
-                _Node = Nothing
+            If BaseAudioNode IsNot Nothing Then
+                BaseAudioNode.Stop()
+                _BaseAudioNode = Nothing
             End If
             Dim result = Await graph.CreateDeviceOutputNodeAsync()
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
-            _Node = result.DeviceOutputNode
+            _BaseAudioNode = result.DeviceOutputNode
         End Function
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub

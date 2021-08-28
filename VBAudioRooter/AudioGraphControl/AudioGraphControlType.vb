@@ -1,6 +1,6 @@
 ﻿Namespace AudioGraphControl
 
-    Public Enum AudioGraphControlType
+    Public Enum NodeTypeEnum
         Input
         Effect
         Output

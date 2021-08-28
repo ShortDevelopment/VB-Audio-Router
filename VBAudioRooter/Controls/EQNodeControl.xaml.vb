@@ -10,8 +10,13 @@ Namespace Controls
         Implements IAudioNodeControl
 
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
+        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
+            Get
+                Return NodeTypeEnum.Effect
+            End Get
+        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
-        Public ReadOnly Property Node As IAudioNode Implements IAudioNodeControl.Node
+        Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
         Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
             Get
@@ -20,7 +25,7 @@ Namespace Controls
         End Property
 
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            DirectCast(Me.Node, AudioSubmixNode).AddOutgoingConnection(node.Node)
+            DirectCast(Me.BaseAudioNode, AudioSubmixNode).AddOutgoingConnection(node.BaseAudioNode)
         End Sub
 
         Dim EQEffect As EqualizerEffectDefinition
@@ -32,9 +37,9 @@ Namespace Controls
         Private Const fxeq_max_gain As Double = 7.94
 
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
-            _Node = graph.CreateSubmixNode()
+            _BaseAudioNode = graph.CreateSubmixNode()
             EQEffect = New EqualizerEffectDefinition(graph)
-            Node.EffectDefinitions.Add(EQEffect)
+            BaseAudioNode.EffectDefinitions.Add(EQEffect)
             EQDrag1.SetPosition(New Point(EQEffect.Bands(0).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(0).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag2.SetPosition(New Point(EQEffect.Bands(1).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(1).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag3.SetPosition(New Point(EQEffect.Bands(2).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(2).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
@@ -49,6 +54,7 @@ Namespace Controls
         End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
+
     End Class
 
 End Namespace

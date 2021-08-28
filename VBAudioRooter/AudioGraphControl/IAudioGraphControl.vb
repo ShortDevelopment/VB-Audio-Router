@@ -6,7 +6,8 @@ Namespace AudioGraphControl
 
     Public Interface IAudioNodeControl
         ReadOnly Property ID As Guid
-        ReadOnly Property Node As IAudioNode
+        ReadOnly Property NodeType As NodeTypeEnum
+        ReadOnly Property BaseAudioNode As IAudioNode
         Sub AddOutgoingConnection(node As IAudioNodeControl)
         Function Initialize(graph As AudioGraph) As Task
         Sub OnStateChanged(state As GraphState)

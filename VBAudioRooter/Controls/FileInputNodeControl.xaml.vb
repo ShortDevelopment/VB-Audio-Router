@@ -13,8 +13,13 @@ Namespace Controls
         Public Property CurrentFile As StorageFile
 
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
+        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
+            Get
+                Return NodeTypeEnum.Input
+            End Get
+        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
-        Public ReadOnly Property Node As IAudioNode Implements IAudioNodeControl.Node
+        Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
         Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
             Get
@@ -23,7 +28,7 @@ Namespace Controls
         End Property
 
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            DirectCast(Me.Node, AudioFileInputNode).AddOutgoingConnection(node.Node)
+            DirectCast(Me.BaseAudioNode, AudioFileInputNode).AddOutgoingConnection(node.BaseAudioNode)
         End Sub
 
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
@@ -33,29 +38,29 @@ Namespace Controls
         Dim Graph As AudioGraph
         Private Async Function CreateAudioNode(graph As AudioGraph) As Task
             If CurrentFile Is Nothing Then Throw New Exception("Not file has been choosen!")
-            If Node IsNot Nothing Then
-                Node.Stop()
-                _Node = Nothing
+            If BaseAudioNode IsNot Nothing Then
+                BaseAudioNode.Stop()
+                _BaseAudioNode = Nothing
             End If
             Dim result = Await graph.CreateFileInputNodeAsync(CurrentFile)
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
-            _Node = result.FileInputNode
-            DirectCast(Node, AudioFileInputNode).OutgoingGain = GainSlider.Value
-            DirectCast(Node, AudioFileInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
-            AddHandler DirectCast(Node, AudioFileInputNode).FileCompleted, Sub()
-                                                                               If Dispatcher Is Nothing Then Exit Sub
+            _BaseAudioNode = result.FileInputNode
+            DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingGain = GainSlider.Value
+            DirectCast(BaseAudioNode, AudioFileInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
+            AddHandler DirectCast(BaseAudioNode, AudioFileInputNode).FileCompleted, Sub()
+                                                                                        If Dispatcher Is Nothing Then Exit Sub
 #Disable Warning BC42358 ' Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
-                                                                               Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, Sub()
-                                                                                                                                                      If Node Is Nothing Then Exit Sub
-                                                                                                                                                      If LoopToggleButton.IsChecked Then
-                                                                                                                                                          Node.Reset()
-                                                                                                                                                          Node.Start()
-                                                                                                                                                      End If
-                                                                                                                                                  End Sub)
+                                                                                        Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, Sub()
+                                                                                                                                                               If BaseAudioNode Is Nothing Then Exit Sub
+                                                                                                                                                               If LoopToggleButton.IsChecked Then
+                                                                                                                                                                   BaseAudioNode.Reset()
+                                                                                                                                                                   BaseAudioNode.Start()
+                                                                                                                                                               End If
+                                                                                                                                                           End Sub)
 #Enable Warning BC42358 ' Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
-                                                                           End Sub
+                                                                                    End Sub
             ' UI
-            PositionSlider.Maximum = DirectCast(Node, AudioFileInputNode).Duration.TotalMilliseconds
+            PositionSlider.Maximum = DirectCast(BaseAudioNode, AudioFileInputNode).Duration.TotalMilliseconds
         End Function
 
         Private Async Sub InputDevices_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -64,13 +69,13 @@ Namespace Controls
         End Sub
 
         Private Sub MuteToggleButton_Click(sender As Object, e As RoutedEventArgs)
-            If Node Is Nothing Then Exit Sub
-            DirectCast(Node, AudioFileInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
+            If BaseAudioNode Is Nothing Then Exit Sub
+            DirectCast(BaseAudioNode, AudioFileInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
         End Sub
 
         Private Sub Slider_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
-            If Node Is Nothing Then Exit Sub
-            DirectCast(Node, AudioFileInputNode).OutgoingGain = GainSlider.Value
+            If BaseAudioNode Is Nothing Then Exit Sub
+            DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingGain = GainSlider.Value
         End Sub
 
         Private Async Sub Button_Click(sender As Object, e As RoutedEventArgs)
@@ -93,11 +98,11 @@ Namespace Controls
                 PlayButton.Tag = "pause"
                 PlayButton.Icon = New SymbolIcon(Symbol.Pause)
                 StopButton.IsEnabled = True
-                DirectCast(Node, AudioFileInputNode).Start()
+                DirectCast(BaseAudioNode, AudioFileInputNode).Start()
             Else
                 PlayButton.Tag = "play"
                 PlayButton.Icon = New SymbolIcon(Symbol.Play)
-                DirectCast(Node, AudioFileInputNode).Stop()
+                DirectCast(BaseAudioNode, AudioFileInputNode).Stop()
             End If
         End Sub
 
@@ -105,8 +110,8 @@ Namespace Controls
             StopButton.IsEnabled = False
             PlayButton.Tag = "play"
             PlayButton.Icon = New SymbolIcon(Symbol.Play)
-            DirectCast(Node, AudioFileInputNode).Stop()
-            DirectCast(Node, AudioFileInputNode).Reset()
+            DirectCast(BaseAudioNode, AudioFileInputNode).Stop()
+            DirectCast(BaseAudioNode, AudioFileInputNode).Reset()
         End Sub
 
 #Region "Position Slider"
@@ -116,7 +121,7 @@ Namespace Controls
         End Sub
 
         Private Sub PositionSlider_ManipulationCompleted(sender As Object, e As ManipulationCompletedRoutedEventArgs)
-            DirectCast(Node, AudioFileInputNode).Seek(TimeSpan.FromMilliseconds(PositionSlider.Value))
+            DirectCast(BaseAudioNode, AudioFileInputNode).Seek(TimeSpan.FromMilliseconds(PositionSlider.Value))
             SliderAdjustedByHand = False
         End Sub
 
@@ -125,8 +130,8 @@ Namespace Controls
             timer.Interval = New TimeSpan(100)
             timer.Start()
             AddHandler timer.Tick, Sub()
-                                       If Node Is Nothing Or SliderAdjustedByHand Then Exit Sub
-                                       PositionSlider.Value = DirectCast(Node, AudioFileInputNode).Position.TotalMilliseconds
+                                       If BaseAudioNode Is Nothing Or SliderAdjustedByHand Then Exit Sub
+                                       PositionSlider.Value = DirectCast(BaseAudioNode, AudioFileInputNode).Position.TotalMilliseconds
                                    End Sub
         End Sub
 #End Region
