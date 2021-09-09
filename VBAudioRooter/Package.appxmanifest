@@ -5,54 +5,56 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
-  IgnorableNamespaces="uap mp uap3">
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap mp uap3 rescap">
 
-  <Identity
-    Name="de.shortdev.VBAudioRooter"
-    Publisher="CN=lukas"
-    Version="0.1.0.0" />
+	<Identity
+	  Name="de.shortdev.VBAudioRooter"
+	  Publisher="CN=lukas"
+	  Version="0.1.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="0685347c-1262-47e9-968c-6603c8e43a00" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="0685347c-1262-47e9-968c-6603c8e43a00" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
-  <Properties>
-    <DisplayName>VBAudioRooter</DisplayName>
-    <PublisherDisplayName>ShortDevelopment</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>VBAudioRooter</DisplayName>
+		<PublisherDisplayName>ShortDevelopment</PublisherDisplayName>
+		<Logo>Assets\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="x-generate"/>
-  </Resources>
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
 
-  <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="VBAudioRooter.App">
-      <uap:VisualElements
-        DisplayName="VB Audio Rooter"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="OpenSource advanced audio rooting application build with UWP and the WinRT Audio Graph API"
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Audio Rooter">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#E87D0D"/>
-      </uap:VisualElements>
-    </Application>
-  </Applications>
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="VBAudioRooter.App">
+			<uap:VisualElements
+			  DisplayName="VB Audio Rooter"
+			  Square150x150Logo="Assets\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Square44x44Logo.png"
+			  Description="OpenSource advanced audio rooting application build with UWP and the WinRT Audio Graph API"
+			  BackgroundColor="transparent">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Audio Rooter">
+					<uap:ShowNameOnTiles>
+						<uap:ShowOn Tile="square150x150Logo"/>
+						<uap:ShowOn Tile="wide310x150Logo"/>
+						<uap:ShowOn Tile="square310x310Logo"/>
+					</uap:ShowNameOnTiles>
+				</uap:DefaultTile >
+				<uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#E87D0D"/>
+			</uap:VisualElements>
+		</Application>
+	</Applications>
 
-  <Capabilities>
-    <Capability Name="internetClient" />
-    <uap3:Capability Name="backgroundMediaPlayback"/>
-    <DeviceCapability Name="microphone"/>
-  </Capabilities>
+	<Capabilities>
+		<rescap:Capability Name="extendedExecutionBackgroundAudio"/>
+		<uap3:Capability Name="backgroundMediaPlayback"/>
+		<Capability Name="internetClient" />
+		<DeviceCapability Name="microphone"/>
+	</Capabilities>
 </Package>

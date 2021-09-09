@@ -1,14 +1,15 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
 Imports VBAudioRooter.Controls
+Imports Windows.ApplicationModel.ExtendedExecution.Foreground
 Imports Windows.Media
 Imports Windows.Media.Audio
-Imports Windows.Media.MediaProperties
 Imports Windows.UI
-Imports Windows.UI.Xaml.Shapes
 
 Public NotInheritable Class MainPage
     Inherits Page
+
+    Public ReadOnly Property BackgroundAudioSession As ExtendedExecutionForegroundSession
 
     Private Async Sub MainPage_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Dim settings As New AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media)
@@ -41,6 +42,14 @@ Public NotInheritable Class MainPage
                                                                     MediaTransportControl.PlaybackStatus = MediaPlaybackStatus.Stopped
                                                             End Select
                                                         End Sub
+
+        _BackgroundAudioSession = New ExtendedExecutionForegroundSession()
+        BackgroundAudioSession.Reason = ExtendedExecutionForegroundReason.BackgroundAudio
+        BackgroundAudioSession.Description = "Play Background audio"
+        Dim result = Await BackgroundAudioSession.RequestExtensionAsync()
+        If result = ExtendedExecutionForegroundResult.Denied Then
+            Debugger.Break()
+        End If
     End Sub
 
     Public ReadOnly Property CurrentAudioGraph As AudioGraph = Nothing
