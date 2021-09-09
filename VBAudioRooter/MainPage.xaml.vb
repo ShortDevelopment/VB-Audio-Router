@@ -48,7 +48,7 @@ Public NotInheritable Class MainPage
         BackgroundAudioSession.Description = "Play Background audio"
         Dim result = Await BackgroundAudioSession.RequestExtensionAsync()
         If result = ExtendedExecutionForegroundResult.Denied Then
-            Debugger.Break()
+            ShowWarning()
         End If
     End Sub
 
@@ -97,6 +97,16 @@ Public NotInheritable Class MainPage
         PlayButton.IsEnabled = True
         StopButton.IsEnabled = False
     End Sub
+
+#Region "Warning"
+    Private Sub BackgroundAudioPermissionsWarning_Closed(sender As Microsoft.UI.Xaml.Controls.InfoBar, args As Microsoft.UI.Xaml.Controls.InfoBarClosedEventArgs)
+        BackgroundAudioPermissionsWarning.Visibility = Visibility.Collapsed
+    End Sub
+    Private Sub ShowWarning()
+        BackgroundAudioPermissionsWarning.Visibility = Visibility.Visible
+        BackgroundAudioPermissionsWarning.IsOpen = True
+    End Sub
+#End Region
 
 #Region "Context Menu"
     Private Sub MenuFlyoutItem_Click(sender As Object, e As RoutedEventArgs)

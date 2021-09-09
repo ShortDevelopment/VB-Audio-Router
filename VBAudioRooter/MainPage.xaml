@@ -5,35 +5,43 @@
     xmlns:local="using:VBAudioRooter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls1="using:VBAudioRooter.Controls"
+    xmlns:controls1="using:VBAudioRooter.Controls" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">
 
-    <Grid>
-        <Canvas x:Name="ConnectionCanvas" />
-        <Grid x:Name="NodeContainer" Background="Transparent">
-            <Grid.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutSubItem Text="Input">
-                        <MenuFlyoutItem Text="Microphone" Tag="InputNodeControl" Click="MenuFlyoutItem_Click" />
-                        <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
-                    </MenuFlyoutSubItem>
-                    <MenuFlyoutSubItem Text="Effects">
-                        <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
-                        <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
-                        <MenuFlyoutItem Text="Echo" />
-                        <MenuFlyoutItem Text="Limiter" />
-                    </MenuFlyoutSubItem>
-                </MenuFlyout>
-            </Grid.ContextFlyout>
-            <controls1:NodeControl Title="Output" TitleBrush="{StaticResource NodeTitleBarColor}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" />
-            </controls1:NodeControl>
+    <StackPanel>
+        <Grid>
+            <controls:InfoBar
+                x:Name="BackgroundAudioPermissionsWarning" Margin="10"
+                IsOpen="False" Visibility="Collapsed" Closed="BackgroundAudioPermissionsWarning_Closed"
+                Severity="Warning" Title="Permissions" Message="App does not have permissions to play background audio" />
         </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
-            <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
-            <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed" />
-        </StackPanel>
-    </Grid>
+        <Grid>
+            <Canvas x:Name="ConnectionCanvas" />
+            <Grid x:Name="NodeContainer" Background="Transparent">
+                <Grid.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutSubItem Text="Input">
+                            <MenuFlyoutItem Text="Microphone" Tag="InputNodeControl" Click="MenuFlyoutItem_Click" />
+                            <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSubItem Text="Effects">
+                            <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
+                            <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
+                            <MenuFlyoutItem Text="Echo" />
+                            <MenuFlyoutItem Text="Limiter" />
+                        </MenuFlyoutSubItem>
+                    </MenuFlyout>
+                </Grid.ContextFlyout>
+                <controls1:NodeControl Title="Output" TitleBrush="{StaticResource NodeTitleBarColor}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" />
+                </controls1:NodeControl>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
+                <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
+                <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
 </Page>
