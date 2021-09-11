@@ -13,10 +13,11 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
     - [x] Draw line between nodes (❗)
     - [ ] Label EQ
  - [ ] Functionality
+    - [ ] Better accessibility of add context menu 
     - [x] Background audio (❗) 4e116dcc198b5efcc35779deedf6371f380ee985
     - [ ] Custom output select
     - [ ] Allow multiple outputs 
-    - [ ] Allow change of input device / file during runtime
+    - [x] Allow change of input device / file / connections during runtime
     - [ ] Delete Nodes
  - [ ] Nice to have
     - [ ] Add A2DP Support
