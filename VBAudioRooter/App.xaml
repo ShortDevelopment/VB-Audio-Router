@@ -20,7 +20,7 @@
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>                
-            </controls:XamlControlsResources.MergedDictionaries>
+            </controls:XamlControlsResources.MergedDictionaries>            
         </controls:XamlControlsResources>
     </Application.Resources>
 </Application>

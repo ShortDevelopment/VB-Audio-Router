@@ -38,6 +38,8 @@ Namespace Controls
             _BaseAudioNode = graph.CreateSubmixNode()
             EQEffect = New EqualizerEffectDefinition(graph)
             BaseAudioNode.EffectDefinitions.Add(EQEffect)
+            DirectCast(BaseAudioNode, AudioSubmixNode).EnableEffectsByDefinition(EQEffect)
+
             EQDrag1.SetPosition(New Point(EQEffect.Bands(0).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(0).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag2.SetPosition(New Point(EQEffect.Bands(1).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(1).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag3.SetPosition(New Point(EQEffect.Bands(2).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(2).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))

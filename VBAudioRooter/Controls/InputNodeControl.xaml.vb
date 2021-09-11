@@ -16,14 +16,22 @@ Namespace Controls
             If DesignMode.DesignModeEnabled Or DesignMode.DesignMode2Enabled Then Exit Sub
             AudioCaptureDevices = Await DeviceInformation.FindAllAsync(MediaDevice.GetAudioCaptureSelector())
             InputDevices.ItemsSource = AudioCaptureDevices.Select(Function(device) device.Name).ToList()
+
+            Dim foundDefault As Boolean = False
             For i As Integer = 0 To AudioCaptureDevices.Count - 1
                 If AudioCaptureDevices.Item(i).IsDefault Then
                     InputDevices.SelectedIndex = i
+                    foundDefault = True
                     Exit For
                 End If
             Next
+
+            If Not foundDefault Then
+                InputDevices.SelectedIndex = 0
+            End If
         End Sub
 
+#Region "Identity"
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
         Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
             Get
@@ -38,32 +46,61 @@ Namespace Controls
                 Return OutgoingConnectorControl
             End Get
         End Property
+#End Region
 
         Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
             DirectCast(Me.BaseAudioNode, AudioDeviceInputNode).AddOutgoingConnection(node.BaseAudioNode)
         End Sub
 
+        Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             Me.Graph = graph
-            Await CreateAudioNode(graph)
         End Function
-        Dim Graph As AudioGraph
-        Private Async Function CreateAudioNode(graph As AudioGraph, Optional reconnect As Boolean = False) As Task
-            If BaseAudioNode IsNot Nothing Then
-                BaseAudioNode.Stop()
-                _BaseAudioNode = Nothing
-            End If
-            Dim result = Await graph.CreateDeviceInputNodeAsync(Windows.Media.Capture.MediaCategory.Other, graph.EncodingProperties, AudioCaptureDevices.Item(InputDevices.SelectedIndex))
+
+        Private Async Function CreateAudioNode() As Task
+            If GraphState = GraphState.Started AndAlso BaseAudioNode IsNot Nothing Then DisposeOldNode()
+
+            Dim result = Await Graph.CreateDeviceInputNodeAsync(Windows.Media.Capture.MediaCategory.Other, Graph.EncodingProperties, AudioCaptureDevices.Item(InputDevices.SelectedIndex))
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _BaseAudioNode = result.DeviceInputNode
+
+            If GraphState = GraphState.Started Then ReconnectNewNode()
+
             DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
             DirectCast(BaseAudioNode, AudioDeviceInputNode).ConsumeInput = Not MuteToggleButton.IsChecked
+
             GainSlider.Value = GainSlider.Maximum
         End Function
 
+#Region "State"
+        Dim GraphState As GraphState = GraphState.Stopped
+        Public Async Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged
+            Me.GraphState = state
+            ' Ensure Initialized
+            If state = GraphState.Started AndAlso BaseAudioNode Is Nothing Then Await CreateAudioNode()
+        End Sub
+#End Region
+
+#Region "Reconnect"
+        Private Sub DisposeOldNode()
+            BaseAudioNode.Stop()
+            For Each connection In DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingConnections.ToArray()
+                DirectCast(BaseAudioNode, AudioFileInputNode).RemoveOutgoingConnection(connection)
+            Next
+            BaseAudioNode.Dispose()
+        End Sub
+
+        Private Sub ReconnectNewNode()
+            For Each connection In OutgoingConnector.Connections
+                Dim node = connection.DestinationConnector.AttachedNode.BaseAudioNode
+                AddOutgoingConnection(node)
+            Next
+        End Sub
+#End Region
+
         Private Async Sub InputDevices_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
             If Graph Is Nothing Then Exit Sub
-            Await CreateAudioNode(Graph, True)
+            Await CreateAudioNode()
         End Sub
 
         Private Sub MuteToggleButton_Click(sender As Object, e As RoutedEventArgs)
@@ -76,7 +113,7 @@ Namespace Controls
             DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value.Map(0, 100, 0, GainControl.fxeq_max_gain)
         End Sub
 
-        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
+
     End Class
 
 End Namespace

@@ -10,6 +10,25 @@ Namespace Utils
         Public Function Map(ByVal value As Double, ByVal fromSource As Double, ByVal toSource As Double, ByVal fromTarget As Double, ByVal toTarget As Double) As Double
             Return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget
         End Function
+
+        <Extension>
+        Public Function FindNameRecursive(Of T As FrameworkElement)(ByRef ele As FrameworkElement, name As String) As T
+            For child_index = 0 To VisualTreeHelper.GetChildrenCount(ele) - 1
+                Dim child As FrameworkElement = DirectCast(VisualTreeHelper.GetChild(ele, child_index), FrameworkElement)
+
+                Dim search As T = DirectCast(child.FindName(name), T)
+                If search IsNot Nothing Then Return search
+
+                Dim recursion As T = FindNameRecursive(Of T)(child, name)
+                If recursion IsNot Nothing Then Return recursion
+            Next
+            Return Nothing
+        End Function
+
+        <Extension>
+        Public Function FindNameRecursive(ByRef ele As FrameworkElement, name As String) As FrameworkElement
+            Return FindNameRecursive(Of FrameworkElement)(ele, name)
+        End Function
     End Module
 
     Public Class ColorTranslator

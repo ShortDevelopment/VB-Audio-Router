@@ -1,5 +1,5 @@
 ﻿<UserControl
-    xmlns:controls="using:VBAudioRooter.Controls"
+    xmlns:controls1="using:VBAudioRooter.Controls"
     x:Class="VBAudioRooter.Controls.FileInputNodeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:utils="using:VBAudioRooter.Utils"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    Width="400">
 
     <UserControl.Resources>
         <utils:SliderTimeSpanValueConverter x:Key="SliderTimeSpanValueConverter" />
@@ -27,40 +27,16 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0" IsReadOnly="True" x:Name="PathDisplay" Margin="0,0,10,0" />
-                <Button Grid.Column="1" Content="Browse" Click="Button_Click" />
+                <Button Grid.Column="1" Content="Browse" Click="Button_Click" x:Name="BrowseButton" />
             </Grid>
-            <UserControl Height="20" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ToggleButton Content="Mute" HorizontalAlignment="Center" x:Name="MuteToggleButton" Click="MuteToggleButton_Click" Margin="5" />
-                <ToggleButton Content="Loop" HorizontalAlignment="Center" x:Name="LoopToggleButton" Margin="5" />
-            </StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Slider Orientation="Vertical" Header="Gain" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="0" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" Height="108" />
-                <Grid Grid.Column="1" Padding="20,5,20,5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                        <AppBarButton LabelPosition="Collapsed" Icon="Play" x:Name="PlayButton" Foreground="#89D185" Tag="play" />
-                        <AppBarButton LabelPosition="Collapsed" Icon="Stop" x:Name="StopButton" Foreground="#D97C6A" IsEnabled="False" />
-                    </StackPanel>
-                    <Slider x:Name="PositionSlider" Grid.Row="1" MinHeight="0" Maximum="0" Tapped="PositionSlider_Tapped"
-                            ManipulationMode="TranslateRailsX" ManipulationStarting="PositionSlider_ManipulationStarting" ManipulationCompleted="PositionSlider_ManipulationCompleted"
-                            ThumbToolTipValueConverter="{StaticResource SliderTimeSpanValueConverter}" />
-                </Grid>
-            </Grid>            
+            <MediaTransportControls IsFullWindowEnabled="False" IsRepeatButtonVisible="True" IsZoomButtonVisible="False" x:Name="TransportControls"  />
         </StackPanel>
         <StackPanel Grid.Column="2">
-            <controls:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
-                <controls:ConnectorControl.RenderTransform>
+            <controls1:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
+                <controls1:ConnectorControl.RenderTransform>
                     <CompositeTransform TranslateX="18" />
-                </controls:ConnectorControl.RenderTransform>
-            </controls:ConnectorControl>
+                </controls1:ConnectorControl.RenderTransform>
+            </controls1:ConnectorControl>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -140,6 +140,8 @@
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ElementWrapper.vb" />
+    <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
     <Compile Include="Controls\ReverbNodeControl.xaml.vb">
       <DependentUpon>ReverbNodeControl.xaml</DependentUpon>
     </Compile>
