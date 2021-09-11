@@ -3,7 +3,6 @@ Imports VBAudioRooter.AudioGraphControl
 Imports VBAudioRooter.Utils
 Imports Windows.Media.Audio
 Imports Windows.Media.Core
-Imports Windows.Media.Playback
 Imports Windows.Storage.Pickers
 
 Namespace Controls
@@ -38,10 +37,6 @@ Namespace Controls
             End Get
         End Property
 #End Region
-
-        Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            DirectCast(Me.BaseAudioNode, MediaSourceAudioInputNode).AddOutgoingConnection(node.BaseAudioNode)
-        End Sub
 
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize

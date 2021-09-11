@@ -10,6 +10,7 @@ Namespace Controls
         Inherits UserControl
         Implements IAudioNodeControl
 
+#Region "Indentity"
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
         Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
             Get
@@ -24,10 +25,7 @@ Namespace Controls
                 Return OutgoingConnectorControl
             End Get
         End Property
-
-        Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            DirectCast(Me.BaseAudioNode, AudioSubmixNode).AddOutgoingConnection(node.BaseAudioNode)
-        End Sub
+#End Region
 
         Dim EQEffect As EqualizerEffectDefinition
 

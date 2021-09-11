@@ -48,9 +48,6 @@ Namespace Controls
         End Property
 #End Region
 
-        Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            DirectCast(Me.BaseAudioNode, AudioDeviceInputNode).AddOutgoingConnection(node.BaseAudioNode)
-        End Sub
 
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
@@ -84,16 +81,16 @@ Namespace Controls
 #Region "Reconnect"
         Private Sub DisposeOldNode()
             BaseAudioNode.Stop()
-            For Each connection In DirectCast(BaseAudioNode, AudioFileInputNode).OutgoingConnections.ToArray()
-                DirectCast(BaseAudioNode, AudioFileInputNode).RemoveOutgoingConnection(connection)
+            For Each connection In DirectCast(BaseAudioNode, IAudioInputNode).OutgoingConnections.ToArray()
+                DirectCast(BaseAudioNode, IAudioInputNode).RemoveOutgoingConnection(connection.Destination)
             Next
             BaseAudioNode.Dispose()
         End Sub
 
         Private Sub ReconnectNewNode()
             For Each connection In OutgoingConnector.Connections
-                Dim node = connection.DestinationConnector.AttachedNode.BaseAudioNode
-                AddOutgoingConnection(node)
+                Dim node As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
+                DirectCast(BaseAudioNode, IAudioInputNode).AddOutgoingConnection(node)
             Next
         End Sub
 #End Region

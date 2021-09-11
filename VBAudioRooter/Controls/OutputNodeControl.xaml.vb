@@ -22,6 +22,7 @@ Namespace Controls
             Next
         End Sub
 
+#Region "Identity"
         Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
         Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
             Get
@@ -30,12 +31,8 @@ Namespace Controls
         End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
-
         Public ReadOnly Property OutgoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.OutgoingConnector
-
-        Public Sub AddOutgoingConnection(node As IAudioNodeControl) Implements IAudioNodeControl.AddOutgoingConnection
-            Throw New NotImplementedException()
-        End Sub
+#End Region
 
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize

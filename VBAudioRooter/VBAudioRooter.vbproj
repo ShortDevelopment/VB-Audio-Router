@@ -140,6 +140,9 @@
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ErrorDialog.xaml.vb">
+      <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ElementWrapper.vb" />
     <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
     <Compile Include="Controls\ReverbNodeControl.xaml.vb">
@@ -260,6 +263,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\OutputNodeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

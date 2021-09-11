@@ -1,6 +1,8 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
+Imports Windows.Media.Audio
 Imports Windows.UI
+Imports Windows.UI.Popups
 Imports Windows.UI.Xaml.Shapes
 
 Namespace Controls
@@ -67,23 +69,38 @@ Namespace Controls
                 ' If we may only create a single connection remove the previous one
                 If IsConnected AndAlso Not AllowMultipleConnections Then DeleteConnection(Connections.First())
 
-                Dim remoteNode = DirectCast(e.DataView.Properties("AttachedNode"), IAudioNodeControl)
                 Dim remoteConnector = DirectCast(e.DataView.Properties("Connector"), ConnectorControl)
 
-                ' Create Connection
-                Dim connection As New NodeConnection()
-                connection.SourceConnector = remoteConnector
-                connection.DestinationConnector = Me
-                connection.Line = CreateConnection(remoteConnector)
-
-                ' Add connection to list
-                Connections.Add(connection)
-                remoteConnector.Connections.Add(connection)
+                Try
+                    CreateConnection(remoteConnector)
+                Catch ex As Exception
+                    'Call New MessageDialog(ex.Message, "Failed to add connection").ShowAsync()
+                    Dim dialog As New Dialogs.ErrorDialog(ex)
+                    dialog.Title = "Failed to add connection"
+                    Call dialog.ShowAsync()
+                End Try
             End If
             e.AcceptedOperation = DataTransfer.DataPackageOperation.None
         End Sub
 
-        Private Function CreateConnection(remoteConnector As ConnectorControl) As Line
+        Private Sub CreateConnection(remoteConnector As ConnectorControl)
+            ' Create Connection
+            Dim connection As New NodeConnection()
+            connection.SourceConnector = remoteConnector
+            connection.DestinationConnector = Me
+
+            ' Add graph connection
+            DirectCast(remoteConnector.AttachedNode.BaseAudioNode, IAudioInputNode).AddOutgoingConnection(AttachedNode.BaseAudioNode)
+
+            ' Only create line if connection could be established (AudioGraph)
+            connection.Line = CreateConnectionVisual(remoteConnector)
+
+            ' Add connection to list
+            Connections.Add(connection)
+            remoteConnector.Connections.Add(connection)
+        End Sub
+
+        Private Function CreateConnectionVisual(remoteConnector As ConnectorControl) As Line
             Dim line As New Line()
             line.StrokeThickness = 1
             line.Stroke = New SolidColorBrush(Colors.White)
@@ -111,9 +128,17 @@ Namespace Controls
             ' Ignore if connection does not exist on this node
             If Not Connections.Contains(connection) Then Exit Sub
 
+            ' Get graph nodes
+            Dim sourceNode As IAudioInputNode = DirectCast(connection.SourceConnector.AttachedNode.BaseAudioNode, IAudioInputNode)
+            Dim destinationNode As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
+            ' Remove graph connection
+            sourceNode.RemoveOutgoingConnection(destinationNode)
+
+            ' Remove visual
             AttachedNode.Canvas.Children.Remove(connection.Line)
+            ' Remove reference
             connection.SourceConnector.Connections.Remove(connection)
-            Connections.Remove(connection)
+            connection.DestinationConnector.Connections.Remove(connection)
         End Sub
 
         Private Sub UserControl_LayoutUpdated(sender As Object, e As Object)

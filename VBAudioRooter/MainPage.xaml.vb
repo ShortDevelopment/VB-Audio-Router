@@ -61,30 +61,40 @@ Public NotInheritable Class MainPage
 #End Region
 #End Region
 
-    Private Async Sub PlayButton_Click(sender As Object, e As RoutedEventArgs) Handles PlayButton.Click
+#Region "GraphState"
+    Public ReadOnly Property GraphState As GraphState = GraphState.Stopped
+    Private Sub NotifyAllState()
+        ' Notify Node (UI)
         For Each child In NodeContainer.Children
             If GetType(NodeControl) = child.GetType() Then
                 Dim control As NodeControl = DirectCast(child, NodeControl)
                 If control.NodeContent IsNot Nothing AndAlso GetType(IAudioNodeControl).IsAssignableFrom(control.NodeContent.GetType()) Then
                     Dim node As IAudioNodeControl = DirectCast(control.NodeContent, IAudioNodeControl)
                     node.OnStateChanged(GraphState.Started)
-                    If node.OutgoingConnector IsNot Nothing AndAlso Not node.OutgoingConnector.IsConnected Then Continue For
-                    If node.OutgoingConnector IsNot Nothing AndAlso node.OutgoingConnector.IsConnected Then
-                        For Each connection In node.OutgoingConnector.Connections
-                            node.AddOutgoingConnection(connection.DestinationConnector.AttachedNode)
-                        Next
-                    End If
                 End If
             End If
         Next
+    End Sub
+#End Region
 
+    Private Sub PlayButton_Click(sender As Object, e As RoutedEventArgs) Handles PlayButton.Click
         CurrentAudioGraph.Start()
+
+        Me._GraphState = GraphState.Started
+        NotifyAllState()
+
+        ' UI
         PlayButton.IsEnabled = False
         StopButton.IsEnabled = True
     End Sub
 
     Private Sub StopButton_Click(sender As Object, e As RoutedEventArgs) Handles StopButton.Click
         CurrentAudioGraph.Stop()
+
+        Me._GraphState = GraphState.Stopped
+        NotifyAllState()
+
+        ' UI
         PlayButton.IsEnabled = True
         StopButton.IsEnabled = False
     End Sub
@@ -115,6 +125,8 @@ Public NotInheritable Class MainPage
             Await Dispatcher.RunIdleAsync(Async Sub()
                                               ' Initialize
                                               Await DirectCast(contentEle, IAudioNodeControl).Initialize(CurrentAudioGraph)
+                                              ' Update State
+                                              DirectCast(contentEle, IAudioNodeControl).OnStateChanged(GraphState)
                                           End Sub)
         End If
     End Sub
