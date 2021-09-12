@@ -21,6 +21,7 @@ Advanced audio rooting application build with UWP and the WinRT Audio Graph API
     - [ ] Delete Nodes
     - [ ] Delete Connections
     - [ ] Add Help / Dokumentation
+    - [ ] Correctly disposing stuff
  - [ ] Nice to have
     - [ ] Add A2DP Support
     - [ ] Add Text2Speech Support
