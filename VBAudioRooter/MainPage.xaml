@@ -10,15 +10,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">
 
-    <StackPanel>
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
             <controls:InfoBar
                 x:Name="BackgroundAudioPermissionsWarning" Margin="10"
                 IsOpen="False" Visibility="Collapsed" Closed="BackgroundAudioPermissionsWarning_Closed"
                 Severity="Warning" Title="Permissions" Message="App does not have permissions to play background audio" />
         </Grid>
-        <Grid>
-            <Canvas x:Name="ConnectionCanvas" />
+        <Grid Grid.Row="1">            
             <Grid x:Name="NodeContainer" Background="Transparent">
                 <Grid.ContextFlyout>
                     <MenuFlyout x:Name="ContextMenuFlyout">
@@ -38,10 +41,11 @@
                     <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" x:Name="DefaultOutputNode" />
                 </controls1:NodeControl>
             </Grid>
+            <Canvas x:Name="ConnectionCanvas" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
                 <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
                 <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed" />
             </StackPanel>
         </Grid>
-    </StackPanel>
+    </Grid>
 </Page>
