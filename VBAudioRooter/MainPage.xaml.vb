@@ -3,6 +3,7 @@ Imports VBAudioRooter.AudioGraphControl
 Imports VBAudioRooter.Controls
 Imports Windows.ApplicationModel.ExtendedExecution.Foreground
 Imports Windows.Media.Audio
+Imports Windows.System
 Imports Windows.UI
 
 Public NotInheritable Class MainPage
@@ -131,5 +132,9 @@ Public NotInheritable Class MainPage
         End If
     End Sub
 #End Region
+
+    Private Async Sub HelpButton_Click(sender As Object, e As RoutedEventArgs)
+        Await Launcher.LaunchUriAsync(New Uri("https://github.com/ShortDevelopment/VB-Audio-Rooter/wiki"))
+    End Sub
 
 End Class
