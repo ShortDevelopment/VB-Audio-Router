@@ -12,12 +12,6 @@ Namespace Controls
         Implements IAudioNodeControl
 
         Private WithEvents ControlsWrapper As Utils.MediaTransportControlsWrapper
-        Private Async Sub FileInputNodeControl_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-            ControlsWrapper = New MediaTransportControlsWrapper(TransportControls)
-            Await Dispatcher.RunIdleAsync(Sub() ControlsWrapper.Initialize())
-
-            InitializePositionTimer()
-        End Sub
 
         Public Property MediaSource As MediaSource
 
@@ -41,6 +35,11 @@ Namespace Controls
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             Me.Graph = graph
+
+            ControlsWrapper = New MediaTransportControlsWrapper(TransportControls)
+            Await Dispatcher.RunIdleAsync(Sub() ControlsWrapper.Initialize())
+
+            InitializePositionTimer()
         End Function
 
         Private Async Function CreateAudioNode() As Task
@@ -86,6 +85,7 @@ Namespace Controls
         End Sub
 
         Private Sub ControlsWrapper_PlayStateChanged(sender As MediaTransportControlsWrapper, playing As Boolean) Handles ControlsWrapper.PlayStateChanged
+            If BaseAudioNode Is Nothing Then Exit Sub
             If playing Then
                 DirectCast(BaseAudioNode, MediaSourceAudioInputNode).Start()
             Else

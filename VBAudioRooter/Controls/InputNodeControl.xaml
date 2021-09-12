@@ -18,8 +18,14 @@
         <StackPanel Grid.Column="1">
             <ComboBox x:Name="InputDevices" HorizontalAlignment="Center" PlaceholderText="Input Device" Width="160" SelectionChanged="InputDevices_SelectionChanged" />
             <UserControl Height="20" />
-            <ToggleButton Content="Mute" HorizontalAlignment="Center" x:Name="MuteToggleButton" Click="MuteToggleButton_Click" />
-            <Slider Header="Gain" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="0" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <AppBarButton Grid.Column="0" VerticalAlignment="Center" Width="40" Margin="0,0,10,0" Icon="Volume" LabelPosition="Collapsed" x:Name="MuteButton" Click="MuteToggleButton_Click" ToolTipService.ToolTip="Mute" />
+                <Slider Grid.Column="1" VerticalAlignment="Center" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="100" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
+            </Grid>            
         </StackPanel>
         <StackPanel Grid.Column="2">
             <controls:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
