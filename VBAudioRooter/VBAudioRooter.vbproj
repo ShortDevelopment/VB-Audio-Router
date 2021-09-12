@@ -140,6 +140,9 @@
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\GainNodeControl.xaml.vb">
+      <DependentUpon>GainNodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ErrorDialog.xaml.vb">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,10 @@
     <Page Include="Controls\EQDragControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GainNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ReverbNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>

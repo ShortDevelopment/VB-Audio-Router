@@ -21,7 +21,7 @@
                 IsOpen="False" Visibility="Collapsed" Closed="BackgroundAudioPermissionsWarning_Closed"
                 Severity="Warning" Title="Permissions" Message="App does not have permissions to play background audio" />
         </Grid>
-        <Grid Grid.Row="1">            
+        <Grid Grid.Row="1">
             <Grid x:Name="NodeContainer" Background="Transparent">
                 <Grid.ContextFlyout>
                     <MenuFlyout x:Name="ContextMenuFlyout">
@@ -34,6 +34,9 @@
                             <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
                             <MenuFlyoutItem Text="Echo" />
                             <MenuFlyoutItem Text="Limiter" />
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSubItem Text="Transforms">
+                            <MenuFlyoutItem Text="Gain" Tag="GainNodeControl" Click="MenuFlyoutItem_Click" />
                         </MenuFlyoutSubItem>
                     </MenuFlyout>
                 </Grid.ContextFlyout>
