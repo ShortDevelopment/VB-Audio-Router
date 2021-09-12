@@ -23,7 +23,7 @@
             </controls:ConnectorControl>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <ComboBox HorizontalAlignment="Stretch" x:Name="OutputDevices" PlaceholderText="Output Device" Width="160" SelectionChanged="OutputDevices_SelectionChanged" />
+            <ComboBox HorizontalAlignment="Stretch" Visibility="Collapsed" x:Name="OutputDevices" PlaceholderText="Output Device" Width="160" SelectionChanged="OutputDevices_SelectionChanged" />
         </StackPanel>
     </Grid>
 </UserControl>
