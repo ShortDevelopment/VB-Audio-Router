@@ -102,34 +102,40 @@ Public NotInheritable Class MainPage
 
 #Region "Context Menu"
     Private Async Sub MenuFlyoutItem_Click(sender As Object, e As RoutedEventArgs)
-        Dim tag As String = DirectCast(DirectCast(sender, MenuFlyoutItem).Tag, String)
-        If Not String.IsNullOrEmpty(tag) Then
-            Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRooter.Controls.{tag}")), IAudioNodeControl)
+        Try
+            Dim tag As String = DirectCast(DirectCast(sender, MenuFlyoutItem).Tag, String)
+            If Not String.IsNullOrEmpty(tag) Then
+                Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRooter.Controls.{tag}")), IAudioNodeControl)
 
 #Region "UI"
-            Dim nodeContainer As New NodeControl()
-            nodeContainer.HorizontalAlignment = HorizontalAlignment.Left
-            nodeContainer.VerticalAlignment = VerticalAlignment.Top
-            nodeContainer.Title = String.Join("", contentEle.GetType().Name.Replace("NodeControl", "").ToCharArray().Select(Function(x) If(Char.IsUpper(x), " " + x, x.ToString())))
-            If contentEle.NodeType = NodeTypeEnum.Effect Then
-                nodeContainer.TitleBrush = New SolidColorBrush(DirectCast(Application.Current.Resources("NodeTitleBarColor2"), Color))
-            End If
+                Dim nodeContainer As New NodeControl()
+                nodeContainer.HorizontalAlignment = HorizontalAlignment.Left
+                nodeContainer.VerticalAlignment = VerticalAlignment.Top
+                nodeContainer.Title = String.Join("", contentEle.GetType().Name.Replace("NodeControl", "").ToCharArray().Select(Function(x) If(Char.IsUpper(x), " " + x, x.ToString())))
+                If contentEle.NodeType = NodeTypeEnum.Effect Then
+                    nodeContainer.TitleBrush = New SolidColorBrush(DirectCast(Application.Current.Resources("NodeTitleBarColor2"), Color))
+                End If
 #End Region
 
-            contentEle.Canvas = ConnectionCanvas
+                contentEle.Canvas = ConnectionCanvas
 
-            ' Assign content to container ("window")
-            nodeContainer.NodeContent = contentEle
-            Me.NodeContainer.Children.Add(nodeContainer)
+                ' Assign content to container ("window")
+                nodeContainer.NodeContent = contentEle
+                Me.NodeContainer.Children.Add(nodeContainer)
 
-            ' Wait for node to be initialized by uwp
-            Await Dispatcher.RunIdleAsync(Async Sub()
-                                              ' Initialize
-                                              Await DirectCast(contentEle, IAudioNodeControl).Initialize(CurrentAudioGraph)
-                                              ' Update State
-                                              DirectCast(contentEle, IAudioNodeControl).OnStateChanged(GraphState)
-                                          End Sub)
-        End If
+                ' Wait for node to be initialized by uwp
+                Await Dispatcher.RunIdleAsync(Async Sub()
+                                                  ' Initialize
+                                                  Await DirectCast(contentEle, IAudioNodeControl).Initialize(CurrentAudioGraph)
+                                                  ' Update State
+                                                  DirectCast(contentEle, IAudioNodeControl).OnStateChanged(GraphState)
+                                              End Sub)
+            End If
+        Catch ex As Exception
+            Dim dialog As New Dialogs.ErrorDialog(ex)
+            dialog.Title = "Failed to add node"
+            Call dialog.ShowAsync()
+        End Try
     End Sub
 #End Region
 
