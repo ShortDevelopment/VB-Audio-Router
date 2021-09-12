@@ -7,7 +7,7 @@ Imports Windows.Media.Devices
 
 Namespace Controls
 
-    Public NotInheritable Class InputNodeControl
+    Public NotInheritable Class MicInputNodeControl
         Inherits UserControl
         Implements IAudioNodeControl
 

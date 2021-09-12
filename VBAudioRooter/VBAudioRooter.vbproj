@@ -157,8 +157,8 @@
     <Compile Include="Controls\EQNodeControl.xaml.vb">
       <DependentUpon>EQNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InputNodeControl.xaml.vb">
-      <DependentUpon>InputNodeControl.xaml</DependentUpon>
+    <Compile Include="Controls\MicInputNodeControl.xaml.vb">
+      <DependentUpon>MicInputNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NodeControl.xaml.vb">
       <DependentUpon>NodeControl.xaml</DependentUpon>
@@ -261,7 +261,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\InputNodeControl.xaml">
+    <Page Include="Controls\MicInputNodeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
