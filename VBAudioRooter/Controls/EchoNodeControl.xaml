@@ -1,0 +1,77 @@
+﻿<UserControl
+    xmlns:controls="using:VBAudioRooter.Controls"
+    x:Class="VBAudioRooter.Controls.EchoNodeControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+    <Grid Background="#3F3F3F" RequestedTheme="Dark">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <controls:ConnectorControl x:Name="IngoingConnectorControl" Margin="0,5,0,5" AllowMultipleConnections="True" IsOutgoing="False">
+                <controls:ConnectorControl.RenderTransform>
+                    <CompositeTransform TranslateX="-18" />
+                </controls:ConnectorControl.RenderTransform>
+            </controls:ConnectorControl>
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="0" Padding="5">
+                <toolkit:RadialGauge
+                    x:Name="DelayTimeRadialGauge"
+                    ValueChanged="RadialGauge_ValueChanged"
+                    Margin="5"
+                    Width="100"
+                    Value="1"
+                    Minimum="1"
+                    Maximum="600"
+                    StepSize="10"
+                    IsInteractive="True"
+                    TickSpacing="50"
+                    ScaleWidth="4"
+                    MinAngle="210"
+                    MaxAngle="150"
+                    Unit="Delay" />
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="1" Padding="5">
+                <toolkit:RadialGauge
+                    x:Name="FeedbackTimeRadialGauge"
+                    ValueChanged="RadialGauge_ValueChanged"
+                    Margin="5"
+                    Width="100"
+                    Value="0"
+                    Minimum="0"
+                    Maximum="1"
+                    StepSize="0.1"
+                    IsInteractive="True"
+                    TickSpacing="1"
+                    ScaleWidth="4"
+                    MinAngle="210"
+                    MaxAngle="150"
+                    Unit="Feedback" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Padding="5" Orientation="Horizontal">
+                <Slider x:Name="DryWetSlider" Value="0" Minimum="0" Maximum="100" Header="Wet / Dry" Margin="5" Orientation="Vertical" TickFrequency="10" TickPlacement="Outside" ValueChanged="RadialGauge_ValueChanged" />
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Column="2">
+            <controls:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
+                <controls:ConnectorControl.RenderTransform>
+                    <CompositeTransform TranslateX="18" />
+                </controls:ConnectorControl.RenderTransform>
+            </controls:ConnectorControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

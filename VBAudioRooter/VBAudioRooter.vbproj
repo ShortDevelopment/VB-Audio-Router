@@ -143,6 +143,9 @@
     <Compile Include="Controls\GainNodeControl.xaml.vb">
       <DependentUpon>GainNodeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EchoNodeControl.xaml.vb">
+      <DependentUpon>EchoNodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ErrorDialog.xaml.vb">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -246,6 +249,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\GainNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\EchoNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

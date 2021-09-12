@@ -31,6 +31,7 @@ Namespace Controls
 
         Public Property ReverbEffect As ReverbEffectDefinition
 
+        Dim isInitialized As Boolean = False
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()
             ReverbEffect = New ReverbEffectDefinition(graph)
@@ -49,12 +50,15 @@ Namespace Controls
 
             DryWetSlider.Value = ReverbEffect.WetDryMix
             RoomSizeSlider.Value = ReverbEffect.RoomSize
+
+            ' Important because the value changed event will otherwise override default settings!
+            isInitialized = True
         End Function
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
         Private Sub RadialGauge_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
-            If ReverbEffect Is Nothing Then Exit Sub
+            If ReverbEffect Is Nothing Or Not isInitialized Then Exit Sub
 
             ReverbEffect.HighEQCutoff = HighCutRadialGauge.Value
             ReverbEffect.LowEQCutoff = LowCutRadialGauge.Value

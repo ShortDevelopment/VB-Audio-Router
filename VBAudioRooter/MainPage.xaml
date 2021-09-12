@@ -32,8 +32,8 @@
                         <MenuFlyoutSubItem Text="Effects">
                             <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
                             <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="Echo" />
-                            <MenuFlyoutItem Text="Limiter" />
+                            <MenuFlyoutItem Text="Echo" Tag="EchoNodeControl" Click="MenuFlyoutItem_Click" />
+                            <MenuFlyoutItem Text="Limiter" Tag="LimiterNodeControl" Click="MenuFlyoutItem_Click" />
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSubItem Text="Transforms">
                             <MenuFlyoutItem Text="Gain" Tag="GainNodeControl" Click="MenuFlyoutItem_Click" />
