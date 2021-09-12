@@ -67,7 +67,7 @@ Namespace Controls
         Private Sub Grid_Drop(sender As Object, e As DragEventArgs)
             If Not IsOutgoing AndAlso e.DataView IsNot Nothing AndAlso e.DataView.Properties IsNot Nothing Then
                 ' If we may only create a single connection remove the previous one
-                If IsConnected AndAlso Not AllowMultipleConnections Then DeleteConnection(Connections.First())
+                If IsConnected AndAlso Not AllowMultipleConnections Then ConnectionHelper.DeleteConnection(Connections.First())
 
                 Dim remoteConnector = DirectCast(e.DataView.Properties("Connector"), ConnectorControl)
 
@@ -123,23 +123,6 @@ Namespace Controls
             AttachedNode.Canvas.Children.Add(line)
             Return line
         End Function
-
-        Public Sub DeleteConnection(connection As NodeConnection)
-            ' Ignore if connection does not exist on this node
-            If Not Connections.Contains(connection) Then Exit Sub
-
-            ' Get graph nodes
-            Dim sourceNode As IAudioInputNode = DirectCast(connection.SourceConnector.AttachedNode.BaseAudioNode, IAudioInputNode)
-            Dim destinationNode As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
-            ' Remove graph connection
-            sourceNode.RemoveOutgoingConnection(destinationNode)
-
-            ' Remove visual
-            AttachedNode.Canvas.Children.Remove(connection.Line)
-            ' Remove reference
-            connection.SourceConnector.Connections.Remove(connection)
-            connection.DestinationConnector.Connections.Remove(connection)
-        End Sub
 
         Private Sub UserControl_LayoutUpdated(sender As Object, e As Object)
             If DesignMode.DesignModeEnabled Or DesignMode.DesignMode2Enabled Then Exit Sub

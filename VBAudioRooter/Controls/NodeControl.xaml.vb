@@ -1,6 +1,7 @@
 ﻿Imports VBAudioRooter.Utils
-Imports Windows.UI
 Imports Windows.UI.Xaml.Markup
+Imports VBAudioRooter.AudioGraphControl
+Imports Windows.UI.Core
 
 Namespace Controls
 
@@ -60,6 +61,13 @@ Namespace Controls
             positionTransform.TranslateX += e.Delta.Translation.X
             positionTransform.TranslateY += e.Delta.Translation.Y
             If NodeContent IsNot Nothing Then NodeContent.InvalidateArrange()
+        End Sub
+
+        Private Sub Grid_Tapped(sender As Object, e As TappedRoutedEventArgs)
+            If Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down) Then
+                If NodeContent.GetType() = GetType(OutputNodeControl) Then Exit Sub
+                ConnectionHelper.DisposeNode(Me)
+            End If
         End Sub
     End Class
 

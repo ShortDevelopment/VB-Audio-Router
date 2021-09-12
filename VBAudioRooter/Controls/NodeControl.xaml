@@ -13,8 +13,8 @@
 
     <StackPanel Background="#3F3F3F" CornerRadius="5" BorderThickness="1" BorderBrush="#efefef">
         <Grid Background="{x:Bind TitleBrush}" Padding="10,4,10,4"
-                ManipulationMode="TranslateX, TranslateY"
-                ManipulationDelta="UserControl_ManipulationDelta">
+                ManipulationMode="TranslateX, TranslateY" ManipulationDelta="UserControl_ManipulationDelta"
+                Tapped="Grid_Tapped">
             <TextBlock Text="{x:Bind Title}" FontSize="10" Foreground="White" />
         </Grid>
         <ContentPresenter HorizontalAlignment="Stretch" Content="{Binding NodeContent}" Padding="10" />
