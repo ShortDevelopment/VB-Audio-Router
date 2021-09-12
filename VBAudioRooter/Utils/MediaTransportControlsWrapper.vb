@@ -141,7 +141,7 @@
                     ' Set manually
                     RaiseEvent PositionChanged(Me, position)
                 End If
-                TimeElapsedElement.Text = position.ToString()
+                TimeElapsedElement.Text = position.ToString("hh\:mm\:ss")
             End Set
         End Property
 
@@ -162,7 +162,7 @@
                 If Not Me._Duration = duration Then
                     Me._Duration = duration
                     ProgressSlider.Maximum = duration.TotalMilliseconds
-                    TimeRemainingElement.Text = duration.ToString()
+                    TimeRemainingElement.Text = duration.ToString("hh\:mm\:ss")
                 End If
             End Set
         End Property
