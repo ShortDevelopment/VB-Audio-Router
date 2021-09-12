@@ -1,6 +1,5 @@
 ﻿
 Imports VBAudioRooter.AudioGraphControl
-Imports VBAudioRooter.Utils
 Imports Windows.Media.Audio
 
 Namespace Controls
@@ -8,7 +7,6 @@ Namespace Controls
     Public NotInheritable Class ReverbNodeControl
         Inherits UserControl
         Implements IAudioNodeControl
-        Implements INotifyPropertyChanged
 
         Public Sub New()
             InitializeComponent()
@@ -72,14 +70,6 @@ Namespace Controls
             ReverbEffect.WetDryMix = DryWetSlider.Value
             ReverbEffect.RoomSize = RoomSizeSlider.Value
         End Sub
-
-#Region "INotifyPropertyChanged"
-        Private Sub OnPropertyChanged(<CallerMemberName> Optional propertyName As String = Nothing)
-            RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
-        End Sub
-
-        Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
-#End Region
 
     End Class
 
