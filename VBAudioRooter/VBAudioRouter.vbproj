@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{65472FE0-CAA5-4078-9155-3373AF4B692F}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
-    <RootNamespace>VBAudioRooter</RootNamespace>
-    <AssemblyName>VBAudioRooter</AssemblyName>
+    <RootNamespace>VBAudioRouter</RootNamespace>
+    <AssemblyName>VBAudioRouter</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
@@ -28,7 +28,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
@@ -40,7 +40,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -54,7 +54,7 @@
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
@@ -66,7 +66,7 @@
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -80,7 +80,7 @@
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -93,7 +93,7 @@
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
@@ -107,7 +107,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -119,7 +119,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>VBAudioRooter.xml</DocumentationFile>
+    <DocumentationFile>VBAudioRouter.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>

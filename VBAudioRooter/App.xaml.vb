@@ -1,4 +1,4 @@
-﻿Imports VBAudioRooter.Utils
+﻿Imports VBAudioRouter.Utils
 Imports Windows.UI
 
 NotInheritable Class App

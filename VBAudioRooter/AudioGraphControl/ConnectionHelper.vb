@@ -1,4 +1,4 @@
-﻿Imports VBAudioRooter.Controls
+﻿Imports VBAudioRouter.Controls
 Imports Windows.Media.Audio
 
 Namespace AudioGraphControl

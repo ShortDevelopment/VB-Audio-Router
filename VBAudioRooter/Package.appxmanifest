@@ -9,14 +9,14 @@
   IgnorableNamespaces="uap mp uap3 rescap">
 
 	<Identity
-	  Name="de.shortdev.VBAudioRooter"
+	  Name="de.shortdev.VBAudioRouter"
 	  Publisher="CN=lukas"
 	  Version="0.1.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="0685347c-1262-47e9-968c-6603c8e43a00" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
 	<Properties>
-		<DisplayName>VBAudioRooter</DisplayName>
+		<DisplayName>VBAudioRouter</DisplayName>
 		<PublisherDisplayName>ShortDevelopment</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
@@ -32,14 +32,14 @@
 	<Applications>
 		<Application Id="App"
 		  Executable="$targetnametoken$.exe"
-		  EntryPoint="VBAudioRooter.App">
+		  EntryPoint="VBAudioRouter.App">
 			<uap:VisualElements
-			  DisplayName="VB Audio Rooter"
+			  DisplayName="VB Audio Router"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
 			  Square44x44Logo="Assets\Square44x44Logo.png"
 			  Description="OpenSource advanced audio rooting application build with UWP and the WinRT Audio Graph API"
 			  BackgroundColor="transparent">
-				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Audio Rooter">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Audio Router">
 					<uap:ShowNameOnTiles>
 						<uap:ShowOn Tile="square150x150Logo"/>
 						<uap:ShowOn Tile="wide310x150Logo"/>

@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="VBAudioRooter.MainPage"
+    x:Class="VBAudioRouter.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:VBAudioRooter"
+    xmlns:local="using:VBAudioRouter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls1="using:VBAudioRooter.Controls" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls1="using:VBAudioRouter.Controls" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">

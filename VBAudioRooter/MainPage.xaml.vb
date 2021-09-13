@@ -1,6 +1,6 @@
 ﻿
-Imports VBAudioRooter.AudioGraphControl
-Imports VBAudioRooter.Controls
+Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.Controls
 Imports Windows.ApplicationModel.ExtendedExecution.Foreground
 Imports Windows.Media.Audio
 Imports Windows.System
@@ -105,7 +105,7 @@ Public NotInheritable Class MainPage
         Try
             Dim tag As String = DirectCast(DirectCast(sender, MenuFlyoutItem).Tag, String)
             If Not String.IsNullOrEmpty(tag) Then
-                Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRooter.Controls.{tag}")), IAudioNodeControl)
+                Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRouter.Controls.{tag}")), IAudioNodeControl)
 
 #Region "UI"
                 Dim nodeContainer As New NodeControl()
@@ -140,7 +140,7 @@ Public NotInheritable Class MainPage
 #End Region
 
     Private Async Sub HelpButton_Click(sender As Object, e As RoutedEventArgs)
-        Await Launcher.LaunchUriAsync(New Uri("https://github.com/ShortDevelopment/VB-Audio-Rooter/wiki"))
+        Await Launcher.LaunchUriAsync(New Uri("https://github.com/ShortDevelopment/VB-Audio-Router/wiki"))
     End Sub
 
 End Class

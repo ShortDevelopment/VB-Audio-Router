@@ -1,6 +1,6 @@
-﻿Imports VBAudioRooter.Utils
+﻿Imports VBAudioRouter.Utils
 Imports Windows.UI.Xaml.Markup
-Imports VBAudioRooter.AudioGraphControl
+Imports VBAudioRouter.AudioGraphControl
 Imports Windows.UI.Core
 
 Namespace Controls

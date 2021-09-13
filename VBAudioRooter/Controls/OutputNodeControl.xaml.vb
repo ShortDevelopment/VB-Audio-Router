@@ -1,4 +1,4 @@
-﻿Imports VBAudioRooter.AudioGraphControl
+﻿Imports VBAudioRouter.AudioGraphControl
 Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
 Imports Windows.Media.Devices

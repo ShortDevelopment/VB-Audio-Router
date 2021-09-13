@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Werte der Assemblyattribute überprüfen
 
-<Assembly: AssemblyTitle("VBAudioRooter")>
+<Assembly: AssemblyTitle("VBAudioRouter")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("VBAudioRooter")>
-<Assembly: AssemblyCopyright("Copyright ©  2021")>
+<Assembly: AssemblyCompany("ShortDevelopment")>
+<Assembly: AssemblyProduct("VBAudioRouter")>
+<Assembly: AssemblyCopyright("© 2021 ShortDevelopment")>
 <Assembly: AssemblyTrademark("")>
 
 ' Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
