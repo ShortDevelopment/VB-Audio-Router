@@ -43,9 +43,13 @@ Namespace Controls
         End Function
 
         Private Async Function CreateAudioNode() As Task
+            If BaseAudioNode IsNot Nothing Then Me.DisposeAudioNode()
+
             Dim result = Await Graph.CreateMediaSourceAudioInputNodeAsync(MediaSource)
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _BaseAudioNode = result.Node
+
+            Me.ReconnectAudioNode()
 
             ControlsWrapper.Duration = DirectCast(BaseAudioNode, MediaSourceAudioInputNode).Duration
         End Function
@@ -71,9 +75,10 @@ Namespace Controls
 
         End Sub
 
-        Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged
+        Public Async Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged
             If state = GraphState.Started Then
                 ControlsWrapper.IsPlaying = True
+                If MediaSource IsNot Nothing AndAlso BaseAudioNode Is Nothing Then Await CreateAudioNode()
             Else
                 ControlsWrapper.IsPlaying = False
             End If

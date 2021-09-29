@@ -10,7 +10,9 @@ Namespace AudioGraphControl
             Dim sourceNode As IAudioInputNode = DirectCast(connection.SourceConnector.AttachedNode.BaseAudioNode, IAudioInputNode)
             Dim destinationNode As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
             ' Remove graph connection
-            sourceNode.RemoveOutgoingConnection(destinationNode)
+            If sourceNode IsNot Nothing Then
+                sourceNode.RemoveOutgoingConnection(destinationNode)
+            End If
 
             ' Remove visual
             DirectCast(connection.Line.Parent, Canvas).Children.Remove(connection.Line)
@@ -45,11 +47,13 @@ Namespace AudioGraphControl
         <Extension>
         Public Sub DisposeAudioNode(ByRef nodeControl As IAudioNodeControl)
             Dim node As IAudioInputNode = DirectCast(nodeControl.BaseAudioNode, IAudioInputNode)
-            node.Stop()
-            For Each connection In node.OutgoingConnections.ToArray()
-                node.RemoveOutgoingConnection(connection.Destination)
-            Next
-            node.Dispose()
+            Try
+                node.Stop()
+                For Each connection In node.OutgoingConnections.ToArray()
+                    node.RemoveOutgoingConnection(connection.Destination)
+                Next
+                node.Dispose()
+            Catch : End Try
         End Sub
 
         <Extension>

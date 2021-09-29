@@ -90,7 +90,9 @@ Namespace Controls
             connection.DestinationConnector = Me
 
             ' Add graph connection
-            DirectCast(remoteConnector.AttachedNode.BaseAudioNode, IAudioInputNode).AddOutgoingConnection(AttachedNode.BaseAudioNode)
+            If remoteConnector.AttachedNode.BaseAudioNode IsNot Nothing Then
+                DirectCast(remoteConnector.AttachedNode.BaseAudioNode, IAudioInputNode).AddOutgoingConnection(AttachedNode.BaseAudioNode)
+            End If
 
             ' Only create line if connection could be established (AudioGraph)
             connection.Line = CreateConnectionVisual(remoteConnector)

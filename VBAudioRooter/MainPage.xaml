@@ -29,6 +29,7 @@
                         <MenuFlyoutSubItem Text="Input">
                             <MenuFlyoutItem Text="Microphone" Tag="MicInputNodeControl" Click="MenuFlyoutItem_Click" />
                             <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
+                            <MenuFlyoutItem Text="TTS" Tag="TextToSpeechInputNodeControl" Click="MenuFlyoutItem_Click" />
                         </MenuFlyoutSubItem>
                         <MenuFlyoutSubItem Text="Effects">
                             <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />

@@ -1,0 +1,56 @@
+﻿<UserControl
+    xmlns:controls="using:VBAudioRouter.Controls"
+    x:Class="VBAudioRouter.Controls.TextToSpeechInputNodeControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VBAudioRouter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    Width="500">
+    <Grid Background="#3F3F3F" RequestedTheme="Dark">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="15" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1">
+            <ComboBox x:Name="VoiceSelection" PlaceholderText="Selected Voice" Margin="10,0,10,0" HorizontalAlignment="Stretch" />
+            <UserControl Height="20" />
+            <TextBox x:Name="InputTextBox" Margin="10,0,10,0" PlaceholderText="Input" AcceptsReturn="True" TextWrapping="Wrap" Height="100" />
+            <UserControl Height="20" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <AppBarButton Grid.Column="0" VerticalAlignment="Center" Width="40" Margin="0,0,10,0" Icon="Volume" LabelPosition="Collapsed" IsEnabled="False" />
+                <Slider Grid.Column="1" VerticalAlignment="Center" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="100" Maximum="100" x:Name="VolumeSlider" />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <AppBarButton Grid.Column="0" VerticalAlignment="Center" Width="40" Margin="0,0,10,0" LabelPosition="Collapsed" IsEnabled="False">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xec4a;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <Slider Grid.Column="1" VerticalAlignment="Center" TickFrequency="0.5" TickPlacement="Outside" Minimum="0.5" Value="1" Maximum="6" x:Name="SpeedSlider" />
+            </Grid>
+            <UserControl Height="20" />
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <AppBarButton Width="40" Margin="5" LabelPosition="Collapsed" Icon="Play" x:Name="PlayButton" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <controls:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
+                <controls:ConnectorControl.RenderTransform>
+                    <CompositeTransform TranslateX="18" />
+                </controls:ConnectorControl.RenderTransform>
+            </controls:ConnectorControl>
+        </StackPanel>
+    </Grid>
+</UserControl>
