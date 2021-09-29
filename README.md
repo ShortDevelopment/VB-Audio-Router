@@ -6,7 +6,7 @@ Learn more in the [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wik
 
 ## ToDo
  - [ ] Effects
-    - [ ] Add rest of Windows build-in effects
+    - [x] Add rest of Windows build-in effects
     - [ ] Add custom effects
  - [ ] Graphics
     - [x] Branding
@@ -19,7 +19,7 @@ Learn more in the [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wik
     - [ ] Custom output select
     - [ ] Allow multiple outputs 
     - [x] Allow change of input device / file / connections during runtime
-    - [ ] Delete Nodes
+    - [x] Delete Nodes
     - [ ] Delete Connections
     - [ ] Add Help / Dokumentation
     - [ ] Correctly disposing stuff
