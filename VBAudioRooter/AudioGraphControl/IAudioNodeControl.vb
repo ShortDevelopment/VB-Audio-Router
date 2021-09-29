@@ -6,8 +6,6 @@ Namespace AudioGraphControl
 
     Public Interface IAudioNodeControl
 #Region "Identity"
-
-        ReadOnly Property ID As Guid
         ReadOnly Property NodeType As NodeTypeEnum
         ReadOnly Property BaseAudioNode As IAudioNode
 #End Region

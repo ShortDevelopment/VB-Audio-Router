@@ -16,7 +16,7 @@ Namespace Controls
         Public Property MediaSource As MediaSource
 
 #Region "Identity"
-        Public ReadOnly Property ID As Guid = Guid.NewGuid() Implements IAudioNodeControl.ID
+        
         Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
             Get
                 Return NodeTypeEnum.Input
