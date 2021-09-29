@@ -25,5 +25,5 @@ Learn more in the [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wik
     - [ ] Correctly disposing stuff
  - [ ] Nice to have
     - [ ] Add A2DP Support
-    - [ ] Add Text2Speech Support
+    - [x] Add Text2Speech Support
     - [ ] Add single application input Support
