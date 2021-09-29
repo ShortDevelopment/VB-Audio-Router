@@ -56,13 +56,13 @@ Namespace Controls
         End Function
 
         Private Async Function CreateAudioNode() As Task
-            If GraphState = GraphState.Started AndAlso BaseAudioNode IsNot Nothing Then DisposeOldNode()
+            If GraphState = GraphState.Started AndAlso BaseAudioNode IsNot Nothing Then Me.DisposeAudioNode()
 
             Dim result = Await Graph.CreateDeviceInputNodeAsync(Windows.Media.Capture.MediaCategory.Other, Graph.EncodingProperties, AudioCaptureDevices.Item(InputDevices.SelectedIndex))
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _BaseAudioNode = result.DeviceInputNode
 
-            If GraphState = GraphState.Started Then ReconnectNewNode()
+            If GraphState = GraphState.Started Then Me.ReconnectAudioNode()
 
             DirectCast(BaseAudioNode, AudioDeviceInputNode).OutgoingGain = GainSlider.Value
             DirectCast(BaseAudioNode, AudioDeviceInputNode).ConsumeInput = Not isMuted
@@ -76,23 +76,6 @@ Namespace Controls
             Me.GraphState = state
             ' Ensure Initialized
             If state = GraphState.Started AndAlso BaseAudioNode Is Nothing Then Await CreateAudioNode()
-        End Sub
-#End Region
-
-#Region "Reconnect"
-        Private Sub DisposeOldNode()
-            BaseAudioNode.Stop()
-            For Each connection In DirectCast(BaseAudioNode, IAudioInputNode).OutgoingConnections.ToArray()
-                DirectCast(BaseAudioNode, IAudioInputNode).RemoveOutgoingConnection(connection.Destination)
-            Next
-            BaseAudioNode.Dispose()
-        End Sub
-
-        Private Sub ReconnectNewNode()
-            For Each connection In OutgoingConnector.Connections
-                Dim node As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
-                DirectCast(BaseAudioNode, IAudioInputNode).AddOutgoingConnection(node)
-            Next
         End Sub
 #End Region
 

@@ -40,4 +40,26 @@ Namespace AudioGraphControl
 
     End Class
 
+    Public Module ConnectionExtensions
+
+        <Extension>
+        Public Sub DisposeAudioNode(ByRef nodeControl As IAudioNodeControl)
+            Dim node As IAudioInputNode = DirectCast(nodeControl.BaseAudioNode, IAudioInputNode)
+            node.Stop()
+            For Each connection In node.OutgoingConnections.ToArray()
+                node.RemoveOutgoingConnection(connection.Destination)
+            Next
+            node.Dispose()
+        End Sub
+
+        <Extension>
+        Public Sub ReconnectAudioNode(ByRef nodeControl As IAudioNodeControl)
+            For Each connection In nodeControl.OutgoingConnector.Connections
+                Dim node As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
+                DirectCast(nodeControl.BaseAudioNode, IAudioInputNode).AddOutgoingConnection(node)
+            Next
+        End Sub
+
+    End Module
+
 End Namespace
