@@ -23,6 +23,7 @@ Learn more in the [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wik
     - [ ] Delete Connections
     - [ ] Add Help / Dokumentation
     - [ ] Correctly disposing stuff
+    - [ ] Rearrange whole viewport (zoom, drag, ...)
  - [ ] Nice to have
     - [ ] Add A2DP Support
     - [x] Add Text2Speech Support
