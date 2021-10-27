@@ -1,0 +1,21 @@
+﻿<ContentDialog
+    x:Class="VBAudioRouter.CloseConfirmDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VBAudioRouter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Closing"
+    PrimaryButtonText="Yes"
+    SecondaryButtonText="No"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <StackPanel>
+        <TextBlock>
+            Do you really want to close the application?!
+            <LineBreak />Closing the application might end in a lose of data!
+        </TextBlock>
+    </StackPanel>
+</ContentDialog>

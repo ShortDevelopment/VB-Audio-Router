@@ -156,6 +156,9 @@
     <Compile Include="Controls\TextToSpeechInputNodeControl.xaml.vb">
       <DependentUpon>TextToSpeechInputNodeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CloseConfirmDialog.xaml.vb">
+      <DependentUpon>CloseConfirmDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ErrorDialog.xaml.vb">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -299,6 +302,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\OutputNodeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\CloseConfirmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

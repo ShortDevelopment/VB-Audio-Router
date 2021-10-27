@@ -1,10 +1,12 @@
 ﻿Imports VBAudioRouter.Utils
 Imports Windows.UI
+Imports Windows.UI.Core.Preview
 
 NotInheritable Class App
     Inherits Application
 
     Protected Overrides Sub OnLaunched(e As Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)
+#Region "TitleBar"
         Dim titlebar = ApplicationView.GetForCurrentView().TitleBar
         Dim themeColor = ColorTranslator.FromHex("#E87D0D")
         Dim darkThemeColor = ColorTranslator.FromHex("#232323")
@@ -16,7 +18,22 @@ NotInheritable Class App
         titlebar.InactiveForegroundColor = Colors.LightGray
         titlebar.InactiveBackgroundColor = darkThemeColor
         titlebar.ButtonInactiveBackgroundColor = darkThemeColor
+#End Region
 
+#Region "Close confirm"
+        AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
+                                                                                          Dim deferral As Deferral = ev.GetDeferral()
+                                                                                          Try
+                                                                                              Dim dialog As New CloseConfirmDialog()
+                                                                                              dialog.RequestedTheme = ElementTheme.Dark
+                                                                                              ev.Handled = (Await dialog.ShowAsync()) = ContentDialogResult.Secondary
+                                                                                          Finally
+                                                                                              deferral.Complete()
+                                                                                          End Try
+                                                                                      End Sub
+#End Region
+
+#Region "Launching app"
         Dim rootFrame As Frame = TryCast(Window.Current.Content, Frame)
         If rootFrame Is Nothing Then
             rootFrame = New Frame()
@@ -36,6 +53,7 @@ NotInheritable Class App
 
             Window.Current.Activate()
         End If
+#End Region
     End Sub
 
     Private Sub OnNavigationFailed(sender As Object, e As NavigationFailedEventArgs)

@@ -53,6 +53,7 @@
 
 	<Capabilities>
 		<rescap:Capability Name="extendedExecutionBackgroundAudio"/>
+		<rescap:Capability Name="confirmAppClose"/>
 		<uap3:Capability Name="backgroundMediaPlayback"/>
 		<Capability Name="internetClient" />
 		<DeviceCapability Name="microphone"/>
