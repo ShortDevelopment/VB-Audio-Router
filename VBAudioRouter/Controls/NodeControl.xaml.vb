@@ -64,10 +64,15 @@ Namespace Controls
         End Sub
 
         Private Sub Grid_Tapped(sender As Object, e As TappedRoutedEventArgs)
+            Me.BringToFront()
             If Window.Current.CoreWindow.GetKeyState(Windows.System.VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down) Then
                 If NodeContent.GetType() = GetType(OutputNodeControl) Then Exit Sub
                 ConnectionHelper.DisposeNode(Me)
             End If
+        End Sub
+
+        Private Sub Grid_ManipulationStarted(sender As Object, e As ManipulationStartedRoutedEventArgs)
+            Me.BringToFront()
         End Sub
     End Class
 
