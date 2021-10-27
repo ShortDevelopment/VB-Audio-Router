@@ -21,10 +21,11 @@ Learn more in the [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wik
     - [x] Allow change of input device / file / connections during runtime
     - [x] Delete Nodes
     - [ ] Delete Connections
-    - [ ] Add Help / Dokumentation
+    - [x] Add Help / Dokumentation (See [Wiki](https://github.com/ShortDevelopment/VB-Audio-Rooter/wiki))
     - [ ] Correctly disposing stuff
     - [ ] Rearrange whole viewport (zoom, drag, ...)
  - [ ] Nice to have
-    - [ ] Add A2DP Support
-    - [x] Add Text2Speech Support
-    - [ ] Add single application input Support
+    - [ ] Add A2DP support
+    - [x] Add Text2Speech support
+    - [ ] Add single application input support
+    - [ ] Desktop audio input support
