@@ -150,6 +150,9 @@
     <Compile Include="Controls\EchoNodeControl.xaml.vb">
       <DependentUpon>EchoNodeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SpectrumNodeControl.xaml.vb">
+      <DependentUpon>SpectrumNodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextToSpeechInputNodeControl.xaml.vb">
       <DependentUpon>TextToSpeechInputNodeControl.xaml</DependentUpon>
     </Compile>
@@ -267,6 +270,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\SpectrumNodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\TextToSpeechInputNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -342,7 +349,10 @@
       <Version>7.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.7.0</Version>
+      <Version>2.8.0-prerelease.210927001</Version>
+    </PackageReference>
+    <PackageReference Include="UWPAudioVisualizer">
+      <Version>1.0.38</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
