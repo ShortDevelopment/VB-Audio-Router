@@ -6,25 +6,24 @@ Namespace Controls
 
     Public NotInheritable Class EchoNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl
+        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput
 
         Public Sub New()
             InitializeComponent()
         End Sub
 
 #Region "Identity"
-
-        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
-            Get
-                Return NodeTypeEnum.Effect
-            End Get
-        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
-        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
+        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControlOutput.OutgoingConnector
             Get
                 Return OutgoingConnectorControl
+            End Get
+        End Property
+        Public ReadOnly Property IncomingConnector As ConnectorControl Implements IAudioNodeControlInput.IncomingConnector
+            Get
+                Return IncomingConnectorControl
             End Get
         End Property
 #End Region

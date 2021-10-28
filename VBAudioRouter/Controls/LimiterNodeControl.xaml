@@ -13,7 +13,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <controls:ConnectorControl x:Name="IngoingConnectorControl" Margin="0,5,0,5" AllowMultipleConnections="True" IsOutgoing="False">
+            <controls:ConnectorControl x:Name="IncomingConnectorControl" Margin="0,5,0,5" AllowMultipleConnections="True" IsOutgoing="False">
                 <controls:ConnectorControl.RenderTransform>
                     <CompositeTransform TranslateX="-18" />
                 </controls:ConnectorControl.RenderTransform>

@@ -24,14 +24,26 @@ Namespace AudioGraphControl
         Public Shared Sub DisposeNode(nodeControl As NodeControl)
             Dim node = DirectCast(nodeControl.NodeContent, IAudioNodeControl)
 
-            ' Remove visual & graph connections
-            Dim connections = node.OutgoingConnector.Connections.ToArray()
+#Region "' Remove visual & graph connections"
+            Dim connections As New List(Of NodeConnection)
+
+            Dim inputNode = TryCast(nodeControl.NodeContent, IAudioNodeControlInput)
+            If inputNode IsNot Nothing Then
+                connections.AddRange(inputNode.IncomingConnector.Connections)
+            End If
+
+            Dim outputNode = TryCast(nodeControl.NodeContent, IAudioNodeControlOutput)
+            If outputNode IsNot Nothing Then
+                connections.AddRange(outputNode.OutgoingConnector.Connections)
+            End If
+
             For Each connection In connections
                 DeleteConnection(connection)
             Next
+#End Region
 
+            ' Dispose audio node
             If Not node.BaseAudioNode Is Nothing Then
-                ' Dispose audio node
                 node.BaseAudioNode.Stop()
                 node.BaseAudioNode.Dispose()
             End If
@@ -57,7 +69,7 @@ Namespace AudioGraphControl
         End Sub
 
         <Extension>
-        Public Sub ReconnectAudioNode(ByRef nodeControl As IAudioNodeControl)
+        Public Sub ReconnectAudioNode(ByRef nodeControl As IAudioNodeControlOutput)
             For Each connection In nodeControl.OutgoingConnector.Connections
                 Dim node As IAudioNode = connection.DestinationConnector.AttachedNode.BaseAudioNode
                 DirectCast(nodeControl.BaseAudioNode, IAudioInputNode).AddOutgoingConnection(node)

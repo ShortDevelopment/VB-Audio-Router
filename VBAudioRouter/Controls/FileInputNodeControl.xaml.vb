@@ -9,23 +9,17 @@ Namespace Controls
 
     Public NotInheritable Class FileInputNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl
+        Implements IAudioNodeControl, IAudioNodeControlOutput
 
         Private WithEvents ControlsWrapper As Utils.MediaTransportControlsWrapper
 
         Public Property MediaSource As MediaSource
 
 #Region "Identity"
-        
-        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
-            Get
-                Return NodeTypeEnum.Input
-            End Get
-        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
-        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
+        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControlOutput.OutgoingConnector
             Get
                 Return OutgoingConnectorControl
             End Get

@@ -7,7 +7,7 @@ Namespace Controls
 
     Public NotInheritable Class OutputNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl
+        Implements IAudioNodeControl, IAudioNodeControlInput
 
         Property AudioRenderDevices As DeviceInformationCollection
         Private Async Sub OutputNodeControl_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
@@ -23,15 +23,13 @@ Namespace Controls
         End Sub
 
 #Region "Identity"
-        
-        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
-            Get
-                Return NodeTypeEnum.Output
-            End Get
-        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
-        Public ReadOnly Property OutgoingConnector As ConnectorControl = Nothing Implements IAudioNodeControl.OutgoingConnector
+        Public ReadOnly Property IncomingConnector As ConnectorControl Implements IAudioNodeControlInput.IncomingConnector
+            Get
+                Return IncomingConnectorControl
+            End Get
+        End Property
 #End Region
 
         Dim Graph As AudioGraph

@@ -112,7 +112,7 @@ Public NotInheritable Class MainPage
                 nodeContainer.HorizontalAlignment = HorizontalAlignment.Left
                 nodeContainer.VerticalAlignment = VerticalAlignment.Top
                 nodeContainer.Title = String.Join("", contentEle.GetType().Name.Replace("NodeControl", "").ToCharArray().Select(Function(x) If(Char.IsUpper(x), " " + x, x.ToString())))
-                If contentEle.NodeType = NodeTypeEnum.Effect Then
+                If TypeOf contentEle Is IAudioNodeControlEffect Then
                     nodeContainer.TitleBrush = New SolidColorBrush(DirectCast(Application.Current.Resources("NodeTitleBarColor2"), Color))
                 End If
 #End Region

@@ -8,7 +8,7 @@ Namespace Controls
 
     Public NotInheritable Class TextToSpeechInputNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl
+        Implements IAudioNodeControl, IAudioNodeControlOutput
 
         Public ReadOnly Property AllVoices As New Dictionary(Of String, VoiceInformation)
         Public Sub New()
@@ -20,16 +20,10 @@ Namespace Controls
         End Sub
 
 #Region "Identity"
-
-        Public ReadOnly Property NodeType As NodeTypeEnum Implements IAudioNodeControl.NodeType
-            Get
-                Return NodeTypeEnum.Input
-            End Get
-        End Property
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
         Public ReadOnly Property BaseAudioNode As IAudioNode Implements IAudioNodeControl.BaseAudioNode
 
-        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControl.OutgoingConnector
+        Public ReadOnly Property OutgoingConnector As ConnectorControl Implements IAudioNodeControlOutput.OutgoingConnector
             Get
                 Return OutgoingConnectorControl
             End Get
