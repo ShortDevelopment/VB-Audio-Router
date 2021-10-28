@@ -147,4 +147,10 @@ Public NotInheritable Class MainPage
         Await Launcher.LaunchUriAsync(New Uri("https://github.com/ShortDevelopment/VB-Audio-Router/wiki"))
     End Sub
 
+    Private Sub Grid_ManipulationDelta(sender As Object, e As ManipulationDeltaRoutedEventArgs)
+        Exit Sub
+        If e.OriginalSource IsNot ViewPort Then Exit Sub
+        ViewPortTransform.TranslateX += e.Delta.Translation.X
+        ViewPortTransform.TranslateY += e.Delta.Translation.Y
+    End Sub
 End Class

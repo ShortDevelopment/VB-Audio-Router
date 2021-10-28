@@ -21,37 +21,43 @@
                 IsOpen="False" Visibility="Collapsed" Closed="BackgroundAudioPermissionsWarning_Closed"
                 Severity="Warning" Title="Permissions" Message="App does not have permissions to play background audio" />
         </Grid>
-        <Grid Grid.Row="1">
-            <Canvas x:Name="ConnectionCanvas" />
-            <Grid x:Name="NodeContainer" Background="Transparent">
-                <Grid.ContextFlyout>
-                    <MenuFlyout x:Name="ContextMenuFlyout">
-                        <MenuFlyoutSubItem Text="Input">
-                            <MenuFlyoutItem Text="Microphone" Tag="MicInputNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="TTS" Tag="TextToSpeechInputNodeControl" Click="MenuFlyoutItem_Click" />
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutSeparator />
-                        <MenuFlyoutSubItem Text="Effects">
-                            <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="Echo" Tag="EchoNodeControl" Click="MenuFlyoutItem_Click" />
-                            <MenuFlyoutItem Text="Limiter" Tag="LimiterNodeControl" Click="MenuFlyoutItem_Click" />
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutSubItem Text="Transforms">
-                            <MenuFlyoutItem Text="Gain" Tag="GainNodeControl" Click="MenuFlyoutItem_Click" />
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutSeparator />
-                        <MenuFlyoutSubItem Text="Output">
-                            <MenuFlyoutItem Text="Device" IsEnabled="False" />
-                            <MenuFlyoutItem Text="File" IsEnabled="False" />
-                            <MenuFlyoutItem Text="Spectrum" Tag="SpectrumNodeControl" Click="MenuFlyoutItem_Click" />
-                        </MenuFlyoutSubItem>
-                    </MenuFlyout>
-                </Grid.ContextFlyout>
-                <controls1:NodeControl Title="Output" TitleBrush="{StaticResource NodeTitleBarColor}" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" x:Name="DefaultOutputNode" />
-                </controls1:NodeControl>
+        <Grid Grid.Row="1">            
+            <Grid x:Name="ViewPort"
+                ManipulationMode="TranslateX, TranslateY" ManipulationDelta="Grid_ManipulationDelta">
+                <Canvas x:Name="ConnectionCanvas" />
+                <Grid x:Name="NodeContainer" Background="Transparent">
+                    <Grid.ContextFlyout>
+                        <MenuFlyout x:Name="ContextMenuFlyout">
+                            <MenuFlyoutSubItem Text="Input">
+                                <MenuFlyoutItem Text="Microphone" Tag="MicInputNodeControl" Click="MenuFlyoutItem_Click" />
+                                <MenuFlyoutItem Text="File" Tag="FileInputNodeControl" Click="MenuFlyoutItem_Click" />
+                                <MenuFlyoutItem Text="TTS" Tag="TextToSpeechInputNodeControl" Click="MenuFlyoutItem_Click" />
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutSubItem Text="Effects">
+                                <MenuFlyoutItem Text="Equalizer" Tag="EQNodeControl" Click="MenuFlyoutItem_Click" />
+                                <MenuFlyoutItem Text="Reverb" Tag="ReverbNodeControl" Click="MenuFlyoutItem_Click" />
+                                <MenuFlyoutItem Text="Echo" Tag="EchoNodeControl" Click="MenuFlyoutItem_Click" />
+                                <MenuFlyoutItem Text="Limiter" Tag="LimiterNodeControl" Click="MenuFlyoutItem_Click" />
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSubItem Text="Transforms">
+                                <MenuFlyoutItem Text="Gain" Tag="GainNodeControl" Click="MenuFlyoutItem_Click" />
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutSubItem Text="Output">
+                                <MenuFlyoutItem Text="Device" IsEnabled="False" />
+                                <MenuFlyoutItem Text="File" IsEnabled="False" />
+                                <MenuFlyoutItem Text="Spectrum" Tag="SpectrumNodeControl" Click="MenuFlyoutItem_Click" />
+                            </MenuFlyoutSubItem>
+                        </MenuFlyout>
+                    </Grid.ContextFlyout>
+                    <controls1:NodeControl Title="Output" TitleBrush="{StaticResource NodeTitleBarColor}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <controls1:OutputNodeControl Canvas="{x:Bind ConnectionCanvas}" x:Name="DefaultOutputNode" />
+                    </controls1:NodeControl>
+                </Grid>
+                <Grid.RenderTransform>
+                    <CompositeTransform x:Name="ViewPortTransform" />
+                </Grid.RenderTransform>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
                 <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
