@@ -29,8 +29,8 @@ Namespace Controls
 
         Dim EQEffect As EqualizerEffectDefinition
 
-        Private Const MinFreq As Integer = 100
-        Private Const MaxFreq As Integer = 12000
+        Public Const MinFreq As Integer = 100
+        Public Const MaxFreq As Integer = 12000
 
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()

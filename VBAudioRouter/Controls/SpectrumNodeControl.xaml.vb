@@ -26,8 +26,8 @@ Namespace Controls
             Dim _source As PlaybackSource = PlaybackSource.CreateFromAudioNode(BaseAudioNode)
             Dim _converter As New SourceConverter()
             _converter.Source = _source.Source
-            _converter.MinFrequency = 110.0F ' Note A2
-            _converter.MaxFrequency = 3520.0F ' Note A7
+            _converter.MinFrequency = EQNodeControl.MinFreq
+            _converter.MaxFrequency = EQNodeControl.MaxFreq
             _converter.FrequencyCount = 12 * 5 * 5 ' 5 octaves, 5 bars per note
             _converter.FrequencyScale = ScaleType.Logarithmic
             _converter.SpectrumRiseTime = TimeSpan.FromMilliseconds(20)
