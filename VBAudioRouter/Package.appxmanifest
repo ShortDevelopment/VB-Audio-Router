@@ -6,6 +6,7 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   IgnorableNamespaces="uap mp uap3 rescap">
 
 	<Identity
@@ -31,6 +32,7 @@
 
 	<Applications>
 		<Application Id="App"
+			desktop4:SupportsMultipleInstances="true"
 		  Executable="$targetnametoken$.exe"
 		  EntryPoint="VBAudioRouter.App">
 			<uap:VisualElements
