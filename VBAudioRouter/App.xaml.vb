@@ -1,4 +1,5 @@
-﻿Imports VBAudioRouter.Utils
+﻿Imports VBAudioRouter.Dialogs
+Imports VBAudioRouter.Utils
 Imports Windows.UI
 Imports Windows.UI.Core.Preview
 
