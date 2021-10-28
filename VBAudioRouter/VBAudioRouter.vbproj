@@ -162,6 +162,9 @@
     <Compile Include="Dialogs\ErrorDialog.xaml.vb">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\OutputDeviceSelectDialog.xaml.vb">
+      <DependentUpon>OutputDeviceSelectDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ElementWrapper.vb" />
     <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
     <Compile Include="Controls\ReverbNodeControl.xaml.vb">
@@ -310,6 +313,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\ErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OutputDeviceSelectDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,6 +2,7 @@
 Imports VBAudioRouter.AudioGraphControl
 Imports VBAudioRouter.Controls
 Imports Windows.ApplicationModel.ExtendedExecution.Foreground
+Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
 Imports Windows.System
 Imports Windows.UI
@@ -10,7 +11,10 @@ Public NotInheritable Class MainPage
     Inherits Page
 
     Private Async Sub MainPage_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        Await InitAudioGraphAsync(CreateGraphSettings())
+        Dim dialog As New Dialogs.OutputDeviceSelectDialog()
+        Await dialog.ShowAsync()
+
+        Await InitAudioGraphAsync(CreateGraphSettings(dialog.SelectedRenderDevice))
         Await EnableBackgroundAudioAsync()
 
         Await DefaultOutputNode.Initialize(CurrentAudioGraph)
@@ -20,14 +24,14 @@ Public NotInheritable Class MainPage
     Public ReadOnly Property CurrentAudioGraph As AudioGraph = Nothing
 
     Private Function CreateGraphSettings() As AudioGraphSettings
+        Return CreateGraphSettings(Nothing)
+    End Function
+    Private Function CreateGraphSettings(renderDevice As DeviceInformation) As AudioGraphSettings
         Dim settings As New AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media)
+
+        If renderDevice IsNot Nothing Then settings.PrimaryRenderDevice = renderDevice
+
         settings.QuantumSizeSelectionMode = QuantumSizeSelectionMode.LowestLatency
-        'settings.EncodingProperties = New AudioEncodingProperties()
-        'settings.EncodingProperties.Subtype = "Float"
-        'settings.EncodingProperties.SampleRate = 48000
-        'settings.EncodingProperties.ChannelCount = 2
-        'settings.EncodingProperties.BitsPerSample = 32
-        'settings.EncodingProperties.Bitrate = 3072000
         Return settings
     End Function
 
