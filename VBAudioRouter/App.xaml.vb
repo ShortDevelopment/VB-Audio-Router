@@ -25,6 +25,14 @@ NotInheritable Class App
         AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
                                                                                           Dim deferral As Deferral = ev.GetDeferral()
                                                                                           Try
+                                                                                              ' Force all legacy dialogs to close
+                                                                                              For Each popup In VisualTreeHelper.GetOpenPopups(Window.Current)
+                                                                                                  Dim legacyDialog As ContentDialog = TryCast(popup?.Child, ContentDialog)
+                                                                                                  If legacyDialog IsNot Nothing Then
+                                                                                                      legacyDialog.Hide()
+                                                                                                  End If
+                                                                                              Next
+                                                                                              ' Show confirmation dialog
                                                                                               Dim dialog As New CloseConfirmDialog()
                                                                                               dialog.RequestedTheme = ElementTheme.Dark
                                                                                               ev.Handled = (Await dialog.ShowAsync()) = ContentDialogResult.Secondary
