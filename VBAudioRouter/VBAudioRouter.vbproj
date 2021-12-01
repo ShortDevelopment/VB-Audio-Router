@@ -198,6 +198,7 @@
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Utils\Extensions.vb" />
     <Compile Include="Utils\SliderTimeSpanValueConverter.vb" />
+    <Compile Include="Utils\Utils.vb" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

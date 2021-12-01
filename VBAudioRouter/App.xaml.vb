@@ -6,7 +6,8 @@ Imports Windows.UI.Core.Preview
 NotInheritable Class App
     Inherits Application
 
-    Protected Overrides Sub OnLaunched(e As Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)
+    Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
+
 #Region "TitleBar"
         Dim titlebar = ApplicationView.GetForCurrentView().TitleBar
         Dim themeColor = ColorTranslator.FromHex("#E87D0D")
@@ -26,20 +27,29 @@ NotInheritable Class App
                                                                                           Dim deferral As Deferral = ev.GetDeferral()
                                                                                           Try
                                                                                               ' Force all legacy dialogs to close
-                                                                                              For Each popup In VisualTreeHelper.GetOpenPopups(Window.Current)
-                                                                                                  Dim legacyDialog As ContentDialog = TryCast(popup?.Child, ContentDialog)
-                                                                                                  If legacyDialog IsNot Nothing Then
-                                                                                                      legacyDialog.Hide()
-                                                                                                  End If
-                                                                                              Next
+                                                                                              Utils.Utils.CloseAllDialogs()
                                                                                               ' Show confirmation dialog
                                                                                               Dim dialog As New CloseConfirmDialog()
-                                                                                              dialog.RequestedTheme = ElementTheme.Dark
                                                                                               ev.Handled = (Await dialog.ShowAsync()) = ContentDialogResult.Secondary
                                                                                           Finally
                                                                                               deferral.Complete()
                                                                                           End Try
                                                                                       End Sub
+#End Region
+
+#Region "Exception handling"
+        AddHandler Me.UnhandledException, Sub(sender As System.Object, ev As Xaml.UnhandledExceptionEventArgs)
+                                              ev.Handled = True
+                                              Call (Async Sub()
+                                                        Try
+                                                            ' Force all legacy dialogs to close
+                                                            Utils.Utils.CloseAllDialogs()
+                                                            ' Show error dialog
+                                                            Dim dialog As New ErrorDialog(ev.Exception)
+                                                            Await dialog.ShowAsync()
+                                                        Catch : End Try
+                                                    End Sub)()
+                                          End Sub
 #End Region
 
 #Region "Launching app"
