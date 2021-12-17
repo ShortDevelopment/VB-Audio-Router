@@ -16,7 +16,11 @@ Public NotInheritable Class GraphViewPage
         Me.NavigationCacheMode = NavigationCacheMode.Required
     End Sub
 
+    Dim isLoaded As Boolean = False
     Private Async Sub MainPage_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        If isLoaded Then Exit Sub
+        isLoaded = True
+
         Dim dialog As New Dialogs.OutputDeviceSelectDialog()
         Await dialog.ShowAsync()
 
