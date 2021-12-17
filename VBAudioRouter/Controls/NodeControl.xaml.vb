@@ -10,10 +10,10 @@ Namespace Controls
     <ContentProperty(Name:="NodeContent")>
     Public Class NodeControl
         Inherits UserControl
-        Implements INotifyPropertyChanged
+        Implements INodeControl, INotifyPropertyChanged
 
         Public Shared Property NodeContentProperty As DependencyProperty = DependencyProperty.Register("NodeContent", GetType(UIElement), GetType(NodeControl), Nothing)
-        Public Property NodeContent As UIElement
+        Public Property NodeContent As UIElement Implements INodeControl.NodeContent
             Get
                 Return GetValue(NodeContentProperty)
             End Get
@@ -24,7 +24,7 @@ Namespace Controls
         End Property
 
         Public Shared Property TitleProperty As DependencyProperty = DependencyProperty.Register("Title", GetType(String), GetType(NodeControl), Nothing)
-        Public Property Title As String
+        Public Property Title As String Implements INodeControl.Title
             Get
                 Return GetValue(TitleProperty)
             End Get
@@ -35,7 +35,7 @@ Namespace Controls
         End Property
 
         Public Shared Property TitleBrushProperty As DependencyProperty = DependencyProperty.Register("TitleBrush", GetType(Brush), GetType(NodeControl), Nothing)
-        Public Property TitleBrush As Brush
+        Public Property TitleBrush As Brush Implements INodeControl.TitleBrush
             Get
                 Return GetValue(TitleBrushProperty)
             End Get
@@ -76,6 +76,16 @@ Namespace Controls
         Private Sub Grid_ManipulationStarted(sender As Object, e As ManipulationStartedRoutedEventArgs)
             Me.BringToFront()
         End Sub
+
+        Public Property NodePosition As Point Implements INodeControl.NodePosition
+            Get
+                Return New Point(positionTransform.TranslateX, positionTransform.TranslateY)
+            End Get
+            Set(value As Point)
+                positionTransform.TranslateX = value.X
+                positionTransform.TranslateY = value.Y
+            End Set
+        End Property
     End Class
 
 End Namespace

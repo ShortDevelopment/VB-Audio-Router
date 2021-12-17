@@ -27,7 +27,6 @@ Namespace Controls
         End Property
 #End Region
 
-
         Dim Graph As AudioGraph
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             Me.Graph = graph

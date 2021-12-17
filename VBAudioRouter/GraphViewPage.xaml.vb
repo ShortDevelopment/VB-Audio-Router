@@ -153,14 +153,23 @@ Public NotInheritable Class GraphViewPage
     End Sub
 #End Region
 
-    Private Async Sub HelpButton_Click(sender As Object, e As RoutedEventArgs)
-        Await Launcher.LaunchUriAsync(New Uri("https://github.com/ShortDevelopment/VB-Audio-Router/wiki"))
-    End Sub
-
     Private Sub Grid_ManipulationDelta(sender As Object, e As ManipulationDeltaRoutedEventArgs)
         Exit Sub
         If e.OriginalSource IsNot ViewPort Then Exit Sub
         ViewPortTransform.TranslateX += e.Delta.Translation.X
         ViewPortTransform.TranslateY += e.Delta.Translation.Y
+    End Sub
+
+    Private Async Sub SaveAppBarButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim picker = New Windows.Storage.Pickers.FileSavePicker()
+        picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary
+        picker.FileTypeChoices.Add("Audio Graph", {".audiograph"})
+
+        Dim file = Await picker.PickSaveFileAsync()
+        If file IsNot Nothing Then
+            Using stream As Stream = Await file.OpenStreamForWriteAsync()
+                Serialization.SerializationHelper.WriteGraphToStream(stream, Me.NodeContainer.Children.Cast(Of INodeControl))
+            End Using
+        End If
     End Sub
 End Class

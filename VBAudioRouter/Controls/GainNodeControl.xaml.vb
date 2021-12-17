@@ -1,12 +1,13 @@
 ﻿
 Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
 Namespace Controls
 
     Public NotInheritable Class GainNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput
+        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
         Public Sub New()
             InitializeComponent()
@@ -30,9 +31,12 @@ Namespace Controls
 
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()
-
-            RadialGauge.Value = BaseAudioNode.OutgoingGain
+            ReloadSettings()
         End Function
+
+        Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
+            RadialGauge.Value = BaseAudioNode.OutgoingGain
+        End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 

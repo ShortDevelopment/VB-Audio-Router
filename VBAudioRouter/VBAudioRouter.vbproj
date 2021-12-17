@@ -156,14 +156,16 @@
     <Compile Include="AudioControlPage.xaml.vb">
       <DependentUpon>AudioControlPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AudioGraphControl\AudioGraphControlType.vb" />
     <Compile Include="AudioGraphControl\ConnectionHelper.vb" />
     <Compile Include="AudioGraphControl\GraphState.vb" />
     <Compile Include="AudioGraphControl\IAudioNodeControl.vb" />
+    <Compile Include="AudioGraphControl\Serialization\IAudioNodeSerializable.vb" />
     <Compile Include="AudioGraphControl\NodeConnection.vb" />
+    <Compile Include="AudioGraphControl\Serialization\SerializationHelper.vb" />
     <Compile Include="Controls\ConnectorControl.xaml.vb">
       <DependentUpon>ConnectorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\INodeControl.vb" />
     <Compile Include="Controls\LimiterNodeControl.xaml.vb">
       <DependentUpon>LimiterNodeControl.xaml</DependentUpon>
     </Compile>

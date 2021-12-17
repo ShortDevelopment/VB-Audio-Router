@@ -1,12 +1,13 @@
 ﻿
 Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
 Namespace Controls
 
     Public NotInheritable Class EchoNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput
+        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
         Public Sub New()
             InitializeComponent()
@@ -36,14 +37,18 @@ Namespace Controls
             EchoEffect = New EchoEffectDefinition(graph)
             BaseAudioNode.EffectDefinitions.Add(EchoEffect)
 
-            DelayTimeRadialGauge.Value = EchoEffect.Delay
-            FeedbackTimeRadialGauge.Value = EchoEffect.Feedback
-
-            DryWetSlider.Value = EchoEffect.WetDryMix * 100
+            ReloadSettings()
 
             ' Important because the value changed event will otherwise override default settings!
             isInitialized = True
         End Function
+
+        Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
+            DelayTimeRadialGauge.Value = EchoEffect.Delay
+            FeedbackTimeRadialGauge.Value = EchoEffect.Feedback
+
+            DryWetSlider.Value = EchoEffect.WetDryMix * 100
+        End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
@@ -55,7 +60,6 @@ Namespace Controls
 
             EchoEffect.WetDryMix = DryWetSlider.Value / 100
         End Sub
-
     End Class
 
 End Namespace

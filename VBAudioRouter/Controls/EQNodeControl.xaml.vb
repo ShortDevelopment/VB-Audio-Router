@@ -1,14 +1,15 @@
 ﻿
 Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports VBAudioRouter.Utils
-Imports Windows.Media.Audio
 Imports VBAudioRouter.Utils.GainControl
+Imports Windows.Media.Audio
 
 Namespace Controls
 
     Public NotInheritable Class EQNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput
+        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
 #Region "Indentity"
         Public Property Canvas As Canvas Implements IAudioNodeControl.Canvas
@@ -38,11 +39,15 @@ Namespace Controls
             BaseAudioNode.EffectDefinitions.Add(EQEffect)
             DirectCast(BaseAudioNode, AudioSubmixNode).EnableEffectsByDefinition(EQEffect)
 
+            ReloadSettings()
+        End Function
+
+        Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
             EQDrag1.SetPosition(New Point(EQEffect.Bands(0).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(0).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag2.SetPosition(New Point(EQEffect.Bands(1).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(1).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag3.SetPosition(New Point(EQEffect.Bands(2).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(2).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
             EQDrag4.SetPosition(New Point(EQEffect.Bands(3).FrequencyCenter.Map(MinFreq, MaxFreq, 0.0, 1.0), EQEffect.Bands(3).Gain.Map(fxeq_min_gain, fxeq_max_gain, 0.0, 1.0)))
-        End Function
+        End Sub
 
         Private Sub EQDrag_ValueChanged(sender As Object, e As Point)
             If EQEffect Is Nothing Then Exit Sub

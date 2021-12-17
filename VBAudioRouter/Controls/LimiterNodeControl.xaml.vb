@@ -1,13 +1,14 @@
 ﻿Option Strict Off
 
 Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
 Namespace Controls
 
     Public NotInheritable Class LimiterNodeControl
         Inherits UserControl
-        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput
+        Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
         Public Sub New()
             InitializeComponent()
@@ -37,12 +38,16 @@ Namespace Controls
             LimiterEffect = New LimiterEffectDefinition(graph)
             BaseAudioNode.EffectDefinitions.Add(LimiterEffect)
 
-            LoudnessRadialGauge.Value = LimiterEffect.Loudness
-            ReleaseRadialGauge.Value = LimiterEffect.Release
+            ReloadSettings()
 
             ' Important because the value changed event will otherwise override default settings!
             isInitialized = True
         End Function
+
+        Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
+            LoudnessRadialGauge.Value = LimiterEffect.Loudness
+            ReleaseRadialGauge.Value = LimiterEffect.Release
+        End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
