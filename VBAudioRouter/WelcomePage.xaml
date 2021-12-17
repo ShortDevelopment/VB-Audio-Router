@@ -12,6 +12,9 @@
     <controls:NavigationView PaneDisplayMode="Top"
                                 SelectionFollowsFocus="Enabled" IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
                                 SelectionChanged="NavigationView_SelectionChanged">
+        <controls:NavigationView.Resources>
+            <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="{StaticResource DarkThemeColor}" />
+        </controls:NavigationView.Resources>
         <controls:NavigationView.MenuItems>
             <controls:NavigationViewItem Content="Home" Tag="Home" IsEnabled="False">
                 <controls:NavigationViewItem.Icon>

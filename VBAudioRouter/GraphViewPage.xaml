@@ -60,11 +60,23 @@
                 </Grid.RenderTransform>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
-                <AppBarButton x:Name="PlayButton" Icon="Play" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed" />
-                <AppBarButton x:Name="StopButton" Icon="Stop" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed" />
+                <AppBarButton x:Name="PlayButton" Foreground="{StaticResource PositiveColor}" LabelPosition="Collapsed">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xe768;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton x:Name="StopButton" Foreground="{StaticResource NegativeColor}" IsEnabled="False" LabelPosition="Collapsed">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xe71a;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
-                <AppBarButton x:Name="HelpButton" Icon="Help" LabelPosition="Collapsed" Click="HelpButton_Click" />
+                <AppBarButton LabelPosition="Collapsed">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xe74e;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
             </StackPanel>
         </Grid>
     </Grid>

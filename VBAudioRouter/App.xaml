@@ -8,19 +8,26 @@
             <controls:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
                     <Color x:Key="DarkThemeColor">#232323</Color>
-                    <Color x:Key="LightThemeColor">#232323</Color>
+                    <Color x:Key="LightThemeColor">#272727</Color>
                     <Color x:Key="MenuBackground">#333333</Color>
                     <Color x:Key="NodeTitleBarColor">#9E343E</Color>
                     <Color x:Key="NodeTitleBarColor2">#8D802F</Color>
                     <Color x:Key="PositiveColor">#89D185</Color>
                     <Color x:Key="NegativeColor">#D97C6A</Color>
+
+                    <!-- Segoe Fluent Icons - Font -->
+                    <FontFamily x:Key="SegoeFluentIcons">/Assets/Fonts/FluentIcons/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
+                    <Style TargetType="FontIcon">
+                        <Setter Property="FontFamily" Value="{StaticResource SegoeFluentIcons}" />
+                    </Style>
+
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{StaticResource DarkThemeColor}" />
+                            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{StaticResource LightThemeColor}" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
-                </ResourceDictionary>                
-            </controls:XamlControlsResources.MergedDictionaries>            
+                </ResourceDictionary>
+            </controls:XamlControlsResources.MergedDictionaries>
         </controls:XamlControlsResources>
     </Application.Resources>
 </Application>

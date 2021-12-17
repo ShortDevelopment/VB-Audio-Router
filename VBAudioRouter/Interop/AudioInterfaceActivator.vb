@@ -1,6 +1,9 @@
 ﻿Imports System.Runtime.InteropServices
 
 Namespace Interop
+    ''' <summary>
+    ''' <see href="https://gist.github.com/wbokkers/74e05ccc1ee2371ec55c4a7daf551a26"/>
+    ''' </summary>
     Public Class AudioInterfaceActivator
         Public Shared Async Function ActivateAudioInterfaceAsync(Of T)(deviceInterfacePath As String) As Task(Of T)
             Dim activationHandler As New ActivateAudioInterfaceCompletionHandler(Of T)()
