@@ -37,7 +37,7 @@ Namespace Utils
         <Extension>
         Public Sub BringToFront(ByRef this As FrameworkElement)
             Try
-                Dim parent As Panel = this.Parent
+                Dim parent As Panel = DirectCast(this.Parent, Panel)
                 Dim currentIndex As Integer = Canvas.GetZIndex(this)
                 Dim zIndex As Integer = 0
                 Dim maxZ As Integer = 0

@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="VBAudioRouter.AudioControlPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VBAudioRouter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    RequestedTheme="Dark">
+
+    <StackPanel Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <AppBarButton Grid.Column="0" VerticalAlignment="Center" Width="40" Margin="0,0,10,0" Icon="Volume" LabelPosition="Collapsed" x:Name="MuteButton" Click="MuteToggleButton_Click" ToolTipService.ToolTip="Mute" />
+            <Slider Grid.Column="1" VerticalAlignment="Center" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="100" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
+        </Grid>
+    </StackPanel>
+</Page>

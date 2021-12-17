@@ -7,7 +7,14 @@ NotInheritable Class App
     Inherits Application
 
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
+        LaunchApp(e)
+    End Sub
 
+    Protected Overrides Sub OnActivated(args As IActivatedEventArgs)
+        LaunchApp(args)
+    End Sub
+
+    Private Sub LaunchApp(args As IActivatedEventArgs)
 #Region "TitleBar"
         Dim titlebar = ApplicationView.GetForCurrentView().TitleBar
         Dim themeColor = ColorTranslator.FromHex("#E87D0D")
@@ -52,27 +59,25 @@ NotInheritable Class App
                                           End Sub
 #End Region
 
-#Region "Launching app"
         Dim rootFrame As Frame = TryCast(Window.Current.Content, Frame)
         If rootFrame Is Nothing Then
             rootFrame = New Frame()
 
             AddHandler rootFrame.NavigationFailed, AddressOf OnNavigationFailed
 
-            If e.PreviousExecutionState = ApplicationExecutionState.Terminated Then
+            If args.PreviousExecutionState = ApplicationExecutionState.Terminated Then
                 ' TODO: Zustand von zuvor angehaltener Anwendung laden
             End If
             Window.Current.Content = rootFrame
         End If
 
-        If e.PrelaunchActivated = False Then
-            If rootFrame.Content Is Nothing Then
-                rootFrame.Navigate(GetType(MainPage), e.Arguments)
-            End If
-
-            Window.Current.Activate()
+        'If args.PrelaunchActivated = False Then
+        If rootFrame.Content Is Nothing Then
+            rootFrame.Navigate(GetType(WelcomePage))
         End If
-#End Region
+
+        Window.Current.Activate()
+        'End If
     End Sub
 
     Private Sub OnNavigationFailed(sender As Object, e As NavigationFailedEventArgs)

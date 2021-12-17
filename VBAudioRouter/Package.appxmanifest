@@ -50,6 +50,22 @@
 				</uap:DefaultTile >
 				<uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#E87D0D"/>
 			</uap:VisualElements>
+			<Extensions>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="audiograph">
+						<uap:Logo>Assets\StoreLogo.png</uap:Logo>
+						<uap:SupportedFileTypes>
+							<uap:FileType>.audiograph</uap:FileType>
+						</uap:SupportedFileTypes>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<uap:Extension Category="windows.protocol">
+					<uap:Protocol Name="vb-audio-router">
+						<uap:Logo>Assets\StoreLogo.png</uap:Logo>
+						<uap:DisplayName>VB Audio Router</uap:DisplayName>
+					</uap:Protocol>
+				</uap:Extension>
+			</Extensions>
 		</Application>
 	</Applications>
 

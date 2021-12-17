@@ -1,0 +1,57 @@
+﻿<Page
+    x:Class="VBAudioRouter.WelcomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VBAudioRouter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    RequestedTheme="Dark">
+
+    <controls:NavigationView PaneDisplayMode="Top"
+                                SelectionFollowsFocus="Enabled" IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
+                                SelectionChanged="NavigationView_SelectionChanged">
+        <controls:NavigationView.MenuItems>
+            <controls:NavigationViewItem Content="Home" Tag="Home" IsEnabled="False">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xe80f;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+            <controls:NavigationViewItemSeparator />
+            <controls:NavigationViewItem Content="Edit" Tag="Edit"
+                                         IsEnabled="true">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xe70f;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+            <controls:NavigationViewItemSeparator />
+            <controls:NavigationViewItem Content="Audio" Tag="AudioControl">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xe995;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+            <controls:NavigationViewItem Content="Virtual Devices" Tag="VirtualDevices"
+                                         IsEnabled="False">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xebde;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+            <controls:NavigationViewItemSeparator />
+            <controls:NavigationViewItem Content="How To" Tag="Help">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xe897;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+        </controls:NavigationView.MenuItems>
+        <controls:NavigationView.FooterMenuItems>
+            <controls:NavigationViewItem Content="New Instance" Tag="NewInstance"
+                                         SelectsOnInvoked="False" Tapped="NewInstance_Tapped">
+                <controls:NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xe78b;" />
+                </controls:NavigationViewItem.Icon>
+            </controls:NavigationViewItem>
+        </controls:NavigationView.FooterMenuItems>
+        <Frame x:Name="ContentFrame"/>
+    </controls:NavigationView>
+</Page>

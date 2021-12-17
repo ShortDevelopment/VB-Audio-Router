@@ -7,8 +7,14 @@ Imports Windows.Media.Audio
 Imports Windows.System
 Imports Windows.UI
 
-Public NotInheritable Class MainPage
+Public NotInheritable Class GraphViewPage
     Inherits Page
+
+    Public Sub New()
+        InitializeComponent()
+
+        Me.NavigationCacheMode = NavigationCacheMode.Required
+    End Sub
 
     Private Async Sub MainPage_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Dim dialog As New Dialogs.OutputDeviceSelectDialog()
@@ -124,7 +130,7 @@ Public NotInheritable Class MainPage
                 contentEle.Canvas = ConnectionCanvas
 
                 ' Assign content to container ("window")
-                nodeContainer.NodeContent = contentEle
+                nodeContainer.NodeContent = DirectCast(contentEle, UIElement)
                 Me.NodeContainer.Children.Add(nodeContainer)
 
                 ' Wait for node to be initialized by uwp

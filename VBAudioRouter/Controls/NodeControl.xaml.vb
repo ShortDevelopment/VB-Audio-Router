@@ -1,4 +1,6 @@
-﻿Imports VBAudioRouter.Utils
+﻿Option Strict Off
+
+Imports VBAudioRouter.Utils
 Imports Windows.UI.Xaml.Markup
 Imports VBAudioRouter.AudioGraphControl
 Imports Windows.UI.Core

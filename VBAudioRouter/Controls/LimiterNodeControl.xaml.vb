@@ -1,4 +1,5 @@
-﻿
+﻿Option Strict Off
+
 Imports VBAudioRouter.AudioGraphControl
 Imports Windows.Media.Audio
 
