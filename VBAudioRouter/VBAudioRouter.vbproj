@@ -196,6 +196,8 @@
     <Compile Include="HelpPage.xaml.vb">
       <DependentUpon>HelpPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interop\IAudioEndpointVolumeCallback.vb" />
+    <Compile Include="Interop\IAudioMeterInformation.vb" />
     <Compile Include="Utils\ElementWrapper.vb" />
     <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
     <Compile Include="Controls\ReverbNodeControl.xaml.vb">
