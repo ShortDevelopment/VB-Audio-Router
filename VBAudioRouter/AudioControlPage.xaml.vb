@@ -1,5 +1,6 @@
 ﻿Imports VBAudioRouter.Interop
 Imports Windows.Media.Devices
+Imports WinUI.Interop.AppContainer
 
 Public NotInheritable Class AudioControlPage
     Inherits Page

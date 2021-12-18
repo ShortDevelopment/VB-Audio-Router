@@ -196,7 +196,6 @@
     <Compile Include="HelpPage.xaml.vb">
       <DependentUpon>HelpPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Interop\AudioInterfaceActivator.vb" />
     <Compile Include="Utils\ElementWrapper.vb" />
     <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
     <Compile Include="Controls\ReverbNodeControl.xaml.vb">
@@ -428,6 +427,9 @@
     </PackageReference>
     <PackageReference Include="UWPAudioVisualizer">
       <Version>1.0.38</Version>
+    </PackageReference>
+    <PackageReference Include="WinUI.Interop">
+      <Version>0.1.0</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
