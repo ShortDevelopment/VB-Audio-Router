@@ -71,13 +71,13 @@
                     </AppBarButton.Icon>
                 </AppBarButton>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
+            <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" CornerRadius="5" Background="{StaticResource MenuBackground}">
                 <AppBarButton LabelPosition="Collapsed" Click="SaveAppBarButton_Click">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe74e;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
     </Grid>
 </Page>

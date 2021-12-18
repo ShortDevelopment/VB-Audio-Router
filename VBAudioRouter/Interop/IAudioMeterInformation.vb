@@ -7,8 +7,8 @@ Namespace Interop
     ''' </summary>
     <Guid("C02216F6-8C67-4B5B-9D00-D008E73E0064"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
     Public Interface IAudioMeterInformation
-        Function GetPeakValue(<Out> ByRef pfPeak As Single) As Integer
-        Function GetMeteringChannelCount(<Out> ByRef pnChannelCount As Integer) As Integer
+        Function GetPeakValue() As Single
+        Function GetMeteringChannelCount() As Integer
         Function GetChannelsPeakValues(ByVal u32ChannelCount As Integer, <[In]> ByVal afPeakValues As IntPtr) As Integer
         Function QueryHardwareSupport(<Out> ByRef pdwHardwareSupportMask As Integer) As Integer
     End Interface

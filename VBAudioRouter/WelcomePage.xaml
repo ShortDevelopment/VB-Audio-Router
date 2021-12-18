@@ -16,22 +16,22 @@
             <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="{StaticResource DarkThemeColor}" />
         </controls:NavigationView.Resources>
         <controls:NavigationView.MenuItems>
-            <controls:NavigationViewItem Content="Home" Tag="Home" IsEnabled="False">
+            <!--<controls:NavigationViewItem Content="Home" Tag="Home" IsEnabled="False">
                 <controls:NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xe80f;" />
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
-            <controls:NavigationViewItemSeparator />
-            <controls:NavigationViewItem Content="Edit" Tag="Edit"
+            <controls:NavigationViewItemSeparator />-->
+            <controls:NavigationViewItem Content="Audio Graph" Tag="Edit"
                                          IsEnabled="true">
                 <controls:NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xe70f;" />
+                    <FontIcon Glyph="&#xe8d6;" />
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
             <controls:NavigationViewItemSeparator />
-            <controls:NavigationViewItem Content="Audio" Tag="AudioControl">
+            <controls:NavigationViewItem Content="Speakers" Tag="AudioControl">
                 <controls:NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xe995;" />
+                    <FontIcon Glyph="&#xe7f5;" />
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
             <controls:NavigationViewItem Content="Virtual Devices" Tag="VirtualDevices"

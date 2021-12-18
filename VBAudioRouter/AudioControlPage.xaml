@@ -4,19 +4,38 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:VBAudioRouter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:audiovisualizer="using:AudioVisualizer"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">
 
-    <StackPanel Padding="10">
+    <StackPanel Padding="10" Orientation="Horizontal">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <AppBarButton Grid.Column="0" VerticalAlignment="Center" Width="40" Margin="0,0,10,0" Icon="Volume" LabelPosition="Collapsed" x:Name="MuteButton" Click="MuteToggleButton_Click" ToolTipService.ToolTip="Mute" />
-            <Slider Grid.Column="1" VerticalAlignment="Center" TickFrequency="10" TickPlacement="Outside" Minimum="0" Value="100" Maximum="100" x:Name="GainSlider" ValueChanged="Slider_ValueChanged" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <FontIcon Glyph="&#xe7f5;" Margin="10,10,10,20" />
+            <Slider x:Name="GainSlider" 
+                    Grid.Row="1" HorizontalAlignment="Center" Orientation="Vertical"
+                    TickFrequency="10" TickPlacement="Outside" 
+                    Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" />
+            <AppBarButton x:Name="MuteButton" Click="MuteToggleButton_Click" 
+                          Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Margin="0,10,0,0" 
+                          LabelPosition="Collapsed" ToolTipService.ToolTip="Mute" Icon="Volume" />
         </Grid>
+        <StackPanel Orientation="Horizontal">
+            <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="LeftMeter" ScaleY="0.5" />
+                </Grid.RenderTransform>
+            </Grid>
+            <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="RightMeter" ScaleY="0.3" />
+                </Grid.RenderTransform>
+            </Grid>
+        </StackPanel>
     </StackPanel>
 </Page>

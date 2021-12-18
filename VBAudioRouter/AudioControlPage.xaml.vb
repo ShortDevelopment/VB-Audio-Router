@@ -1,4 +1,6 @@
-﻿Imports VBAudioRouter.Interop
+﻿Imports System.Runtime.InteropServices
+Imports AudioVisualizer
+Imports VBAudioRouter.Interop
 Imports Windows.Media.Devices
 Imports WinUI.Interop.AppContainer
 
@@ -6,12 +8,29 @@ Public NotInheritable Class AudioControlPage
     Inherits Page
     Implements IAudioEndpointVolumeCallback
 
+    Property Source As SourceConverter
+
     Private Property VolumeManager As IAudioEndpointVolume
     Private Async Sub AudioControlPage_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Dim deviceId As String = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default)
         VolumeManager = Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioEndpointVolume)(deviceId)
         VolumeManager.RegisterControlChangeNotify(Me)
         OnNotify(IntPtr.Zero)
+
+        Dim meterInformation As IAudioMeterInformation = DirectCast(VolumeManager, IAudioMeterInformation)
+        Dim timer As New Timers.Timer()
+        timer.Interval = 30
+        AddHandler timer.Elapsed, Sub()
+                                      Dim unused = Dispatcher.RunIdleAsync(Sub()
+                                                                               Dim meters As Single() = New Single(meterInformation.GetMeteringChannelCount() - 1) {}
+                                                                               Dim metersRef = GCHandle.Alloc(meters, GCHandleType.Pinned)
+                                                                               meterInformation.GetChannelsPeakValues(meters.Length, metersRef.AddrOfPinnedObject)
+                                                                               metersRef.Free()
+                                                                               LeftMeter.ScaleY = meters(0)
+                                                                               RightMeter.ScaleY = meters(1)
+                                                                           End Sub)
+                                  End Sub
+        timer.Enabled = True
     End Sub
 
     Private Sub AudioControlPage_Unloaded(sender As Object, e As RoutedEventArgs) Handles Me.Unloaded
