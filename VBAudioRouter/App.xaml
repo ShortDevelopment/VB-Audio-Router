@@ -14,6 +14,7 @@
                     <Color x:Key="NodeTitleBarColor2">#8D802F</Color>
                     <Color x:Key="PositiveColor">#89D185</Color>
                     <Color x:Key="NegativeColor">#D97C6A</Color>
+                    <Color x:Key="NodeBackgroundColor">#3F3F3F</Color>
 
                     <!-- Segoe Fluent Icons - Font -->
                     <FontFamily x:Key="SegoeFluentIcons">/Assets/Fonts/FluentIcons/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>

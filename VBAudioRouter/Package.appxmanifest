@@ -7,7 +7,8 @@
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
-  IgnorableNamespaces="uap mp uap3 rescap">
+  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+  IgnorableNamespaces="uap mp uap3 rescap iot">
 
 	<Identity
 	  Name="33942ShortDevelopment.VBAudioRouter"
@@ -74,6 +75,7 @@
 		<rescap:Capability Name="confirmAppClose"/>
 		<uap3:Capability Name="backgroundMediaPlayback"/>
 		<Capability Name="internetClient" />
+		<iot:Capability Name="systemManagement"/>
 		<DeviceCapability Name="microphone"/>
 	</Capabilities>
 </Package>

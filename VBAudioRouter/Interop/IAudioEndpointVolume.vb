@@ -3,7 +3,8 @@
 Namespace Interop
 
     ''' <summary>
-    ''' <see href="https://github.com/naudio/NAudio/blob/master/NAudio.Wasapi/CoreAudioApi/Interfaces/IAudioEndpointVolume.cs"/>
+    ''' <see href="https://docs.microsoft.com/en-us/windows/win32/api/endpointvolume/nn-endpointvolume-iaudioendpointvolume">Documentation</see> <br/>
+    ''' <see href="https://github.com/naudio/NAudio/blob/master/NAudio.Wasapi/CoreAudioApi/Interfaces/IAudioEndpointVolume.cs">Implementation</see>
     ''' </summary>
     <Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
     Public Interface IAudioEndpointVolume
@@ -26,4 +27,5 @@ Namespace Interop
         Function QueryHardwareSupport(<Out> ByRef pdwHardwareSupportMask As UInteger) As Integer
         Function GetVolumeRange(<Out> ByRef pflVolumeMindB As Single, <Out> ByRef pflVolumeMaxdB As Single, <Out> ByRef pflVolumeIncrementdB As Single) As Integer
     End Interface
+
 End Namespace

@@ -3,7 +3,8 @@
 Namespace Interop
 
     ''' <summary>
-    ''' <see href="https://github.com/naudio/NAudio/blob/master/NAudio.Wasapi/CoreAudioApi/Interfaces/IAudioMeterInformation.cs"/>
+    ''' <see href="https://docs.microsoft.com/en-us/windows/win32/api/endpointvolume/nn-endpointvolume-iaudiometerinformation">Documentation</see> <br/>
+    ''' <see href="https://github.com/naudio/NAudio/blob/master/NAudio.Wasapi/CoreAudioApi/Interfaces/IAudioMeterInformation.cs">Implementation</see>
     ''' </summary>
     <Guid("C02216F6-8C67-4B5B-9D00-D008E73E0064"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
     Public Interface IAudioMeterInformation

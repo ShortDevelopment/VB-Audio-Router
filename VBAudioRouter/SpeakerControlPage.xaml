@@ -9,33 +9,36 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     RequestedTheme="Dark">
 
-    <StackPanel Padding="10" Orientation="Horizontal">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-            <FontIcon Glyph="&#xe7f5;" Margin="10,10,10,20" />
-            <Slider x:Name="GainSlider" 
+    <Grid>
+        <StackPanel Padding="10" Orientation="Horizontal">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <FontIcon Glyph="&#xe7f5;" Margin="10,10,10,20" />
+                <Slider x:Name="GainSlider" 
                     Grid.Row="1" HorizontalAlignment="Center" Orientation="Vertical"
                     TickFrequency="10" TickPlacement="Outside" 
                     Minimum="0" Maximum="100" ValueChanged="Slider_ValueChanged" />
-            <AppBarButton x:Name="MuteButton" Click="MuteToggleButton_Click" 
+                <AppBarButton x:Name="MuteButton" Click="MuteToggleButton_Click" 
                           Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Margin="0,10,0,0" 
                           LabelPosition="Collapsed" ToolTipService.ToolTip="Mute" Icon="Volume" />
-        </Grid>
-        <StackPanel Orientation="Horizontal">
-            <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
-                <Grid.RenderTransform>
-                    <ScaleTransform x:Name="LeftMeter" ScaleY="0.5" />
-                </Grid.RenderTransform>
             </Grid>
-            <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
-                <Grid.RenderTransform>
-                    <ScaleTransform x:Name="RightMeter" ScaleY="0.3" />
-                </Grid.RenderTransform>
-            </Grid>
+            <StackPanel Orientation="Horizontal">
+                <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="LeftMeter" ScaleY="0.5" />
+                    </Grid.RenderTransform>
+                </Grid>
+                <Grid Background="CornflowerBlue" Width="3" RenderTransformOrigin="1,1" Margin="1">
+                    <Grid.RenderTransform>
+                        <ScaleTransform x:Name="RightMeter" ScaleY="0.3" />
+                    </Grid.RenderTransform>
+                </Grid>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+        <ListView ItemsSource="{x:Bind AudioSessions}" />
+    </Grid>
 </Page>

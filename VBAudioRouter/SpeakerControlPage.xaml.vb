@@ -1,23 +1,24 @@
 ﻿Imports System.Runtime.InteropServices
-Imports AudioVisualizer
+Imports NAudio.CoreAudioApi.Interfaces
 Imports VBAudioRouter.Interop
-Imports Windows.Media.Devices
 Imports WinUI.Interop.AppContainer
 
 Public NotInheritable Class SpeakerControlPage
     Inherits Page
-    Implements IAudioEndpointVolumeCallback
+    Implements IAudioEndpointVolumeCallback, IAudioSessionNotification
 
-    Public Property VolumeManager As IAudioEndpointVolume
-    Public Property MeterInformation As IAudioMeterInformation
+    Public ReadOnly Property VolumeManager As IAudioEndpointVolume
+    Public ReadOnly Property MeterInformation As IAudioMeterInformation
+    Public ReadOnly Property AudioSessionManager As IAudioSessionManager2
 
     Protected Overrides Async Sub OnNavigatedTo(e As NavigationEventArgs)
         Dim deviceId As String = DirectCast(e.Parameter, String)
-        VolumeManager = Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioEndpointVolume)(deviceId)
+        _VolumeManager = Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioEndpointVolume)(deviceId)
+        _MeterInformation = DirectCast(VolumeManager, IAudioMeterInformation)
+
         VolumeManager.RegisterControlChangeNotify(Me)
         OnNotify(IntPtr.Zero)
 
-        MeterInformation = DirectCast(VolumeManager, IAudioMeterInformation)
         Dim timer As New Timers.Timer()
         timer.Interval = 30
         AddHandler timer.Elapsed, Sub()
@@ -31,10 +32,24 @@ Public NotInheritable Class SpeakerControlPage
                                                                            End Sub)
                                   End Sub
         timer.Enabled = True
+
+        Exit Sub
+        _AudioSessionManager = DirectCast(Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioSessionManager)(deviceId), IAudioSessionManager2)
+        AudioSessionManager.RegisterSessionNotification(Me)
+        Dim sessionEnumerator = AudioSessionManager.GetSessionEnumerator()
+        For sessionIndex = 0 To sessionEnumerator.GetCount() - 1
+            AddAudioSession(sessionEnumerator.GetSession(sessionIndex))
+        Next
     End Sub
 
     Private Sub AudioControlPage_Unloaded(sender As Object, e As RoutedEventArgs) Handles Me.Unloaded
         VolumeManager?.UnregisterControlChangeNotify(Me)
+        AudioSessionManager?.UnregisterSessionNotification(Me)
+    End Sub
+
+    Public ReadOnly AudioSessions As New ObservableCollection(Of Controls.AudioSessionControl)
+    Private Sub AddAudioSession(session As IAudioSessionControl)
+        AudioSessions.Add(New Controls.AudioSessionControl(Me, session))
     End Sub
 
     Dim oldValue As Double = -1
@@ -67,4 +82,8 @@ Public NotInheritable Class SpeakerControlPage
                                                  MuteToggleButton_Click(Nothing, Nothing)
                                              End Sub)
     End Sub
+
+    Public Function OnSessionCreated(newSession As IAudioSessionControl) As Integer Implements IAudioSessionNotification.OnSessionCreated
+        AddAudioSession(newSession)
+    End Function
 End Class
