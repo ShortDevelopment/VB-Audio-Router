@@ -12,6 +12,7 @@
     Background="{ThemeResource NodeBackgroundColor}">
 
     <StackPanel Orientation="Vertical">
+        <TextBlock x:Name="DisplayNameTextBlock" Margin="5,15,10,0" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />

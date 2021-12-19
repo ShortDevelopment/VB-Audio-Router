@@ -10,7 +10,11 @@
     RequestedTheme="Dark">
 
     <Grid>
-        <StackPanel Padding="10" Orientation="Horizontal">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Padding="10" Orientation="Horizontal">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -39,6 +43,12 @@
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind AudioSessions}" />
+        <ListView Grid.Column="1" ItemsSource="{x:Bind AudioSessions}" SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </Grid>
 </Page>

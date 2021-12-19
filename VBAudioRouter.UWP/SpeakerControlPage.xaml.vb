@@ -1,6 +1,7 @@
 ﻿Imports System.Runtime.InteropServices
 Imports NAudio.CoreAudioApi.Interfaces
 Imports VBAudioRouter.Interop
+Imports WinUI.Interop
 Imports WinUI.Interop.AppContainer
 
 Public NotInheritable Class SpeakerControlPage
@@ -32,6 +33,9 @@ Public NotInheritable Class SpeakerControlPage
                                                                             End Sub)
                                   End Sub
         timer.Enabled = True
+
+        ' UWP apps don't have permission to do the following stuff 😥
+        If InteropHelper.IsUWP() Then Exit Sub
 
         _AudioSessionManager = DirectCast(Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioSessionManager)(deviceId), IAudioSessionManager2)
         AudioSessionManager.RegisterSessionNotification(Me)
