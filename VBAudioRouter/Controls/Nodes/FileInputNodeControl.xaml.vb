@@ -5,7 +5,7 @@ Imports Windows.Media.Audio
 Imports Windows.Media.Core
 Imports Windows.Storage.Pickers
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class FileInputNodeControl
         Inherits UserControl

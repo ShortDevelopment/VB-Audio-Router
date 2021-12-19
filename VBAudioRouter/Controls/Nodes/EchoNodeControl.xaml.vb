@@ -3,7 +3,7 @@ Imports VBAudioRouter.AudioGraphControl
 Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class EchoNodeControl
         Inherits UserControl

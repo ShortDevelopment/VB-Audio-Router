@@ -2,7 +2,7 @@
 Imports VBAudioRouter.AudioGraphControl
 Imports Windows.Media.Audio
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class SpectrumNodeControl
         Inherits UserControl

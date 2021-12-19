@@ -4,7 +4,7 @@ Namespace AudioGraphControl.Serialization
 
     Public Class SerializationHelper
 
-        Public Shared Sub WriteGraphToStream(stream As Stream, nodes As IEnumerable(Of Controls.INodeControl))
+        Public Shared Sub WriteGraphToStream(stream As Stream, nodes As IEnumerable(Of Controls.Nodes.INodeControl))
             Dim data As IEnumerable(Of NodeInfo) = nodes.Select(Function(x) New NodeInfo(x))
             Using writer As New StreamWriter(stream)
                 writer.Write(JsonConvert.SerializeObject(data))
@@ -13,7 +13,7 @@ Namespace AudioGraphControl.Serialization
 
         Private Class NodeInfo
             Public Sub New() : End Sub
-            Public Sub New(node As Controls.INodeControl)
+            Public Sub New(node As Controls.Nodes.INodeControl)
                 Dim nodeContent As IAudioNodeControl = DirectCast(node.NodeContent, IAudioNodeControl)
                 Me.Type = nodeContent.GetType()
                 Me.Position = node.NodePosition
@@ -26,7 +26,7 @@ Namespace AudioGraphControl.Serialization
             Public Property Position As Point
             Public Property Payload As String
 
-            Public Sub PopulateNodeControl(node As Controls.INodeControl)
+            Public Sub PopulateNodeControl(node As Controls.Nodes.INodeControl)
                 If Not node.GetType().FullName = Me.Type.FullName Then Throw New ArgumentException("Wrong node type")
                 node.NodePosition = Me.Position
                 If GetType(IAudioNodeSerializable).IsAssignableFrom(Me.Type) Then

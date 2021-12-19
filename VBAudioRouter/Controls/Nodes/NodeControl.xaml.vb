@@ -5,7 +5,7 @@ Imports Windows.UI.Xaml.Markup
 Imports VBAudioRouter.AudioGraphControl
 Imports Windows.UI.Core
 
-Namespace Controls
+Namespace Controls.Nodes
 
     <ContentProperty(Name:="NodeContent")>
     Public Class NodeControl

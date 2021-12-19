@@ -1,4 +1,4 @@
-﻿Namespace Controls
+﻿Namespace Controls.Nodes
 
     Public Interface INodeControl
         Property TitleBrush As Brush

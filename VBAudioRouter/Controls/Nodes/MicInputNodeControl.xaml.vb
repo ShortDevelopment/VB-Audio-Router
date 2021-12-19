@@ -5,7 +5,7 @@ Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
 Imports Windows.Media.Devices
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class MicInputNodeControl
         Inherits UserControl

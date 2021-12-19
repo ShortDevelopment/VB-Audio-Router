@@ -1,6 +1,6 @@
 ﻿
 Imports VBAudioRouter.AudioGraphControl
-Imports VBAudioRouter.Controls
+Imports VBAudioRouter.Controls.Nodes
 Imports Windows.ApplicationModel.ExtendedExecution.Foreground
 Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
@@ -119,7 +119,7 @@ Public NotInheritable Class GraphViewPage
         Try
             Dim tag As String = DirectCast(DirectCast(sender, MenuFlyoutItem).Tag, String)
             If Not String.IsNullOrEmpty(tag) Then
-                Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRouter.Controls.{tag}")), IAudioNodeControl)
+                Dim contentEle = DirectCast(Activator.CreateInstance(Me.GetType().Assembly.GetType($"VBAudioRouter.Controls.Nodes.{tag}")), IAudioNodeControl)
 
 #Region "UI"
                 Dim nodeContainer As New NodeControl()

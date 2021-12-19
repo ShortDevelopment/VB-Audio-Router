@@ -4,7 +4,7 @@ Imports Windows.Media.Audio
 Imports Windows.Media.Core
 Imports Windows.Media.SpeechSynthesis
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class TextToSpeechInputNodeControl
         Inherits UserControl

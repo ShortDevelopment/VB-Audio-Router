@@ -1,6 +1,6 @@
 ﻿<UserControl
     xmlns:controls="using:VBAudioRouter.Controls"
-    x:Class="VBAudioRouter.Controls.TextToSpeechInputNodeControl"
+    x:Class="VBAudioRouter.Controls.Nodes.TextToSpeechInputNodeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:VBAudioRouter"

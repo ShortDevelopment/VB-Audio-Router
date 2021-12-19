@@ -4,9 +4,9 @@ Imports VBAudioRouter.AudioGraphControl
 Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
-Namespace Controls
+Namespace Controls.Nodes
 
-    Public NotInheritable Class ReverbNodeControl
+    Public NotInheritable Class LimiterNodeControl
         Inherits UserControl
         Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
@@ -30,13 +30,13 @@ Namespace Controls
         End Property
 #End Region
 
-        Public Property ReverbEffect As ReverbEffectDefinition
+        Public Property LimiterEffect As LimiterEffectDefinition
 
         Dim isInitialized As Boolean = False
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()
-            ReverbEffect = New ReverbEffectDefinition(graph)
-            BaseAudioNode.EffectDefinitions.Add(ReverbEffect)
+            LimiterEffect = New LimiterEffectDefinition(graph)
+            BaseAudioNode.EffectDefinitions.Add(LimiterEffect)
 
             ReloadSettings()
 
@@ -45,39 +45,17 @@ Namespace Controls
         End Function
 
         Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
-            HighCutRadialGauge.Value = ReverbEffect.HighEQCutoff
-            LowCutRadialGauge.Value = ReverbEffect.LowEQCutoff
-            EarlyDiffusionRadialGauge.Value = ReverbEffect.EarlyDiffusion
-            LateDiffusionRadialGauge.Value = ReverbEffect.LateDiffusion
-            DecayTimeRadialGauge.Value = ReverbEffect.DecayTime
-            DensityRadialGauge.Value = ReverbEffect.Density
-
-            RearDelayRadialGauge.Value = ReverbEffect.RearDelay
-            ReflectionsDelayRadialGauge.Value = ReverbEffect.ReflectionsDelay
-            ReverbDelayRadialGauge.Value = ReverbEffect.ReverbDelay
-
-            DryWetSlider.Value = ReverbEffect.WetDryMix
-            RoomSizeSlider.Value = ReverbEffect.RoomSize
+            LoudnessRadialGauge.Value = LimiterEffect.Loudness
+            ReleaseRadialGauge.Value = LimiterEffect.Release
         End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
         Private Sub RadialGauge_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
-            If ReverbEffect Is Nothing Or Not isInitialized Then Exit Sub
+            If LimiterEffect Is Nothing Or Not isInitialized Then Exit Sub
 
-            ReverbEffect.HighEQCutoff = HighCutRadialGauge.Value
-            ReverbEffect.LowEQCutoff = LowCutRadialGauge.Value
-            ReverbEffect.EarlyDiffusion = EarlyDiffusionRadialGauge.Value
-            ReverbEffect.LateDiffusion = LateDiffusionRadialGauge.Value
-            ReverbEffect.DecayTime = DecayTimeRadialGauge.Value
-            ReverbEffect.Density = DensityRadialGauge.Value
-
-            ReverbEffect.RearDelay = RearDelayRadialGauge.Value
-            ReverbEffect.ReflectionsDelay = ReflectionsDelayRadialGauge.Value
-            ReverbEffect.ReverbDelay = ReverbDelayRadialGauge.Value
-
-            ReverbEffect.WetDryMix = DryWetSlider.Value
-            ReverbEffect.RoomSize = RoomSizeSlider.Value
+            LimiterEffect.Loudness = LoudnessRadialGauge.Value
+            LimiterEffect.Release = ReleaseRadialGauge.Value
         End Sub
 
     End Class

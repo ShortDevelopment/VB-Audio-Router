@@ -156,6 +156,9 @@
     <Compile Include="AudioControlPage.xaml.vb">
       <DependentUpon>AudioControlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SpeakerControlPage.xaml.vb">
+      <DependentUpon>SpeakerControlPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AudioGraphControl\ConnectionHelper.vb" />
     <Compile Include="AudioGraphControl\GraphState.vb" />
     <Compile Include="AudioGraphControl\IAudioNodeControl.vb" />
@@ -165,23 +168,23 @@
     <Compile Include="Controls\ConnectorControl.xaml.vb">
       <DependentUpon>ConnectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\INodeControl.vb" />
-    <Compile Include="Controls\LimiterNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\INodeControl.vb" />
+    <Compile Include="Controls\Nodes\LimiterNodeControl.xaml.vb">
       <DependentUpon>LimiterNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EQDragControl.xaml.vb">
       <DependentUpon>EQDragControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GainNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\GainNodeControl.xaml.vb">
       <DependentUpon>GainNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EchoNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\EchoNodeControl.xaml.vb">
       <DependentUpon>EchoNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SpectrumNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\SpectrumNodeControl.xaml.vb">
       <DependentUpon>SpectrumNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TextToSpeechInputNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\TextToSpeechInputNodeControl.xaml.vb">
       <DependentUpon>TextToSpeechInputNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\CloseConfirmDialog.xaml.vb">
@@ -200,22 +203,22 @@
     <Compile Include="Interop\IAudioMeterInformation.vb" />
     <Compile Include="Utils\ElementWrapper.vb" />
     <Compile Include="Utils\MediaTransportControlsWrapper.vb" />
-    <Compile Include="Controls\ReverbNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\ReverbNodeControl.xaml.vb">
       <DependentUpon>ReverbNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileInputNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\FileInputNodeControl.xaml.vb">
       <DependentUpon>FileInputNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EQNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\EQNodeControl.xaml.vb">
       <DependentUpon>EQNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MicInputNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\MicInputNodeControl.xaml.vb">
       <DependentUpon>MicInputNodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\NodeControl.xaml.vb">
       <DependentUpon>NodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\OutputNodeControl.xaml.vb">
+    <Compile Include="Controls\Nodes\OutputNodeControl.xaml.vb">
       <DependentUpon>OutputNodeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="GraphViewPage.xaml.vb">
@@ -301,11 +304,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SpeakerControlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ConnectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\LimiterNodeControl.xaml">
+    <Page Include="Controls\Nodes\LimiterNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -313,43 +320,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\GainNodeControl.xaml">
+    <Page Include="Controls\Nodes\GainNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\EchoNodeControl.xaml">
+    <Page Include="Controls\Nodes\EchoNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\SpectrumNodeControl.xaml">
+    <Page Include="Controls\Nodes\SpectrumNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TextToSpeechInputNodeControl.xaml">
+    <Page Include="Controls\Nodes\TextToSpeechInputNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ReverbNodeControl.xaml">
+    <Page Include="Controls\Nodes\ReverbNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\FileInputNodeControl.xaml">
+    <Page Include="Controls\Nodes\FileInputNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\EQNodeControl.xaml">
+    <Page Include="Controls\Nodes\EQNodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\MicInputNodeControl.xaml">
+    <Page Include="Controls\Nodes\MicInputNodeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\NodeControl.xaml">
+    <Page Include="Controls\Nodes\NodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\OutputNodeControl.xaml">
+    <Page Include="Controls\Nodes\OutputNodeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -29,7 +29,7 @@
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
             <controls:NavigationViewItemSeparator />
-            <controls:NavigationViewItem Content="Speakers" Tag="AudioControl">
+            <controls:NavigationViewItem Content="Devices" Tag="AudioControl">
                 <controls:NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xe7f5;" />
                 </controls:NavigationViewItem.Icon>

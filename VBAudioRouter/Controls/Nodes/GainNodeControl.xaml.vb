@@ -1,12 +1,11 @@
-﻿Option Strict Off
-
+﻿
 Imports VBAudioRouter.AudioGraphControl
 Imports VBAudioRouter.AudioGraphControl.Serialization
 Imports Windows.Media.Audio
 
-Namespace Controls
+Namespace Controls.Nodes
 
-    Public NotInheritable Class LimiterNodeControl
+    Public NotInheritable Class GainNodeControl
         Inherits UserControl
         Implements IAudioNodeControl, IAudioNodeControlInput, IAudioNodeControlEffect, IAudioNodeControlOutput, IAudioNodeSerializable
 
@@ -30,32 +29,19 @@ Namespace Controls
         End Property
 #End Region
 
-        Public Property LimiterEffect As LimiterEffectDefinition
-
-        Dim isInitialized As Boolean = False
         Public Async Function Initialize(graph As AudioGraph) As Task Implements IAudioNodeControl.Initialize
             _BaseAudioNode = graph.CreateSubmixNode()
-            LimiterEffect = New LimiterEffectDefinition(graph)
-            BaseAudioNode.EffectDefinitions.Add(LimiterEffect)
-
             ReloadSettings()
-
-            ' Important because the value changed event will otherwise override default settings!
-            isInitialized = True
         End Function
 
         Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
-            LoudnessRadialGauge.Value = LimiterEffect.Loudness
-            ReleaseRadialGauge.Value = LimiterEffect.Release
+            RadialGauge.Value = BaseAudioNode.OutgoingGain
         End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
         Private Sub RadialGauge_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
-            If LimiterEffect Is Nothing Or Not isInitialized Then Exit Sub
-
-            LimiterEffect.Loudness = LoudnessRadialGauge.Value
-            LimiterEffect.Release = ReleaseRadialGauge.Value
+            BaseAudioNode.OutgoingGain = RadialGauge.Value
         End Sub
 
     End Class

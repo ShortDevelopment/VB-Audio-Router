@@ -1,12 +1,13 @@
 ﻿<UserControl
-    x:Class="VBAudioRouter.Controls.SpectrumNodeControl"
+    x:Class="VBAudioRouter.Controls.Nodes.OutputNodeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:VBAudioRouter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:VBAudioRouter.Controls"
     mc:Ignorable="d"
-    xmlns:visualizer="using:AudioVisualizer">
+    d:DesignHeight="300"
+    d:DesignWidth="400">
 
     <Grid Background="#3F3F3F" RequestedTheme="Dark">
         <Grid.ColumnDefinitions>
@@ -22,7 +23,7 @@
             </controls:ConnectorControl>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <visualizer:SpectrumVisualizer Width="400" Height="200" x:Name="SpectrumVisualizer" UnlitElement="Transparent" />
+            <ComboBox HorizontalAlignment="Stretch" Visibility="Collapsed" x:Name="OutputDevices" PlaceholderText="Output Device" Width="160" SelectionChanged="OutputDevices_SelectionChanged" />
         </StackPanel>
     </Grid>
 </UserControl>

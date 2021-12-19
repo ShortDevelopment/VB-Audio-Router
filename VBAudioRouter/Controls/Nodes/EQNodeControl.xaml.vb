@@ -5,7 +5,7 @@ Imports VBAudioRouter.Utils
 Imports VBAudioRouter.Utils.GainControl
 Imports Windows.Media.Audio
 
-Namespace Controls
+Namespace Controls.Nodes
 
     Public NotInheritable Class EQNodeControl
         Inherits UserControl
