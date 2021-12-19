@@ -1,10 +1,17 @@
-﻿Imports VBAudioRouter.Dialogs
+﻿Imports System.Runtime.InteropServices
+Imports Microsoft.Toolkit.Win32.UI.XamlHost
+Imports VBAudioRouter.Dialogs
 Imports VBAudioRouter.Utils
 Imports Windows.UI
 Imports Windows.UI.Core.Preview
 
 NotInheritable Class App
-    Inherits Application
+    Inherits XamlApplication
+
+    Public Sub New()
+        Initialize()
+        InitializeComponent()
+    End Sub
 
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
         LaunchApp(e)

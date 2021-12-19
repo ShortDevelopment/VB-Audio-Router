@@ -22,18 +22,17 @@ Public NotInheritable Class SpeakerControlPage
         Dim timer As New Timers.Timer()
         timer.Interval = 30
         AddHandler timer.Elapsed, Sub()
-                                      Dim unused = Dispatcher.RunIdleAsync(Sub()
-                                                                               Dim meters As Single() = New Single(MeterInformation.GetMeteringChannelCount() - 1) {}
-                                                                               Dim metersRef = GCHandle.Alloc(meters, GCHandleType.Pinned)
-                                                                               MeterInformation.GetChannelsPeakValues(meters.Length, metersRef.AddrOfPinnedObject)
-                                                                               metersRef.Free()
-                                                                               LeftMeter.ScaleY = meters(0)
-                                                                               RightMeter.ScaleY = meters(1)
-                                                                           End Sub)
+                                      Dim unused = Dispatcher?.RunIdleAsync(Sub()
+                                                                                Dim meters As Single() = New Single(MeterInformation.GetMeteringChannelCount() - 1) {}
+                                                                                Dim metersRef = GCHandle.Alloc(meters, GCHandleType.Pinned)
+                                                                                MeterInformation.GetChannelsPeakValues(meters.Length, metersRef.AddrOfPinnedObject)
+                                                                                metersRef.Free()
+                                                                                LeftMeter.ScaleY = meters(0)
+                                                                                RightMeter.ScaleY = meters(1)
+                                                                            End Sub)
                                   End Sub
         timer.Enabled = True
 
-        Exit Sub
         _AudioSessionManager = DirectCast(Await AudioInterfaceActivator.ActivateAudioInterfaceAsync(Of IAudioSessionManager)(deviceId), IAudioSessionManager2)
         AudioSessionManager.RegisterSessionNotification(Me)
         Dim sessionEnumerator = AudioSessionManager.GetSessionEnumerator()
