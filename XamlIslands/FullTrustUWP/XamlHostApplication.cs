@@ -1,24 +1,34 @@
-using Microsoft.Toolkit.Forms.UI.XamlHost;
+﻿using Microsoft.Toolkit.Forms.UI.XamlHost;
+using Microsoft.Toolkit.Win32.UI.XamlHost;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Windows.UI.Xaml;
 using Application = System.Windows.Forms.Application;
 
-namespace VBAudioRouter.Host
+namespace FullTrustUWP
 {
-    static class Program
+    // https://github.com/CommunityToolkit/Microsoft.Toolkit.Win32/blob/master/Microsoft.Toolkit.Win32.UI.XamlApplication/XamlApplication.cpp
+
+    public class XamlHostApplication<TApp> where TApp : XamlApplication
     {
-        [STAThread]
-        static void Main()
+        static XamlHostApplication()
         {
+            try
+            {
+                Application.SetCompatibleTextRenderingDefault(false);
+            }
+            catch { }
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+        }
 
-            XamlWindow<WelcomePage> window = new();
+        public static void Run<T>() where T : UIElement => Run<T>(new());
+
+        public static void Run<T>(XamlWindow<T> window) where T : UIElement
+        {
             window.Show();
-            using (new App())
+            using (TApp app = Activator.CreateInstance<TApp>())
             {
                 window.InitializeXamlContent();
                 Application.Run(window);
@@ -26,7 +36,7 @@ namespace VBAudioRouter.Host
         }
     }
 
-    class XamlWindow<T> : Form where T : UIElement
+    public class XamlWindow<T> : Form where T : UIElement
     {
         public WindowsXamlHost XamlHost { get; private set; }
         public void InitializeXamlContent()

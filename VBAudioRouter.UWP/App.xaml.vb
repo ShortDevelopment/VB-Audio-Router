@@ -1,5 +1,4 @@
-﻿Imports System.Runtime.InteropServices
-Imports Microsoft.Toolkit.Win32.UI.XamlHost
+﻿Imports Microsoft.Toolkit.Win32.UI.XamlHost
 Imports VBAudioRouter.Dialogs
 Imports VBAudioRouter.Utils
 Imports Windows.UI
