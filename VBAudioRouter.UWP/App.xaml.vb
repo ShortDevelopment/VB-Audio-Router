@@ -1,4 +1,5 @@
 ﻿Imports Microsoft.Toolkit.Win32.UI.XamlHost
+Imports VBAudioRouter.Communication
 Imports VBAudioRouter.Dialogs
 Imports VBAudioRouter.Utils
 Imports Windows.UI
@@ -14,6 +15,10 @@ NotInheritable Class App
 
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
         LaunchApp(e)
+
+        Dim bridge As IDesktopBridge = DirectCast(New DesktopBridge(), IDesktopBridge)
+        Dim x = bridge.Version
+        Debugger.Break()
     End Sub
 
     Protected Overrides Sub OnActivated(args As IActivatedEventArgs)

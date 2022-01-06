@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "XamlIslands (VBAudioRouter.Host)": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

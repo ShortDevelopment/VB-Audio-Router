@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  IgnorableNamespaces="uap mp uap3 rescap">
+
+	<Identity
+	  Name="33942ShortDevelopment.VBAudioRouter"
+	  Publisher="CN=8E251084-44E9-4A7C-AB50-C78A32C26285"
+	  Version="0.1.0.0" />
+
+	<mp:PhoneIdentity PhoneProductId="01b3c67a-5047-40be-a169-edc3d6902f11" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+	<Properties>
+		<DisplayName>VB Audio Router</DisplayName>
+		<PublisherDisplayName>ShortDevelopment</PublisherDisplayName>
+		<Logo>Assets\StoreLogo.png</Logo>
+	</Properties>
+
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+	</Dependencies>
+
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
+
+	<Applications>
+		<!-- UWP UI entry point -->
+		<Application Id="App"
+			Executable="$targetnametoken$.exe"
+			EntryPoint="$targetentrypoint$">
+			<uap:VisualElements
+			  DisplayName="VB Audio Router"
+			  Square150x150Logo="Assets\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Square44x44Logo.png"
+			  Description="OpenSource advanced audio rooting application build with UWP and the WinRT Audio Graph API"
+			  BackgroundColor="transparent">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="Audio Router">
+					<uap:ShowNameOnTiles>
+						<uap:ShowOn Tile="square150x150Logo"/>
+						<uap:ShowOn Tile="wide310x150Logo"/>
+						<uap:ShowOn Tile="square310x310Logo"/>
+					</uap:ShowNameOnTiles>
+				</uap:DefaultTile >
+				<uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#E87D0D"/>
+			</uap:VisualElements>
+			<Extensions>
+				<!-- If you read this: Stay tuned! Serialization and saving your work is on it's way! -->
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="audiograph">
+						<uap:Logo>Assets\StoreLogo.png</uap:Logo>
+						<uap:SupportedFileTypes>
+							<uap:FileType>.audiograph</uap:FileType>
+						</uap:SupportedFileTypes>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<!-- Used to start a new instance -->
+				<uap:Extension Category="windows.protocol">
+					<uap:Protocol Name="vb-audio-router">
+						<uap:Logo>Assets\StoreLogo.png</uap:Logo>
+						<uap:DisplayName>VB Audio Router</uap:DisplayName>
+					</uap:Protocol>
+				</uap:Extension>
+
+				<!-- Com Server (VBAudioRouter.Worker) -->
+				<com:Extension Category="windows.comServer">
+					<com:ComServer>
+						<com:ExeServer
+							Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe">
+							<com:Class Id="23AF1AED-5FC6-4D8E-8AAD-DA3044BA6E80"
+								DisplayName="VBAudioRouter.DesktopBridge"
+								ProgId="VBAudioRouter.DesktopBridge.1"
+								VersionIndependentProgId="VBAudioRouter.DesktopBridge" />
+						</com:ExeServer>
+
+						<com:ProgId Id="VBAudioRouter.DesktopBridge"
+							CurrentVersion="VBAudioRouter.DesktopBridge.1" />
+						<com:ProgId Id="VBAudioRouter.DesktopBridge.1"
+							Clsid="23AF1AED-5FC6-4D8E-8AAD-DA3044BA6E80" />
+					</com:ComServer>
+				</com:Extension>
+				<com:Extension Category="windows.comInterface">
+					<com:ComInterface>
+						<com:Interface Id="6F98D484-E441-4651-80B5-ADCEBF704EC7"
+							UseUniversalMarshaler="true">
+							<com:TypeLib Id="C257DEE5-0692-4393-ADEC-B1851A07AF3F"
+								VersionNumber="1.0" />
+						</com:Interface>
+
+						<com:TypeLib Id="C257DEE5-0692-4393-ADEC-B1851A07AF3F">
+							<com:Version DisplayName="VBAudioRouter"
+								VersionNumber="1.0"
+								LocaleId="0"
+								LibraryFlag="0">
+								<com:Win32Path Path="VBAudioRouter.Worker\VBAudioRouter.Worker.tlb" />
+							</com:Version>
+						</com:TypeLib>
+					</com:ComInterface>
+				</com:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
+
+	<Capabilities>
+		<!-- Play media in background -->
+		<rescap:Capability Name="extendedExecutionBackgroundAudio"/>
+		<!-- Prevent data loss -->
+		<rescap:Capability Name="confirmAppClose"/>
+		<!-- Desktop Bridge -->
+		<rescap:Capability Name="runFullTrust" />
+		<uap3:Capability Name="backgroundMediaPlayback"/>
+		<Capability Name="internetClient" />
+		<!-- Mic input node -->
+		<DeviceCapability Name="microphone"/>
+	</Capabilities>
+</Package>

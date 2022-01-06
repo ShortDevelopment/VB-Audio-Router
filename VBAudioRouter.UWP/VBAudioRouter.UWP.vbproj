@@ -159,6 +159,7 @@
     <Compile Include="Controls\AudioSessionControl.xaml.vb">
       <DependentUpon>AudioSessionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interop\DesktopBridge.vb" />
     <Compile Include="Interop\IAudioEndpointVolumeCallback.vb" />
     <Compile Include="Interop\IAudioSessionEnumerator.vb" />
     <Compile Include="Interop\IAudioSessionManager.vb" />
@@ -452,6 +453,12 @@
     <PackageReference Include="WinUI.Interop">
       <Version>0.1.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VBAudioRouter.Communication\VBAudioRouter.Communication.csproj">
+      <Project>{de9d21a9-0f24-40f3-b36c-28b548250c97}</Project>
+      <Name>VBAudioRouter.Communication</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
