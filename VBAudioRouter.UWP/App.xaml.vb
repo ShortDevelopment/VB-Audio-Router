@@ -16,9 +16,9 @@ NotInheritable Class App
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
         LaunchApp(e)
 
-        Dim bridge As IDesktopBridge = DirectCast(New DesktopBridge(), IDesktopBridge)
-        Dim x = bridge.Version
-        Debugger.Break()
+        'Dim bridge As IDesktopBridge = ComActivator.ActivateInterface(Of IDesktopBridge)(Consts.DesktopBridge_CLSID)
+        'Dim x = bridge.Version
+        'Debugger.Break()
     End Sub
 
     Protected Overrides Sub OnActivated(args As IActivatedEventArgs)
