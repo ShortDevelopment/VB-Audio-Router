@@ -7,6 +7,8 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:com2="http://schemas.microsoft.com/appx/manifest/com/windows10/2"
+  xmlns:com3="http://schemas.microsoft.com/appx/manifest/com/windows10/3"
   IgnorableNamespaces="uap mp uap3 rescap">
 
 	<Identity
@@ -23,7 +25,7 @@
 	</Properties>
 
 	<Dependencies>
-		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
 	</Dependencies>
 
 	<Resources>
@@ -67,26 +69,37 @@
 						<uap:DisplayName>VB Audio Router</uap:DisplayName>
 					</uap:Protocol>
 				</uap:Extension>
+			</Extensions>
+		</Application>
 
-				<!-- Com Server (VBAudioRouter.Worker) -->
-				<com:Extension Category="windows.comServer">
-					<com:ComServer>
-						<com:ExeServer
-							Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe">
+		<!-- Com Server (VBAudioRouter.Worker) -->
+		<Application Id="Worker"
+			Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe"
+			EntryPoint="Windows.FullTrustApplication">
+			<uap:VisualElements AppListEntry="none"
+				DisplayName="VBAudioRouter.Worker"
+				Description="VBAudioRouter.Worker"
+				Square150x150Logo="Assets\Square150x150Logo.png"
+				Square44x44Logo="Assets\Square44x44Logo.png"
+				BackgroundColor="transparent" />
+			<Extensions>
+				<com2:Extension Category="windows.comServer">
+					<com2:ComServer>
+						<com3:ExeServer Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe" DisplayName="VBAudioRouter">
 							<com:Class Id="23AF1AED-5FC6-4D8E-8AAD-DA3044BA6E80"
-								DisplayName="VBAudioRouter.DesktopBridge"
+								DisplayName="DesktopBridge"
 								ProgId="VBAudioRouter.DesktopBridge.1"
 								VersionIndependentProgId="VBAudioRouter.DesktopBridge" />
-						</com:ExeServer>
+						</com3:ExeServer>
 
-						<com:ProgId Id="VBAudioRouter.DesktopBridge"
+						<com3:ProgId Id="VBAudioRouter.DesktopBridge"
 							CurrentVersion="VBAudioRouter.DesktopBridge.1" />
-						<com:ProgId Id="VBAudioRouter.DesktopBridge.1"
+						<com3:ProgId Id="VBAudioRouter.DesktopBridge.1"
 							Clsid="23AF1AED-5FC6-4D8E-8AAD-DA3044BA6E80" />
-					</com:ComServer>
-				</com:Extension>
-				<com:Extension Category="windows.comInterface">
-					<com:ComInterface>
+					</com2:ComServer>
+				</com2:Extension>
+				<com2:Extension Category="windows.comInterface">
+					<com2:ComInterface>
 						<com:Interface Id="6F98D484-E441-4651-80B5-ADCEBF704EC7"
 							UseUniversalMarshaler="true">
 							<com:TypeLib Id="C257DEE5-0692-4393-ADEC-B1851A07AF3F"
@@ -101,8 +114,8 @@
 								<com:Win32Path Path="VBAudioRouter.Worker\VBAudioRouter.Worker.tlb" />
 							</com:Version>
 						</com:TypeLib>
-					</com:ComInterface>
-				</com:Extension>
+					</com2:ComInterface>
+				</com2:Extension>
 			</Extensions>
 		</Application>
 	</Applications>

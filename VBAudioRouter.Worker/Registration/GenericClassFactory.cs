@@ -15,7 +15,7 @@ namespace VBAudioRouter.Worker.Registration
             Type interfaceType = GetInterfaceType(ref riid, pUnkOuter);
 
             object result = new();
-            if (pUnkOuter == null)
+            if (pUnkOuter != null)
                 result = CreateAggregatedObject(pUnkOuter, result);
 
             ppvObject = GetInterfacePtr(result, interfaceType);

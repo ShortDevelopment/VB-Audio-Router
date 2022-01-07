@@ -7,9 +7,9 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VBAudioRouter.UWP", "VBAudi
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "VBAudioRouter.Package", "VBAudioRouter.Package\VBAudioRouter.Package.wapproj", "{13041C15-8089-4932-A0CA-AE915E5D6C63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VBAudioRouter.Communication", "VBAudioRouter.Communication\VBAudioRouter.Communication.csproj", "{DE9D21A9-0F24-40F3-B36C-28B548250C97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBAudioRouter.Communication", "VBAudioRouter.Communication\VBAudioRouter.Communication.csproj", "{DE9D21A9-0F24-40F3-B36C-28B548250C97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VBAudioRouter.Worker", "VBAudioRouter.Worker\VBAudioRouter.Worker.csproj", "{A76147FF-D1EB-4EF1-AB54-79BDB475EFAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBAudioRouter.Worker", "VBAudioRouter.Worker\VBAudioRouter.Worker.csproj", "{A76147FF-D1EB-4EF1-AB54-79BDB475EFAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
