@@ -16,7 +16,7 @@ NotInheritable Class App
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
         LaunchApp(e)
 
-        'Dim bridge As IDesktopBridge = ComActivator.ActivateInterface(Of IDesktopBridge)(Consts.DesktopBridge_CLSID)
+        'Dim bridge As IDesktopBridge = DirectCast(New DesktopBridge(), IDesktopBridge) ' ComActivator.ActivateInterface(Of IDesktopBridge)(Consts.DesktopBridge_CLSID) ' 
         'Dim x = bridge.Version
         'Debugger.Break()
     End Sub
