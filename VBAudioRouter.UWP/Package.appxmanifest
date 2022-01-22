@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
+<!--
+	This file will not be used!
+	If you want to change the package manifest, change the "Package.appxmanifest" in "VBAudioRouter.Package"!
+-->
+
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
@@ -51,6 +56,12 @@
 				</uap:DefaultTile >
 				<uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#E87D0D"/>
 			</uap:VisualElements>
+
+			<!--
+				This file will not be used!
+				If you want to change the package manifest, change the "Package.appxmanifest" in "VBAudioRouter.Package"!
+			-->
+
 			<Extensions>
 				<uap:Extension Category="windows.fileTypeAssociation">
 					<uap:FileTypeAssociation Name="audiograph">

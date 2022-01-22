@@ -4,6 +4,7 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
@@ -34,9 +35,8 @@
 
 	<Applications>
 		<!-- UWP UI entry point -->
-		<Application Id="App"
-			Executable="$targetnametoken$.exe"
-			EntryPoint="$targetentrypoint$">
+		<Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$"
+			desktop4:SupportsMultipleInstances="true">
 			<uap:VisualElements
 			  DisplayName="VB Audio Router"
 			  Square150x150Logo="Assets\Square150x150Logo.png"
@@ -69,20 +69,7 @@
 						<uap:DisplayName>VB Audio Router</uap:DisplayName>
 					</uap:Protocol>
 				</uap:Extension>
-			</Extensions>
-		</Application>
-
-		<!-- Com Server (VBAudioRouter.Worker) -->
-		<Application Id="Worker"
-			Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe"
-			EntryPoint="Windows.FullTrustApplication">
-			<uap:VisualElements AppListEntry="none"
-				DisplayName="VBAudioRouter.Worker"
-				Description="VBAudioRouter.Worker"
-				Square150x150Logo="Assets\Square150x150Logo.png"
-				Square44x44Logo="Assets\Square44x44Logo.png"
-				BackgroundColor="transparent" />
-			<Extensions>
+				<!-- Com Server (VBAudioRouter.Worker) -->
 				<com2:Extension Category="windows.comServer">
 					<com2:ComServer>
 						<com3:ExeServer Executable="VBAudioRouter.Worker\VBAudioRouter.Worker.exe" DisplayName="VBAudioRouter">
@@ -128,6 +115,7 @@
 		<!-- Desktop Bridge -->
 		<rescap:Capability Name="runFullTrust" />
 		<uap3:Capability Name="backgroundMediaPlayback"/>
+		<!-- Default -->
 		<Capability Name="internetClient" />
 		<!-- Mic input node -->
 		<DeviceCapability Name="microphone"/>
