@@ -12,14 +12,27 @@ namespace FullTrustUWP.Core.Activation
     {
         public enum WindowType : long
         {
-            IMMERSIVE_DOCK = 1,
+            IMMERSIVE_BODY = 0,
+            IMMERSIVE_DOCK,
             IMMERSIVE_HOSTED,
-            IMMERSIVE_BODY_ACTIVE = 4,
+            IMMERSIVE_TEST,
+            IMMERSIVE_BODY_ACTIVE,
             IMMERSIVE_DOCK_ACTIVE,
             NOT_IMMERSIVE
         }
 
-        private delegate int PrivateCreateCoreWindow_Sig(WindowType windowType, [MarshalAs(UnmanagedType.BStr)] string windowTitle, int x, int y, uint width, uint height, uint dwAttributes, IntPtr hOwnerWindow, Guid riid, out ICoreWindowInterop windowRef);
+        private delegate int PrivateCreateCoreWindow_Sig(
+            WindowType windowType,
+            [MarshalAs(UnmanagedType.BStr)] string windowTitle,
+            int x,
+            int y,
+            uint width,
+            uint height,
+            uint dwAttributes,
+            IntPtr hOwnerWindow,
+            Guid riid,
+            out ICoreWindowInterop windowRef
+        );
         private static PrivateCreateCoreWindow_Sig PrivateCreateCoreWindow_Ref;
 
         public static CoreWindow CreateCoreWindow(WindowType windowType, string windowTitle, IntPtr hOwnerWindow, int x = 0, int y = 0, uint width = 10, uint height = 10, uint dwAttributes = 0)
@@ -31,7 +44,11 @@ namespace FullTrustUWP.Core.Activation
             return windowRef as object as CoreWindow;
         }
 
-        private delegate int CreateCoreApplicationViewTitleBar_Sig(CoreWindow titleBarClientAdapter, IntPtr hWnd, out CoreApplicationViewTitleBar titleBar);
+        private delegate int CreateCoreApplicationViewTitleBar_Sig(
+            CoreWindow titleBarClientAdapter,
+            IntPtr hWnd,
+            out CoreApplicationViewTitleBar titleBar
+        );
         private static CreateCoreApplicationViewTitleBar_Sig CreateCoreApplicationViewTitleBar_Ref;
 
         public static CoreApplicationViewTitleBar CreateCoreApplicationViewTitleBar(CoreWindow coreWindow, IntPtr hWnd)
@@ -40,6 +57,22 @@ namespace FullTrustUWP.Core.Activation
                 CreateCoreApplicationViewTitleBar_Ref = DynamicLoad<CreateCoreApplicationViewTitleBar_Sig>("twinapi.appcore.dll", 501);
 
             Marshal.ThrowExceptionForHR(CreateCoreApplicationViewTitleBar_Ref(coreWindow, hWnd, out var titleBar));
+            return titleBar;
+        }
+
+        private delegate int CreateApplicationViewTitleBar_Sig(
+            AppWindow titleBarClientAdapter,
+            IntPtr hWnd,
+            out ApplicationViewTitleBar titleBar
+        );
+        private static CreateApplicationViewTitleBar_Sig CreateApplicationViewTitleBar_Ref;
+
+        public static ApplicationViewTitleBar CreateApplicationViewTitleBar(AppWindow titleBarClientAdapter, IntPtr hWnd)
+        {
+            if (CreateApplicationViewTitleBar_Ref == null)
+                CreateApplicationViewTitleBar_Ref = DynamicLoad<CreateApplicationViewTitleBar_Sig>("twinapi.appcore.dll", 502);
+
+            Marshal.ThrowExceptionForHR(CreateApplicationViewTitleBar_Ref(titleBarClientAdapter, hWnd, out var titleBar));
             return titleBar;
         }
 
@@ -73,7 +106,7 @@ namespace FullTrustUWP.Core.Activation
         public void CreateCoreWindow([MarshalAs(UnmanagedType.HString)] string windowTitle, out CoreWindow window)
         {
             window = CoreWindowActivator.CreateCoreWindow(
-                CoreWindowActivator.WindowType.IMMERSIVE_BODY_ACTIVE,
+                CoreWindowActivator.WindowType.IMMERSIVE_BODY,
                 windowTitle,
                 IntPtr.Zero,
                 width: 1024,
