@@ -58,7 +58,7 @@ namespace FullTrustUWP.Core.Activation
             int GetPresentedWindow(out IntPtr hWnd);
 
             [PreserveSig]
-            int SetPresentedWindow(ref IntPtr hWnd);
+            int SetPresentedWindow(IntPtr hWnd);
 
             [Obsolete("Wrong signature")]
             void SetSystemVisual();
@@ -78,7 +78,7 @@ namespace FullTrustUWP.Core.Activation
             int GetChromeOptions(out APPLICATION_FRAME_CHROME_OPTIONS options);
 
             [PreserveSig]
-            int SetChromeOptions(APPLICATION_FRAME_CHROME_OPTIONS options1, APPLICATION_FRAME_CHROME_OPTIONS options2);
+            int SetChromeOptions(int options1, int options2);
 
             [Obsolete("Wrong signature")]
             void GetChromeOffsets();
@@ -89,16 +89,95 @@ namespace FullTrustUWP.Core.Activation
             [PreserveSig]
             int InvokeActionsMenu();
 
-            [Obsolete("Wrong signature")]
-            void GetTitleBar();
+            [PreserveSig]
+            int GetTitleBar(out IApplicationFrameTitleBar titleBar);
 
             [PreserveSig]
             int GetBackgroundColor(out int color);
 
             [PreserveSig]
             int SetBackgroundColor(int color);
+
+            [PreserveSig]
+            int GetSystemVisualFadeTime(out uint time);
+
+            [PreserveSig]
+            int SetOperatingMode(FRAME_OPERATING_MODE mode);
+
+            [PreserveSig]
+            int SetSizeConstraintOverridesPhysical(ref tagSIZE size1, ref tagSIZE size2);
+
+            [PreserveSig]
+            int SetSizeConstraintOverridesLogical(ref tagSIZE size1, ref tagSIZE size2);
+
+            [PreserveSig]
+            int SetPreferredAspectRatioHint(ref tagSIZE ration);
+
+            [Obsolete("Wrong signature")]
+            void SetSystemVisualAnimation();
+            [Obsolete("Wrong signature")]
+            void GetPropertyValue();
+
+            [PreserveSig]
+            int EnsureSizeConstraints();
+
+            [Obsolete("Wrong signature")]
+            void OnCommand();
+            [Obsolete("Wrong signature")]
+            void OnCommand2();
+            [Obsolete("Wrong signature")]
+            void OnCloseCommand();
+
+            [PreserveSig]
+            bool IsEqual(IApplicationFrame frame);
+
+            [PreserveSig]
+            int Destroy();
+
+            [PreserveSig]
+            int NotifyChromeChange(NotifyChromeChangeFlags flags);
+
+            [PreserveSig]
+            int NotifyVisibleButtonsChange();
+
+            [Obsolete("Wrong signature")]
+            void GetMinimumSize(out tagSIZE size);
         }
 
-        public enum APPLICATION_FRAME_CHROME_OPTIONS { }
+        [Guid("c8e34820-d46a-41bc-8c5c-5bc9fdee243d")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IApplicationFrameTitleBar
+        {
+            [PreserveSig]
+            int SetWindowTitle([MarshalAs(UnmanagedType.LPWStr)] string title);
+
+            [PreserveSig]
+            int SetIsVisible(bool visible);
+
+            [PreserveSig]
+            int GetIsVisible(out bool visible);
+        }
+
+        public struct tagSIZE
+        {
+            public int cx;
+            public int cy;
+        }
+
+        public enum APPLICATION_FRAME_CHROME_OPTIONS
+        {
+            ZERO = 0,
+            OTHER = 97
+        }
+
+        public enum NotifyChromeChangeFlags
+        {
+            ZERO = 0
+        }
+
+        public enum FRAME_OPERATING_MODE
+        {
+            ZERO = 0
+        }
     }
 }
