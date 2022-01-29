@@ -1,9 +1,9 @@
-using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Windows.ApplicationModel.Activation;
+using static FullTrustUWP.Core.Activation.ApplicationFrameActivator;
 
 namespace VBAudioRouter.Host
 {
@@ -15,29 +15,30 @@ namespace VBAudioRouter.Host
             Form form = new();
             form.Show();
 
-            //int hres = InteropHelper.GetActivationFactory("App", ref IID_IActivatableApplication, out var factory);
-            //if (hres != 0)
-            //    Marshal.ThrowExceptionForHR(hres);
-            // IActivatableApplication activatableApplication = new App() as object as IActivatableApplication;
-
-            //var splashScreen = SplashScreenActivator.CreateSplashScreen();
-            //splashScreen.TitleBarButtonPressedTextColorOverride = Windows.UI.Colors.Red;
-
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
-            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
 
-            var coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", hwnd);
-            IntPtr contentHwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
-            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(ref contentHwnd));
+            Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
+            Marshal.ThrowExceptionForHR(frameArray.GetCount(out var count));
+            for (uint i = 0; i < count; i++)
+            {
+                Guid iid = typeof(IApplicationFrame).GUID;
+                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid, out object frameUnk));
+                IApplicationFrame frame = frameUnk as IApplicationFrame;
+                Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
+                Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out var hwnd));
+                Debug.Print($"HWND: {hwnd}; OPTIONS: {options}");
+            }
 
-            //ICoreWindowFactory coreWindowFactory = new CoreWindowFactory();
-            //IActivatedEventArgs activatedEventArgs = new ActivatedEventArgsImpl();
-            //CoreWindowActivator.CoreUICreateICoreWindowFactory(0, IntPtr.Zero, IntPtr.Zero, out var coreWindowFactory);
-            //coreWindowFactory.CreateCoreWindow("Test2", out var test);
-            // activatableApplication.Activate(ref coreWindowFactory, "App", ref activatedEventArgs);
-
+            //Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
+            //Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
+            //var coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", hwnd);
+            //IntPtr contentHwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+            //contentHwnd = (IntPtr)0x1107F8;
+            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(ref contentHwnd));            
+            //Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Red.ToArgb()));
             // XamlHostApplication<App>.Run<WelcomePage>();
+            // Marshal.ThrowExceptionForHR(frameManager.DestroyFrame(ref frame));
+
             Application.Run();
         }
     }
