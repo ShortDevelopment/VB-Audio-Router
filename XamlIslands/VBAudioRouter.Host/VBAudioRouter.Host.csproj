@@ -15,7 +15,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\FullTrustUWP\FullTrustUWP.csproj" />
-	  <ProjectReference Include="..\..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
 	</ItemGroup>
 
 </Project>

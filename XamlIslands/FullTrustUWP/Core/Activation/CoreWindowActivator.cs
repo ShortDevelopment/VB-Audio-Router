@@ -76,6 +76,9 @@ namespace FullTrustUWP.Core.Activation
             return titleBar;
         }
 
+        [DllImport("CoreUIComponents.dll", SetLastError = true)]
+        public static extern int CoreUICreateICoreWindowFactory(uint a, IntPtr reserved1, IntPtr reserved2, out ICoreWindowFactory coreWindowFactory);
+
         [DllImport("twinapi.appcore.dll", SetLastError = true)]
         private static extern int CreateCoreApplicationViewTitleBar(CoreWindow titleBarClientAdapter, IntPtr hWnd, out CoreApplicationViewTitleBar titleBar);
 
