@@ -1,3 +1,4 @@
+using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using System;
 using System.Diagnostics;
@@ -33,6 +34,7 @@ namespace VBAudioRouter.Host
                     $"CONTENT: {hwndContent}; TITLE: {GetWindowTitle(hwndContent)};\r\n" +
                     $"OPTIONS: {options}"
                 );
+                frame2.SetBackgroundColor(System.Drawing.Color.Red.ToArgb());
             }
 
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
@@ -42,9 +44,14 @@ namespace VBAudioRouter.Host
             //IntPtr contentHwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
 
             Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Red.ToArgb()));
-            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x1308F6));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
+            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
             frame.InvokeActionsMenu();
+
+            int value = 0;
+            Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));
+
+            RemoteThread.UnCloakWindow(form.Handle);
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.GetIsVisible(out bool isTitleBarVisible));
@@ -64,5 +71,49 @@ namespace VBAudioRouter.Host
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attr, ref int attrValue, int attrSize);
+
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        public static extern int DwmGetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attr, out int attrValue, int attrSize);
+
+        /// <summary>
+        /// <see href="https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute"/>
+        /// </summary>
+        public enum DwmWindowAttribute : uint
+        {
+            NCRenderingEnabled = 1,
+            NCRenderingPolicy,
+            TransitionsForceDisabled,
+            AllowNCPaint,
+            CaptionButtonBounds,
+            NonClientRtlLayout,
+            ForceIconicRepresentation,
+            Flip3DPolicy,
+            ExtendedFrameBounds,
+            HasIconicBitmap,
+            DisallowPeek,
+            ExcludedFromPeek,
+            Cloak,
+            Cloaked,
+            FreezeRepresentation,
+            PASSIVE_UPDATE_MODE,
+            USE_HOSTBACKDROPBRUSH,
+            USE_IMMERSIVE_DARK_MODE,
+            WINDOW_CORNER_PREFERENCE,
+            BORDER_COLOR,
+            CAPTION_COLOR,
+            TEXT_COLOR,
+            VISIBLE_FRAME_BORDER_THICKNESS,
+            LAST
+        }
+
+        public enum DwmCloakedByValue
+        {
+            OwnerProcess = 1,
+            Shell,
+            ParentWindow
+        }
     }
 }
