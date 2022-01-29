@@ -1,6 +1,6 @@
-using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -46,21 +46,27 @@ namespace VBAudioRouter.Host
             Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
             // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
-            frame.InvokeActionsMenu();
+            // frame.InvokeActionsMenu();
 
             int value = 0;
             Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));
-
-            RemoteThread.UnCloakWindow(form.Handle);
+            
+            // Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(form.Handle, (DwmWindowAttribute)19, out value, Marshal.SizeOf<int>()));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.GetIsVisible(out bool isTitleBarVisible));
-            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle("Hello World!"));
+            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
+
+            if (!ShowWindow(hwnd, 9))
+                throw new Win32Exception(Marshal.GetLastWin32Error());
 
             Application.Run(form);
 
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         private static string GetWindowTitle(IntPtr hWnd)
         {
