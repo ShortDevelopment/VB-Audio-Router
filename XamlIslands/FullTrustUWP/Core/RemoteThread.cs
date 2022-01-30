@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
 
 namespace FullTrustUWP.Core
 {
@@ -80,6 +83,9 @@ namespace FullTrustUWP.Core
         public static extern
         uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
 
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
+        static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+
         [DllImport("kernel32")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetExitCodeThread(IntPtr hThread, out int lpExitCode);
@@ -93,23 +99,8 @@ namespace FullTrustUWP.Core
 
             int exitCode;
             GetExitCodeThread(hThread, out exitCode);
-            Marshal.ThrowExceptionForHR(exitCode);
-        }
-
-        struct DwmSetWindowAttribute_Attributes
-        {
-            public IntPtr hwnd;
-            public uint attr;
-            public IntPtr attrValue;
-            public uint attrSize;
-        }
-
-        struct MessageBox_Attributes
-        {
-            // public IntPtr hwnd;
-            [MarshalAs(UnmanagedType.LPStr)] public string lpText;
-            [MarshalAs(UnmanagedType.LPStr)] public string lpCaption;
-            public uint uType;
+            //if (exitCode != 0)
+            //    throw new Win32Exception(exitCode);
         }
 
         public enum DwmWindowAttribute : uint
@@ -140,42 +131,27 @@ namespace FullTrustUWP.Core
             LAST
         }
 
-        public static void UnCloakWindow(IntPtr hWnd)
+        static void Test(IntPtr param)
+        {
+            MessageBox.Show("Hallo");
+        }
+
+        delegate void TestDelegate(IntPtr param);
+
+        private static void LoadUncloakHelper(IntPtr hWnd)
         {
             GetWindowThreadProcessId(hWnd, out var pid);
 
-            IntPtr hModule = GetModuleHandle("dwmapi.dll");
-            IntPtr fpProc = GetProcAddress(hModule, "DwmSetWindowAttribute");
+            IntPtr hModule = GetModuleHandle("kernel32.dll");
+            IntPtr fpProc = GetProcAddress(hModule, "LoadLibraryA");  // GetProcAddress(hModule, "DwmSetWindowAttribute");
             IntPtr hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-            DwmSetWindowAttribute_Attributes attribute_Attributes = new();
-            attribute_Attributes.hwnd = hWnd;
-            attribute_Attributes.attr = (uint)DwmWindowAttribute.NCRenderingEnabled;
+            string dllName = @"D:\Programmieren\Visual Studio Projects\VBAudioRouter\x64\Debug\UncloakHelper.dll";
+            LoadLibrary(dllName);
 
-            IntPtr valuePtr = Marshal.AllocHGlobal(sizeof(int));
-            Marshal.WriteInt32(valuePtr, 1);
-            attribute_Attributes.attrValue = valuePtr;
-            attribute_Attributes.attrSize = sizeof(int);
+            IntPtr allocMemAddress = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)((dllName.Length + 1) * sizeof(char)), AllocationType.Commit | AllocationType.Reserve, MemoryProtection.ReadWrite);
 
-            byte[] data = Struct2Bytes(attribute_Attributes, out int size);
-
-            //IntPtr hModule = GetModuleHandle("User32.dll");
-            //IntPtr fpProc = GetProcAddress(hModule, "MessageBoxA");
-            //IntPtr hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-
-            //MessageBox_Attributes attribute_Attributes = new();
-            //// attribute_Attributes.hwnd = hWnd;
-            //attribute_Attributes.lpCaption = "Hallo!";
-            //attribute_Attributes.lpText = "Test!";
-            //attribute_Attributes.uType = 0;
-
-            //byte[] data = Struct2Bytes(attribute_Attributes, out int size);
-
-            IntPtr allocMemAddress = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)size, AllocationType.Commit | AllocationType.Reserve, MemoryProtection.ReadWrite);
-
-            WriteProcessMemory(hProcess, allocMemAddress, data, size, out var _);
-
-            // DwmSetWindowAttribute_Attributes test = Marshal.PtrToStructure<DwmSetWindowAttribute_Attributes>(allocMemAddress);
+            WriteProcessMemory(hProcess, allocMemAddress, Encoding.Default.GetBytes(dllName), (dllName.Length + 1) * sizeof(char), out _);
 
             uint dwThreadId;
             // Create a thread in the first process.
@@ -187,23 +163,31 @@ namespace FullTrustUWP.Core
                 0,
                 out dwThreadId);
             WaitForThreadToExit(hThread);
+        }
 
-            //Marshal.FreeHGlobal(valuePtr);
+        public static void UnCloakWindow(IntPtr hWnd)
+        {
+            LoadUncloakHelper(hWnd);
+
+            GetWindowThreadProcessId(hWnd, out var pid);
+
+            IntPtr hModule = GetModuleHandle("UncloakHelper.dll");
+            IntPtr fpProc = GetProcAddress(hModule, "UncloakWindow");
+            IntPtr hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+
+            uint dwThreadId;
+            // Create a thread in the first process.
+            IntPtr hThread = CreateRemoteThread(
+                hProcess,
+                IntPtr.Zero,
+                0,
+                fpProc, hWnd,
+                0,
+                out dwThreadId);
+            WaitForThreadToExit(hThread);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-        static byte[] Struct2Bytes<T>(T str, out int size)
-        {
-            size = Marshal.SizeOf(str);
-            byte[] data = new byte[size];
-
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(str, ptr, false);
-            Marshal.Copy(ptr, data, 0, size);
-            Marshal.FreeHGlobal(ptr);
-            return data;
-        }
     }
 }

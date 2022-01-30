@@ -76,14 +76,23 @@ namespace FullTrustUWP.Core.Activation
             return titleBar;
         }
 
+        private delegate int IsImmersiveWindow_Sig(
+            IntPtr hWnd
+        );
+        private static IsImmersiveWindow_Sig IsImmersiveWindow_Ref;
+
+        public static bool IsImmersiveWindow(IntPtr hWnd)
+        {
+            if (IsImmersiveWindow_Ref == null)
+                IsImmersiveWindow_Ref = DynamicLoad<IsImmersiveWindow_Sig>("twinapi.appcore.dll", 12);
+
+            if (IsImmersiveWindow_Ref(hWnd) == 1)
+                return true;
+            return false;
+        }
+
         [DllImport("CoreUIComponents.dll", SetLastError = true)]
         public static extern int CoreUICreateICoreWindowFactory(uint a, IntPtr reserved1, IntPtr reserved2, out ICoreWindowFactory coreWindowFactory);
-
-        [DllImport("twinapi.appcore.dll", SetLastError = true)]
-        private static extern int CreateCoreApplicationViewTitleBar(CoreWindow titleBarClientAdapter, IntPtr hWnd, out CoreApplicationViewTitleBar titleBar);
-
-        [DllImport("twinapi.appcore", SetLastError = true)]
-        private static extern int CreateApplicationViewTitleBar(AppWindow titleBarClientAdapter, IntPtr hWnd, out ApplicationViewTitleBar titleBar);
     }
 
     [ComImport, Guid(Const.IID_ICoreWindowInterop)]

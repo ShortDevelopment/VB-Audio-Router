@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullTrustUWP", "XamlIslands
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlIslands", "XamlIslands", "{5D0108B8-5E39-4F7C-91DA-E72D7E16F826}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UncloakHelper", "UncloakHelper\UncloakHelper.vcxproj", "{B71ED210-DE3B-4061-B097-75F59261183A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,20 @@ Global
 		{B5454F0B-98B7-4639-BDE4-0A0D1E0F5973}.Release|x64.Build.0 = Release|Any CPU
 		{B5454F0B-98B7-4639-BDE4-0A0D1E0F5973}.Release|x86.ActiveCfg = Release|Any CPU
 		{B5454F0B-98B7-4639-BDE4-0A0D1E0F5973}.Release|x86.Build.0 = Release|Any CPU
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|ARM.ActiveCfg = Debug|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|x64.ActiveCfg = Debug|x64
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|x64.Build.0 = Debug|x64
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|x86.ActiveCfg = Debug|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Debug|x86.Build.0 = Debug|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|ARM.ActiveCfg = Release|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|ARM64.ActiveCfg = Release|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|x64.ActiveCfg = Release|x64
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|x64.Build.0 = Release|x64
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|x86.ActiveCfg = Release|Win32
+		{B71ED210-DE3B-4061-B097-75F59261183A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +118,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AF8198C2-56B9-4F92-9931-0C4837936F95} = {5D0108B8-5E39-4F7C-91DA-E72D7E16F826}
 		{B5454F0B-98B7-4639-BDE4-0A0D1E0F5973} = {5D0108B8-5E39-4F7C-91DA-E72D7E16F826}
+		{B71ED210-DE3B-4061-B097-75F59261183A} = {5D0108B8-5E39-4F7C-91DA-E72D7E16F826}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94079978-D490-48BD-8069-F095B27A6654}
