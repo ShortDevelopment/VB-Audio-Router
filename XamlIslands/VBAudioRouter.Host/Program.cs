@@ -57,7 +57,7 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
 
-            RemoteThread.UnCloakWindow(hwnd);
+            RemoteThread.CloakWindow(form.Handle);
 
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
 

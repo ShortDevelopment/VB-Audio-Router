@@ -21,6 +21,9 @@ namespace FullTrustUWP.Core
           out uint lpThreadId
         );
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
         const uint PROCESS_ALL_ACCESS = 0x000F0000 | 0x00100000 | 0xFFF;
         [DllImport("kernel32")]
         public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
@@ -100,58 +103,62 @@ namespace FullTrustUWP.Core
             //    throw new Win32Exception(exitCode);
         }
 
-        delegate void TestDelegate(IntPtr param);
-
-        private static void LoadUncloakHelper(IntPtr hWnd)
+        private static void LoadLibraryRemote(uint pid, string dllName)
         {
-            GetWindowThreadProcessId(hWnd, out var pid);
-
             IntPtr hModule = GetModuleHandle("kernel32.dll");
-            IntPtr fpProc = GetProcAddress(hModule, "LoadLibraryA");  // GetProcAddress(hModule, "DwmSetWindowAttribute");
+            IntPtr hProc = GetProcAddress(hModule, "LoadLibraryA");
             IntPtr hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-            string dllName = @"D:\Programmieren\Visual Studio Projects\VBAudioRouter\x64\Debug\UncloakHelper.dll";
             LoadLibrary(dllName);
 
             IntPtr allocMemAddress = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)((dllName.Length + 1) * sizeof(char)), AllocationType.Commit | AllocationType.Reserve, MemoryProtection.ReadWrite);
 
             WriteProcessMemory(hProcess, allocMemAddress, Encoding.Default.GetBytes(dllName), (dllName.Length + 1) * sizeof(char), out _);
 
-            uint dwThreadId;
-            // Create a thread in the first process.
             IntPtr hThread = CreateRemoteThread(
                 hProcess,
                 IntPtr.Zero,
                 0,
-                fpProc, allocMemAddress,
+                hProc, allocMemAddress,
                 0,
-                out dwThreadId);
+                out _);
             WaitForThreadToExit(hThread);
+            CloseHandle(hThread);
+            CloseHandle(hProcess);
+        }
+
+        const string libName = @"D:\Programmieren\Visual Studio Projects\VBAudioRouter\x64\Debug\UncloakHelper.dll";
+
+        public static void CloakWindow(IntPtr hWnd)
+        {
+            GetWindowThreadProcessId(hWnd, out var pid);
+            LoadLibraryRemote(pid, libName);
+            CallFunctionRemote(pid, "UncloakHelper.dll", "CloakWindow", hWnd);
         }
 
         public static void UnCloakWindow(IntPtr hWnd)
         {
-            LoadUncloakHelper(hWnd);
-
             GetWindowThreadProcessId(hWnd, out var pid);
+            LoadLibraryRemote(pid, libName);
+            CallFunctionRemote(pid, "UncloakHelper.dll", "UncloakWindow", hWnd);
+        }
 
-            IntPtr hModule = GetModuleHandle("UncloakHelper.dll");
-            IntPtr fpProc = GetProcAddress(hModule, "UncloakWindow");
+        public static void CallFunctionRemote(uint pid, string library, string functionName, IntPtr arg)
+        {
+            IntPtr hModule = GetModuleHandle(library);
+            IntPtr hProc = GetProcAddress(hModule, functionName);
             IntPtr hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-            uint dwThreadId;
-            // Create a thread in the first process.
             IntPtr hThread = CreateRemoteThread(
                 hProcess,
                 IntPtr.Zero,
                 0,
-                fpProc, hWnd,
+                hProc, arg,
                 0,
-                out dwThreadId);
+                out _);
             WaitForThreadToExit(hThread);
+            CloseHandle(hThread);
+            CloseHandle(hProcess);
         }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
     }
 }
