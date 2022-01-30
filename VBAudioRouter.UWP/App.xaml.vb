@@ -3,6 +3,7 @@ Imports VBAudioRouter.Dialogs
 Imports VBAudioRouter.Utils
 Imports Windows.UI
 Imports Windows.UI.Core.Preview
+Imports Windows.UI.WindowManagement
 
 NotInheritable Class App
     Inherits XamlApplication

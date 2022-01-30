@@ -3,11 +3,13 @@ using FullTrustUWP.Core.Activation;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 using static FullTrustUWP.Core.Activation.ApplicationFrameActivator;
 
 namespace VBAudioRouter.Host
@@ -57,17 +59,26 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
 
-            RemoteThread.CloakWindow(form.Handle);
+            SetProp(hwnd, "LastSetGlomIdForReconstitution", (IntPtr)1);
+            // SetProp(hwnd, "{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3} 5", (IntPtr)0x0000C174);
+            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)0);            
+            SetProp(hwnd, "43290 (Atom)", (IntPtr)0x2011DDC5BF0);
+            RemoteThread.UnCloakWindow(hwnd);
 
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
 
             int value = 0;
-            Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));            
+            Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));
+
+            var x = CoreApplication.Views.ToArray();
 
             Application.Run(form);
 
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
