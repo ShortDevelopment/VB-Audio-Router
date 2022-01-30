@@ -10,14 +10,12 @@ namespace FullTrustUWP.Core
     public sealed class RemoteThread
     {
         #region standard imports from kernel32
-
-        // CreateRemoteThread, since ThreadProc is in remote process, we must use a raw function-pointer.
         [DllImport("kernel32")]
         public static extern IntPtr CreateRemoteThread(
           IntPtr hProcess,
           IntPtr lpThreadAttributes,
           uint dwStackSize,
-          IntPtr lpStartAddress, // raw Pointer into remote process
+          IntPtr lpStartAddress,
           IntPtr lpParameter,
           uint dwCreationFlags,
           out uint lpThreadId
@@ -92,7 +90,6 @@ namespace FullTrustUWP.Core
 
         #endregion // standard imports from kernel32
 
-        // Helper to wait for a thread to exit and print its exit code
         static void WaitForThreadToExit(IntPtr hThread)
         {
             WaitForSingleObject(hThread, unchecked((uint)-1));
@@ -101,39 +98,6 @@ namespace FullTrustUWP.Core
             GetExitCodeThread(hThread, out exitCode);
             //if (exitCode != 0)
             //    throw new Win32Exception(exitCode);
-        }
-
-        public enum DwmWindowAttribute : uint
-        {
-            NCRenderingEnabled = 1,
-            NCRenderingPolicy,
-            TransitionsForceDisabled,
-            AllowNCPaint,
-            CaptionButtonBounds,
-            NonClientRtlLayout,
-            ForceIconicRepresentation,
-            Flip3DPolicy,
-            ExtendedFrameBounds,
-            HasIconicBitmap,
-            DisallowPeek,
-            ExcludedFromPeek,
-            Cloak,
-            Cloaked,
-            FreezeRepresentation,
-            PASSIVE_UPDATE_MODE,
-            USE_HOSTBACKDROPBRUSH,
-            USE_IMMERSIVE_DARK_MODE,
-            WINDOW_CORNER_PREFERENCE,
-            BORDER_COLOR,
-            CAPTION_COLOR,
-            TEXT_COLOR,
-            VISIBLE_FRAME_BORDER_THICKNESS,
-            LAST
-        }
-
-        static void Test(IntPtr param)
-        {
-            MessageBox.Show("Hallo");
         }
 
         delegate void TestDelegate(IntPtr param);

@@ -56,7 +56,6 @@ namespace VBAudioRouter.Host
             // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle("{66500F8A-FAFF-47FA-898D-0F9277691464}"));
 
             RemoteThread.UnCloakWindow(hwnd);
 
