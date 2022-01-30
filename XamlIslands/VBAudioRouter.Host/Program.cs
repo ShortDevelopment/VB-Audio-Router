@@ -61,9 +61,11 @@ namespace VBAudioRouter.Host
 
             SetProp(hwnd, "LastSetGlomIdForReconstitution", (IntPtr)1);
             // SetProp(hwnd, "{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3} 5", (IntPtr)0x0000C174);
-            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)0);            
+            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)2);
             SetProp(hwnd, "43290 (Atom)", (IntPtr)0x2011DDC5BF0);
             RemoteThread.UnCloakWindow(hwnd);
+
+            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)0);
 
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
 
@@ -77,7 +79,7 @@ namespace VBAudioRouter.Host
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SetPropW")]
         static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
 
         [DllImport("user32.dll", SetLastError = true)]

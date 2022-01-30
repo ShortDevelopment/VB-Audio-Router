@@ -25,9 +25,7 @@ PINVOKE HRESULT CloakWindow(HWND hWnd) {
 	return hRes;
 }
 
-PINVOKE HRESULT UncloakWindow(HWND hWnd) {
-	MessageBoxA(nullptr, "Called uncload", "caption", 0);
-
+PINVOKE HRESULT UnCloakWindow(HWND hWnd) {
 	BOOL value = false;
 	HRESULT hRes = DwmSetWindowAttribute(hWnd, DWMWA_CLOAK, &value, sizeof(value));
 	ExitThread(hRes);
