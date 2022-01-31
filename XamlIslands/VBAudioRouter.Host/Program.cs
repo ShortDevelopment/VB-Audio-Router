@@ -1,16 +1,12 @@
 using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
+using FullTrustUWP.Core.Interfaces;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Windows.ApplicationModel.Core;
-using Windows.UI.ViewManagement;
-using Windows.UI.WindowManagement;
-using static FullTrustUWP.Core.Activation.ApplicationFrameActivator;
+using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace VBAudioRouter.Host
 {
@@ -19,32 +15,42 @@ namespace VBAudioRouter.Host
         [STAThread]
         static void Main()
         {
-            //var provider = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3480a401-bde9-4407-bc02-798a866ac051")));
-            //var factory = provider as ICoreWindowFactory;
-
-            // ApplicationView.GetForCurrentView().TitleBar.
-
             Form form = new();
             form.Show();
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
 
+            #region Immersive Shell
+            var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
+            Guid iid = typeof(IApplicationViewCollection).GUID;
+            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr));
+            IApplicationViewCollection viewCollection = (IApplicationViewCollection)ptr;
+            #endregion
+
             Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
             Marshal.ThrowExceptionForHR(frameArray.GetCount(out var count));
             for (uint i = 0; i < count; i++)
             {
-                Guid iid = typeof(IApplicationFrame).GUID;
-                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid, out object frameUnk));
+                Guid iid2 = typeof(IApplicationFrame).GUID;
+                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid2, out object frameUnk));
                 IApplicationFrame frame2 = frameUnk as IApplicationFrame;
                 Marshal.ThrowExceptionForHR(frame2.GetChromeOptions(out var options));
                 Marshal.ThrowExceptionForHR(frame2.GetFrameWindow(out var hwndHost));
                 frame2.GetPresentedWindow(out var hwndContent);
+
+                frame2.SetBackgroundColor(System.Drawing.Color.Red.ToArgb());
+
+                var view = GetApplicationViewForFrame(viewCollection, frame2);
+                string appUserModelId = "";
+                view?.GetAppUserModelId(out appUserModelId);
+                view?.SetCloak(ApplicationViewCloakType.DEFAULT, 0);
+
                 Debug.Print(
                     $"HWND: {hwndHost}; TITLE: {GetWindowTitle(hwndHost)};\r\n" +
                     $"CONTENT: {hwndContent}; TITLE: {GetWindowTitle(hwndContent)};\r\n" +
-                    $"OPTIONS: {options}"
+                    $"OPTIONS: {options}\r\n" +
+                    $"ID: {appUserModelId}\r\n"
                 );
-                frame2.SetBackgroundColor(System.Drawing.Color.Red.ToArgb());
             }
 
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
@@ -57,33 +63,36 @@ namespace VBAudioRouter.Host
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
             // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
 
-            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-
-            SetProp(hwnd, "LastSetGlomIdForReconstitution", (IntPtr)1);
-            // SetProp(hwnd, "{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3} 5", (IntPtr)0x0000C174);
-            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)2);
-            SetProp(hwnd, "43290 (Atom)", (IntPtr)0x2011DDC5BF0);
             RemoteThread.UnCloakWindow(hwnd);
 
-            SetProp(hwnd, "ApplicationViewCloakType", (IntPtr)0);
+            var desktopManager = VirtualDesktopManagerActivator.CreateVirtualDesktopManager();
+            Marshal.ThrowExceptionForHR(desktopManager.GetWindowDesktopId(form.Handle, out Guid desktopId));
+            // Marshal.ThrowExceptionForHR(desktopManager.MoveWindowToDesktop((IntPtr)0x30BEE, ref desktopId));
 
+            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
 
             int value = 0;
             Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));
-
-            var x = CoreApplication.Views.ToArray();
 
             Application.Run(form);
 
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SetPropW")]
-        static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static IApplicationView? GetApplicationViewForFrame(IApplicationViewCollection collection, IApplicationFrame frame)
+        {
+            try
+            {
+                Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
+                Marshal.ThrowExceptionForHR(collection.GetViewForHwnd(hwnd, out var view));
+                return view;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         private static string GetWindowTitle(IntPtr hWnd)
         {

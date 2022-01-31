@@ -5,6 +5,7 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
 		<LangVersion>9</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,7 +1,9 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <dwmapi.h>
-#pragma comment(lib, "Dwmapi.lib");
+#pragma comment(lib, "Dwmapi.lib")
+
+#include <shobjidl_core.h>
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -18,16 +20,26 @@ PINVOKE HRESULT DisplayNumber(int num) {
 	return 0;
 }
 
-PINVOKE HRESULT CloakWindow(HWND hWnd) {
+PINVOKE void CloakWindow(HWND hWnd) {
 	BOOL value = true;
 	HRESULT hRes = DwmSetWindowAttribute(hWnd, DWMWA_CLOAK, &value, sizeof(value));
 	ExitThread(hRes);
-	return hRes;
 }
 
-PINVOKE HRESULT UnCloakWindow(HWND hWnd) {
+PINVOKE void UnCloakWindow(HWND hWnd) {
 	BOOL value = false;
 	HRESULT hRes = DwmSetWindowAttribute(hWnd, DWMWA_CLOAK, &value, sizeof(value));
 	ExitThread(hRes);
-	return hRes;
 }
+
+//REFGUID CurrentDesktop;
+//PINVOKE void SetCurrentDesktop(REFGUID desktopId) {
+//	CurrentDesktop = desktopId;
+//	ExitThread(0);
+//} // CLSID_VirtualDesktopManager
+//
+//PINVOKE void SetCurrentDesktop(REFGUID desktopId) {
+//	
+//	CoCreateInstance(CLSID_WICImagingFactory, nullptr, 0, , )
+//	ExitThread(0);
+//}
