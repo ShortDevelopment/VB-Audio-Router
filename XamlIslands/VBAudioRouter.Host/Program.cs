@@ -63,7 +63,7 @@ namespace VBAudioRouter.Host
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
             // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
 
-            RemoteThread.UnCloakWindow(hwnd);
+            RemoteThread.UnCloakWindow2(hwnd);
 
             var desktopManager = VirtualDesktopManagerActivator.CreateVirtualDesktopManager();
             Marshal.ThrowExceptionForHR(desktopManager.GetWindowDesktopId(form.Handle, out Guid desktopId));
