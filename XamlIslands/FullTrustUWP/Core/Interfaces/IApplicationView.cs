@@ -20,7 +20,7 @@ namespace FullTrustUWP.Core.Interfaces
 
 		int GetVisibility(out int visibility);
 
-		int SetCloak(ApplicationViewCloakType cloakType, int unknown);
+		int SetCloak(ApplicationViewCloakType cloakType, bool removeFlag);
 
 		int GetPosition(ref Guid guid /* GUID for IApplicationViewPosition */, out IntPtr /* IApplicationViewPosition** */ position);
 
@@ -113,6 +113,7 @@ namespace FullTrustUWP.Core.Interfaces
 		public int Y;
 	}
 
+	[Flags]
 	public enum ApplicationViewCloakType
 	{
 		NONE = 0,

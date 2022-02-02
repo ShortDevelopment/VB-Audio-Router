@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace VBAudioRouter.Host
 {
@@ -43,7 +42,12 @@ namespace VBAudioRouter.Host
                 var view = GetApplicationViewForFrame(viewCollection, frame2);
                 string appUserModelId = "";
                 view?.GetAppUserModelId(out appUserModelId);
-                view?.SetCloak(ApplicationViewCloakType.DEFAULT, 0);
+                if(view != null)
+                {
+                    Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
+                    Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, true));
+                    Marshal.ThrowExceptionForHR(view.Flash());
+                }
 
                 Debug.Print(
                     $"HWND: {hwndHost}; TITLE: {GetWindowTitle(hwndHost)};\r\n" +
@@ -63,7 +67,7 @@ namespace VBAudioRouter.Host
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
             // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
 
-            RemoteThread.UnCloakWindow2(hwnd);
+            // RemoteThread.UnCloakWindow2(hwnd);
 
             var desktopManager = VirtualDesktopManagerActivator.CreateVirtualDesktopManager();
             Marshal.ThrowExceptionForHR(desktopManager.GetWindowDesktopId(form.Handle, out Guid desktopId));

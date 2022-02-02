@@ -7,6 +7,8 @@
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
 		<LangVersion>9</LangVersion>
 		<Platforms>AnyCPU;x64</Platforms>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\FullTrustUWP\FullTrustUWP.csproj" />
+		<ProjectReference Include="..\FullTrustUWP\FullTrustUWP.csproj" />
 	</ItemGroup>
 
 </Project>
