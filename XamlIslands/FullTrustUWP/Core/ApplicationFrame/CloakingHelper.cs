@@ -8,16 +8,16 @@ namespace FullTrustUWP.Core.ApplicationFrame
     {
         private delegate int EnableIAMAccess_Sig(
             IntPtr srwLock,
-            UInt64 enabled
+            bool enabled
         );
         private static EnableIAMAccess_Sig EnableIAMAccess_Ref;
 
-        public static void EnableIAMAccess(IntPtr SRWLock, bool enabled)
+        public static void EnableIAMAccess(bool enabled)
         {
             if (EnableIAMAccess_Ref == null)
                 EnableIAMAccess_Ref = DynamicLoad<EnableIAMAccess_Sig>("user32.dll", 2510);
 
-            Marshal.ThrowExceptionForHR(EnableIAMAccess_Ref(SRWLock, 1));
+            Marshal.ThrowExceptionForHR(EnableIAMAccess_Ref(IntPtr.Zero, enabled));
         }
 
         private delegate int AcquireIAMKey_Sig();
@@ -29,33 +29,6 @@ namespace FullTrustUWP.Core.ApplicationFrame
                 AcquireIAMKey_Ref = DynamicLoad<AcquireIAMKey_Sig>("user32.dll", 2509);
 
             Marshal.ThrowExceptionForHR(AcquireIAMKey_Ref());
-        }
-
-        [DllImport("kernel32")]
-        public static extern void InitializeSRWLock([Out] IntPtr SRWLock);
-
-        [DllImport("kernel32")]
-        public static extern void AcquireSRWLockExclusive([In] IntPtr SRWLock);
-
-        [DllImport("kernel32")]
-        public static extern void ReleaseSRWLockExclusive([In] IntPtr SRWLock);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct RTL_SRWLOCK
-        {
-            public IntPtr Ptr;
-        }
-
-        static RTL_SRWLOCK srwLock;
-        public static unsafe void EnableIAMAccess()
-        {
-            AcquireIAMKey();
-            fixed (RTL_SRWLOCK* ptr = &srwLock)
-            {
-                InitializeSRWLock((IntPtr)ptr);
-                AcquireSRWLockExclusive((IntPtr)ptr);
-                EnableIAMAccess(srwLock.Ptr, true);
-            }
         }
     }
 }

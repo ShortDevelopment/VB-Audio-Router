@@ -30,9 +30,11 @@ namespace VBAudioRouter.Host
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
 
-            CloakingHelper.EnableIAMAccess();
+            CloakingHelper.AcquireIAMKey();
+            CloakingHelper.EnableIAMAccess(true);
             int value = 0;
             Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
+            CloakingHelper.EnableIAMAccess(false);
 
             Application.Run(form);
 
