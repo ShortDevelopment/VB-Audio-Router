@@ -1,5 +1,5 @@
-using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
+using FullTrustUWP.Core.ApplicationFrame;
 using FullTrustUWP.Core.Interfaces;
 using System;
 using System.Diagnostics;
@@ -18,7 +18,30 @@ namespace VBAudioRouter.Host
             form.Show();
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
+            // ListAllFrames(frameManager);
 
+            Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
+            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
+
+            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
+            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
+
+            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
+            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
+
+            CloakingHelper.EnableIAMAccess();
+            int value = 0;
+            Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
+
+            Application.Run(form);
+
+            // XamlHostApplication<App>.Run<WelcomePage>();
+        }
+
+        #region List Frames
+        private static void ListAllFrames(IApplicationFrameManager frameManager)
+        {
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
             Guid iid = typeof(IApplicationViewCollection).GUID;
@@ -42,10 +65,10 @@ namespace VBAudioRouter.Host
                 var view = GetApplicationViewForFrame(viewCollection, frame2);
                 string appUserModelId = "";
                 view?.GetAppUserModelId(out appUserModelId);
-                if(view != null)
+                if (view != null)
                 {
-                    Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
-                    Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, true));
+                    // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
+                    //Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
                     Marshal.ThrowExceptionForHR(view.Flash());
                 }
 
@@ -56,32 +79,6 @@ namespace VBAudioRouter.Host
                     $"ID: {appUserModelId}\r\n"
                 );
             }
-
-            Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
-            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
-
-            //var coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", hwnd);
-            //IntPtr contentHwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
-
-            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
-            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
-
-            // RemoteThread.UnCloakWindow2(hwnd);
-
-            var desktopManager = VirtualDesktopManagerActivator.CreateVirtualDesktopManager();
-            Marshal.ThrowExceptionForHR(desktopManager.GetWindowDesktopId(form.Handle, out Guid desktopId));
-            // Marshal.ThrowExceptionForHR(desktopManager.MoveWindowToDesktop((IntPtr)0x30BEE, ref desktopId));
-
-            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
-
-            int value = 0;
-            Marshal.ThrowExceptionForHR(DwmGetWindowAttribute(hwnd, (DwmWindowAttribute.Cloaked), out value, Marshal.SizeOf<int>()));
-
-            Application.Run(form);
-
-            // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
         private static IApplicationView? GetApplicationViewForFrame(IApplicationViewCollection collection, IApplicationFrame frame)
@@ -107,6 +104,7 @@ namespace VBAudioRouter.Host
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        #endregion
 
         [DllImport("dwmapi.dll", PreserveSig = true)]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attr, ref int attrValue, int attrSize);
