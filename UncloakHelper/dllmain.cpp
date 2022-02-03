@@ -38,5 +38,11 @@ PINVOKE void Test() {
 	InitializeSRWLock(lock);
 	AcquireSRWLockExclusive(lock);
 
+	RTL_SRWLOCK* x;
+	x[5].Ptr
+
+	HMODULE hModule = LoadLibraryA("user32.dll");
+	()GetProcAddress(hModule, MAKEINTRESOURCEA(2510));
+
 	// ReleaseSRWLockExclusive(lock);
 }

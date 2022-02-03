@@ -6,8 +6,8 @@ namespace FullTrustUWP.Core.ApplicationFrame
 {
     public static class CloakingHelper
     {
-        private delegate void EnableIAMAccess_Sig(
-            [In, Out] IntPtr srwLock,
+        private delegate int EnableIAMAccess_Sig(
+            IntPtr srwLock,
             UInt64 enabled
         );
         private static EnableIAMAccess_Sig EnableIAMAccess_Ref;
@@ -15,9 +15,9 @@ namespace FullTrustUWP.Core.ApplicationFrame
         public static void EnableIAMAccess(IntPtr SRWLock, bool enabled)
         {
             if (EnableIAMAccess_Ref == null)
-                EnableIAMAccess_Ref = DynamicLoad<EnableIAMAccess_Sig>("user32.dll", 2501);
+                EnableIAMAccess_Ref = DynamicLoad<EnableIAMAccess_Sig>("user32.dll", 2510);
 
-            EnableIAMAccess_Ref(SRWLock, (UInt64)1);
+            Marshal.ThrowExceptionForHR(EnableIAMAccess_Ref(SRWLock, 1));
         }
 
         private delegate int AcquireIAMKey_Sig();
@@ -49,11 +49,12 @@ namespace FullTrustUWP.Core.ApplicationFrame
         static RTL_SRWLOCK srwLock;
         public static unsafe void EnableIAMAccess()
         {
+            AcquireIAMKey();
             fixed (RTL_SRWLOCK* ptr = &srwLock)
             {
                 InitializeSRWLock((IntPtr)ptr);
                 AcquireSRWLockExclusive((IntPtr)ptr);
-                EnableIAMAccess((IntPtr)ptr, true);
+                EnableIAMAccess(srwLock.Ptr, true);
             }
         }
     }
