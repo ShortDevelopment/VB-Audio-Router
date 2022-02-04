@@ -14,11 +14,14 @@ namespace VBAudioRouter.Host
     static class Program
     {
         static Form MainForm;
+        static Form TestForm;
         [STAThread]
         static void Main()
         {
             MainForm = new();
             MainForm.Show();
+            TestForm = new();
+            TestForm.Show();
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
             ListAllFrames(frameManager);
@@ -75,17 +78,13 @@ namespace VBAudioRouter.Host
                     Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
                     // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
                     Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
-                    if (SetParent(MainForm.Handle, hwndHost) == IntPtr.Zero)
+                    if (SetParent(TestForm.Handle, MainForm.Handle) == IntPtr.Zero)
                     {
-                        // throw new Win32Exception(Marshal.GetLastWin32Error());
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
                     Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
                     Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-                    // 2, 0 => Min -- Close
-                    // 1, 0 => -- -- Close
-                    // 2, 2 => -- Max Close
-                    // 2, 1 => -- -- Close
-                    titleBar.SetVisibleButtons(2,2);
+                    // IntPtr frameHWND = titleBar.GetFrameWindow // ToDo: Access-Violation-Exception
                     Marshal.ThrowExceptionForHR(frame.SetApplicationId("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"));
                     Marshal.ThrowExceptionForHR(view.Flash());
                     test1 = false;

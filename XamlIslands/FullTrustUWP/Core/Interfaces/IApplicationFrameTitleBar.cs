@@ -36,6 +36,34 @@ namespace FullTrustUWP.Core.Interfaces
 
         [PreserveSig]
         int GetVisibleButtons(int flag);
+
+        [Obsolete("Wrong signature")]
+        void SetDragOptions();
+
+        [PreserveSig]
+        int GetDrawnByApp(out bool value);
+
+        [Obsolete("Wrong signature")]
+        void SetHideOptions();
+        [Obsolete("Wrong signature")]
+        void SetFrameHoverState();
+        [Obsolete("Wrong signature")]
+        void SetSuppressedButtons();
+        [Obsolete("Wrong signature")]
+        void OnDesiredTitlebarOverlayStateUpdated();
+        [Obsolete("Wrong signature")]
+        void OnTitleBarIconUpdated();
+        [Obsolete("Wrong signature")]
+        void SetPinButtonHandler();
+
+        [PreserveSig]
+        void ShowActionsMenu();
+
+        [PreserveSig]
+        int GetState();
+
+        [PreserveSig]
+        IntPtr GetFrameWindow();
     }
 
     public static class ApplicationFrameTitleBarExtensions
