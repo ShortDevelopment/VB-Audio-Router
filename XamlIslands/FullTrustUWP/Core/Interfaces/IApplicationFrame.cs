@@ -23,8 +23,10 @@ namespace FullTrustUWP.Core.Interfaces
         void SetSystemVisual();
         [Obsolete("Wrong signature")]
         void GetSystemVisual();
-        [Obsolete("Wrong signature")]
-        void SetApplicationId();
+
+        [PreserveSig] // ToDo: No effect?!
+        int SetApplicationId([MarshalAs(UnmanagedType.LPWStr)] string appId);
+
         [Obsolete("Wrong signature")]
         void SetMinimumSize();
         [Obsolete("Wrong signature")]
@@ -117,7 +119,8 @@ namespace FullTrustUWP.Core.Interfaces
 
     public enum FRAME_OPERATING_MODE
     {
-        ZERO = 0
+        FullScreen = 0,
+        Window = 1
     }
 
     public struct tagSIZE

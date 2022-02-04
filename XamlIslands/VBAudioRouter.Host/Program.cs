@@ -1,7 +1,9 @@
+using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.ApplicationFrame;
 using FullTrustUWP.Core.Interfaces;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,14 +13,15 @@ namespace VBAudioRouter.Host
 {
     static class Program
     {
+        static Form MainForm;
         [STAThread]
         static void Main()
         {
-            Form form = new();
-            form.Show();
+            MainForm = new();
+            MainForm.Show();
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            // ListAllFrames(frameManager);
+            ListAllFrames(frameManager);
 
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
@@ -32,11 +35,12 @@ namespace VBAudioRouter.Host
 
             CloakingHelper.AcquireIAMKey();
             CloakingHelper.EnableIAMAccess(true);
+            RemoteThread.UnCloakWindow(hwnd);
             int value = 0;
-            Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
+            // Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
             CloakingHelper.EnableIAMAccess(false);
 
-            Application.Run(form);
+            Application.Run(MainForm);
 
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
@@ -53,25 +57,38 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
             Marshal.ThrowExceptionForHR(frameArray.GetCount(out var count));
+            bool test1 = true;
             for (uint i = 0; i < count; i++)
             {
                 Guid iid2 = typeof(IApplicationFrame).GUID;
                 Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid2, out object frameUnk));
-                IApplicationFrame frame2 = frameUnk as IApplicationFrame;
-                Marshal.ThrowExceptionForHR(frame2.GetChromeOptions(out var options));
-                Marshal.ThrowExceptionForHR(frame2.GetFrameWindow(out var hwndHost));
-                frame2.GetPresentedWindow(out var hwndContent);
+                IApplicationFrame frame = frameUnk as IApplicationFrame;
+                Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
+                Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out var hwndHost));
+                frame.GetPresentedWindow(out var hwndContent);
 
-                frame2.SetBackgroundColor(System.Drawing.Color.Red.ToArgb());
-
-                var view = GetApplicationViewForFrame(viewCollection, frame2);
+                var view = GetApplicationViewForFrame(viewCollection, frame);
                 string appUserModelId = "";
                 view?.GetAppUserModelId(out appUserModelId);
-                if (view != null)
+                if (view != null && test1)
                 {
-                    // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
-                    //Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
+                    Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
+                    // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
+                    Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
+                    if (SetParent(MainForm.Handle, hwndHost) == IntPtr.Zero)
+                    {
+                        // throw new Win32Exception(Marshal.GetLastWin32Error());
+                    }
+                    Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
+                    Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
+                    // 2, 0 => Min -- Close
+                    // 1, 0 => -- -- Close
+                    // 2, 2 => -- Max Close
+                    // 2, 1 => -- -- Close
+                    titleBar.SetVisibleButtons(2,2);
+                    Marshal.ThrowExceptionForHR(frame.SetApplicationId("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"));
                     Marshal.ThrowExceptionForHR(view.Flash());
+                    test1 = false;
                 }
 
                 Debug.Print(
@@ -81,6 +98,14 @@ namespace VBAudioRouter.Host
                     $"ID: {appUserModelId}\r\n"
                 );
             }
+        }
+
+        [Flags]
+        public enum test
+        {
+            a = 0x1,
+            b = 0x2,
+            c = 0x3
         }
 
         private static IApplicationView? GetApplicationViewForFrame(IApplicationViewCollection collection, IApplicationFrame frame)
@@ -107,6 +132,9 @@ namespace VBAudioRouter.Host
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
         #endregion
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
         [DllImport("dwmapi.dll", PreserveSig = true)]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attr, ref int attrValue, int attrSize);

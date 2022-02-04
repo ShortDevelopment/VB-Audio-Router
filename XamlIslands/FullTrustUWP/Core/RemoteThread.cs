@@ -143,7 +143,7 @@ namespace FullTrustUWP.Core
             CallFunctionRemote(pid, "UncloakHelper.dll", "UnCloakWindow", hWnd);
         }
 
-        public static void UnCloakWindow2(IntPtr hWnd)
+        public static void MoveWindowToCurrentDesktop(IntPtr hWnd)
         {
             GetWindowThreadProcessId(hWnd, out var pid);
             LoadLibraryRemote(pid, libName);
