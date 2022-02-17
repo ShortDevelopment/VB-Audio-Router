@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace VBAudioRouter.Host
 {
@@ -28,6 +29,18 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
+
+            var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
+
+            Guid iid;
+            iid = new Guid("bf63999f-7411-40da-861c-df72c0ffee84");
+            // var x = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("50fdbb99-5c92-495e-9e81-e2c2f48cddae"))) as IUncloakWindowService;
+            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr2));
+            IServiceProvider uncloakWindowService = (IServiceProvider)ptr2; // IFrameFactory
+            iid = typeof(IFrameFactory).GUID;
+            Guid iidIUnkown = new Guid("00000000-0000-0000-C000-000000000046");
+            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iidIUnkown, out object ptr3));
+            IFrameFactory frameFactory = (IFrameFactory)ptr3;
 
             Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
@@ -53,7 +66,10 @@ namespace VBAudioRouter.Host
         {
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
-            Guid iid = typeof(IApplicationViewCollection).GUID;
+
+            Guid iid;
+
+            iid = typeof(IApplicationViewCollection).GUID;
             Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr));
             IApplicationViewCollection viewCollection = (IApplicationViewCollection)ptr;
             #endregion
@@ -78,14 +94,16 @@ namespace VBAudioRouter.Host
                     Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
                     // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
                     Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
-                    if (SetParent(TestForm.Handle, MainForm.Handle) == IntPtr.Zero)
+                    if (SetParent(hwndHost, TestForm.Handle) == IntPtr.Zero)
                     {
-                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                        // throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
                     Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
                     Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
                     // IntPtr frameHWND = titleBar.GetFrameWindow // ToDo: Access-Violation-Exception
                     Marshal.ThrowExceptionForHR(frame.SetApplicationId("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"));
+                    // Marshal.ThrowExceptionForHR(view.SetAppUserModelId(appUserModelId));
+                    view.GetAppUserModelId(out appUserModelId);
                     Marshal.ThrowExceptionForHR(view.Flash());
                     test1 = false;
                 }
