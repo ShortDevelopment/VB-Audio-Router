@@ -8,12 +8,11 @@ namespace FullTrustUWP.Core.Activation
     {
         public static ISplashScreen CreateSplashScreen()
         {
-            ISplashScreen screen = new SplashScreenActivation() as object as ISplashScreen;
+            ISplashScreen screen = (Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid(CLSID_ImmersiveSplashScreen))!)! as ISplashScreen)!;
             return screen;
         }
 
-        [ComImport, Guid("329b80ec-2230-47b8-905d-a2dcf5171c6f")]
-        internal sealed class SplashScreenActivation { }
+        const string CLSID_ImmersiveSplashScreen = "329b80ec-2230-47b8-905d-a2dcf5171c6f";
 
         [Guid("0e0da070-2224-4934-8090-041f7ff223eb")]
         public interface ISplashScreen {

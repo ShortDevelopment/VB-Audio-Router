@@ -5,11 +5,11 @@ using static FullTrustUWP.Core.InteropHelper;
 
 namespace FullTrustUWP.Core
 {
-    internal static class AppxActivatorTest
+    public static class AppxActivatorTest
     {
 
         [DllImport("daxexec.dll", SetLastError = true)]
-        public static extern IntPtr TryActivateDesktopAppXApplication(DesktopAppxActivationParams activationParams);
+        public static extern int TryActivateDesktopAppXApplication(string id, out uint pid);
 
         public enum DesktopAppxActivationParams
         {

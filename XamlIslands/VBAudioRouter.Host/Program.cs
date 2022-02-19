@@ -28,10 +28,12 @@ namespace VBAudioRouter.Host
 
             // https://github.com/tpn/winsdk-10/blob/master/Include/10.0.16299.0/winrt/Windows.UI.Core.CoreWindowFactory.h
             Guid iid = typeof(ICoreWindowFactory).GUID;
-            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.UI.Core.ImmersiveCoreWindowFactory", out var factory));
+            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.ApplicationModel.Activation.LaunchActivatedEventArgs", out var factory));
             ICoreWindowFactory coreWindowFactory = Marshal.GetObjectForIUnknown(factory.ActivateInstance()) as ICoreWindowFactory;
             coreWindowFactory.CreateCoreWindow("Test", out var window);
             window.Activate();
+
+            // Marshal.ThrowExceptionForHR(AppxActivatorTest.TryActivateDesktopAppXApplication("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App", out var pid));
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
             ListAllFrames(frameManager);
@@ -41,8 +43,11 @@ namespace VBAudioRouter.Host
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        [DllImport("ActivationManager.dll", EntryPoint = "DllGetActivationFactory")]
+        [DllImport("twinapi.appcore.dll", EntryPoint = "DllGetActivationFactory")]
         public static extern int ActivationManager_GetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, out IActivationFactory activationFactory);
+
+        [DllImport("Ole32.dll")]
+        public static extern int CoLoadLibrary(string lpszLibName, bool bAutoFree);
 
         static IntPtr hwndNewFrame;
         private static void CreateNewFrame(IApplicationFrameManager frameManager)
