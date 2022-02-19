@@ -15,25 +15,52 @@ namespace VBAudioRouter.Host
     static class Program
     {
         static Form MainForm;
-        static Form TestForm;
         [STAThread]
         static void Main()
         {
             MainForm = new();
             MainForm.Show();
-            TestForm = new();
-            TestForm.Show();
+
+            // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
+            // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
+
+            // Marshal.ThrowExceptionForHR(CoreWindowActivator.CoreUICreateICoreWindowFactory(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, out var factory));
+
+            // https://github.com/tpn/winsdk-10/blob/master/Include/10.0.16299.0/winrt/Windows.UI.Core.CoreWindowFactory.h
+            Guid iid = typeof(ICoreWindowFactory).GUID;
+            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.UI.Core.ImmersiveCoreWindowFactory", out var factory));
+            ICoreWindowFactory coreWindowFactory = Marshal.GetObjectForIUnknown(factory.ActivateInstance()) as ICoreWindowFactory;
+            coreWindowFactory.CreateCoreWindow("Test", out var window);
+            window.Activate();
 
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
             ListAllFrames(frameManager);
 
+            Application.Run(MainForm);
+
+            // XamlHostApplication<App>.Run<WelcomePage>();
+        }
+
+        [DllImport("ActivationManager.dll", EntryPoint = "DllGetActivationFactory")]
+        public static extern int ActivationManager_GetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, out IActivationFactory activationFactory);
+
+        static IntPtr hwndNewFrame;
+        private static void CreateNewFrame(IApplicationFrameManager frameManager)
+        {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
-            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr hwnd));
+            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out hwndNewFrame));
 
+            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
+            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
+
+            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
+            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
+        }
+
+        private static void TryGetFrameFactory()
+        {
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
-
-            // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
-            // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
             Guid iid;
             iid = new Guid("bf63999f-7411-40da-861c-df72c0ffee84");
@@ -45,24 +72,16 @@ namespace VBAudioRouter.Host
             Guid serviceId = new Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e");
             Marshal.ThrowExceptionForHR(uncloakWindowService.QueryService(ref serviceId, ref iidIUnkown, out object ptr3));
             IFrameFactory frameFactory = (IFrameFactory)ptr3;
+        }
 
-            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
-            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
-
-            Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-            Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
-
+        private static void UncloakTests(IntPtr hwnd)
+        {
             CloakingHelper.AcquireIAMKey();
             CloakingHelper.EnableIAMAccess(true);
             RemoteThread.UnCloakWindow(hwnd);
             int value = 0;
             // Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
             CloakingHelper.EnableIAMAccess(false);
-
-            Application.Run(MainForm);
-
-            // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
         #region List Frames
@@ -80,7 +99,7 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
             Marshal.ThrowExceptionForHR(frameArray.GetCount(out var count));
-            bool test1 = true;
+            bool alreadyGotVictim = false;
             for (uint i = 0; i < count; i++)
             {
                 Guid iid2 = typeof(IApplicationFrame).GUID;
@@ -93,23 +112,25 @@ namespace VBAudioRouter.Host
                 var view = GetApplicationViewForFrame(viewCollection, frame);
                 string appUserModelId = "";
                 view?.GetAppUserModelId(out appUserModelId);
-                if (view != null && test1)
+                if (view != null && !alreadyGotVictim)
                 {
                     Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
+                    Marshal.ThrowExceptionForHR(view.Flash());
                     // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
                     //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
-                    //if (SetParent(hwndHost, TestForm.Handle) == IntPtr.Zero)
+
+                    //IntPtr newHwnd = MainForm.Handle;
+                    //Marshal.ThrowExceptionForHR(SetWindowLong(newHwnd, -20, GetWindowLong(hwndHost, -20)));
+                    //Marshal.ThrowExceptionForHR(SetWindowLong(newHwnd, -16, GetWindowLong(hwndHost, -16)));
+                    //if (SetParent(hwndContent, hwndNewFrame) == IntPtr.Zero)
                     //{
-                    //    // throw new Win32Exception(Marshal.GetLastWin32Error());
+                    //    throw new Win32Exception(Marshal.GetLastWin32Error());
                     //}
-                    Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
-                    Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
-                    // IntPtr frameHWND = titleBar.GetFrameWindow // ToDo: Access-Violation-Exception
-                    Marshal.ThrowExceptionForHR(frame.SetApplicationId("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"));
-                    // Marshal.ThrowExceptionForHR(view.SetAppUserModelId(appUserModelId));
-                    view.GetAppUserModelId(out appUserModelId);
-                    Marshal.ThrowExceptionForHR(view.Flash());
-                    test1 = false;
+
+                    //Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
+                    //Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
+                    //Marshal.ThrowExceptionForHR(frame.SetApplicationId("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"));
+                    alreadyGotVictim = true;
                 }
 
                 Debug.Print(
@@ -120,6 +141,12 @@ namespace VBAudioRouter.Host
                 );
             }
         }
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
+
+        [DllImport("user32.dll")]
+        static extern long GetWindowLong(IntPtr hWnd, int nIndex);
 
         [Flags]
         public enum test

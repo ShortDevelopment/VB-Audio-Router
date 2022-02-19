@@ -92,7 +92,7 @@ namespace FullTrustUWP.Core.Activation
         }
 
         [DllImport("CoreUIComponents.dll", SetLastError = true)]
-        public static extern int CoreUICreateICoreWindowFactory(uint a, IntPtr reserved1, IntPtr reserved2, out ICoreWindowFactory coreWindowFactory);
+        public static extern int CoreUICreateICoreWindowFactory(IntPtr a, IntPtr reserved1, IntPtr reserved2, out ICoreWindowFactory coreWindowFactory);
     }
 
     [ComImport, Guid(Const.IID_ICoreWindowInterop)]
