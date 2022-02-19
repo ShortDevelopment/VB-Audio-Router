@@ -28,7 +28,7 @@ namespace VBAudioRouter.Host
 
             // https://github.com/tpn/winsdk-10/blob/master/Include/10.0.16299.0/winrt/Windows.UI.Core.CoreWindowFactory.h
             Guid iid = typeof(ICoreWindowFactory).GUID;
-            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.ApplicationModel.Activation.LaunchActivatedEventArgs", out var factory));
+            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.UI.Core.HostedCoreWindowFactory", out var factory));
             ICoreWindowFactory coreWindowFactory = Marshal.GetObjectForIUnknown(factory.ActivateInstance()) as ICoreWindowFactory;
             coreWindowFactory.CreateCoreWindow("Test", out var window);
             window.Activate();
@@ -43,7 +43,7 @@ namespace VBAudioRouter.Host
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        [DllImport("twinapi.appcore.dll", EntryPoint = "DllGetActivationFactory")]
+        [DllImport("windows.ui.immersive.dll", EntryPoint = "DllGetActivationFactory")]
         public static extern int ActivationManager_GetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, out IActivationFactory activationFactory);
 
         [DllImport("Ole32.dll")]
