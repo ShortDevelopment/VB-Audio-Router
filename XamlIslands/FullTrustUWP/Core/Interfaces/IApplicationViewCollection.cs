@@ -25,7 +25,7 @@ namespace FullTrustUWP.Core.Interfaces
 
 		int RegisterForApplicationViewChanges(object listener, out int cookie);
 
-		int RegisterForApplicationViewPositionChanges(object listener, out int cookie);
+		//int RegisterForApplicationViewPositionChanges(object listener, out int cookie);
 
 		int UnregisterForApplicationViewChanges(int cookie);
 	}

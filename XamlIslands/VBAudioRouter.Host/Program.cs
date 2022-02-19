@@ -1,13 +1,19 @@
-using FullTrustUWP.Core;
+﻿using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.ApplicationFrame;
 using FullTrustUWP.Core.Interfaces;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Windows.UI.Input;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Application = System.Windows.Forms.Application;
 using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace VBAudioRouter.Host
@@ -24,33 +30,53 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
-            // Marshal.ThrowExceptionForHR(CoreWindowActivator.CoreUICreateICoreWindowFactory(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, out var factory));
+            //var windowFactory1 = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("B243A9FD-C57A-4D3E-A7CF-21CAED64CB5A"))) as ICoreWindowFactory;
+            //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
+            //coreWindow2.Activate();
 
-            // https://github.com/tpn/winsdk-10/blob/master/Include/10.0.16299.0/winrt/Windows.UI.Core.CoreWindowFactory.h
-            Guid iid = typeof(ICoreWindowFactory).GUID;
-            Marshal.ThrowExceptionForHR(ActivationManager_GetActivationFactory("Windows.UI.Core.HostedCoreWindowFactory", out var factory));
-            ICoreWindowFactory coreWindowFactory = Marshal.GetObjectForIUnknown(factory.ActivateInstance()) as ICoreWindowFactory;
-            coreWindowFactory.CreateCoreWindow("Test", out var window);
-            window.Activate();
+            #region CoreWindow
+            CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
+            coreWindow.Activate();
 
-            // Marshal.ThrowExceptionForHR(AppxActivatorTest.TryActivateDesktopAppXApplication("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App", out var pid));
+            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
 
+            SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
+
+            {
+                var applicationView = ApplicationView.GetForCurrentView(); // ✔
+                var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
+            }
+            #endregion
+
+            //FolderPicker picker = new();
+            //picker.FileTypeFilter.Add("*");
+            //_ = picker.PickSingleFolderAsync();
+
+            #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
             ListAllFrames(frameManager);
 
-            Application.Run(MainForm);
+            var frame = CreateNewFrame(frameManager);
+            //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
 
+            #endregion
+
+            Window.Current?.Activate();
+
+            DataTransferManager.GetForCurrentView().DataRequested += Program_DataRequested;
+            DataTransferManager.ShowShareUI();
+
+            Application.Run(MainForm);
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        [DllImport("windows.ui.immersive.dll", EntryPoint = "DllGetActivationFactory")]
-        public static extern int ActivationManager_GetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, out IActivationFactory activationFactory);
-
-        [DllImport("Ole32.dll")]
-        public static extern int CoLoadLibrary(string lpszLibName, bool bAutoFree);
+        private static void Program_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
 
         static IntPtr hwndNewFrame;
-        private static void CreateNewFrame(IApplicationFrameManager frameManager)
+        private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)
         {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out hwndNewFrame));
@@ -61,6 +87,7 @@ namespace VBAudioRouter.Host
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
+            return frame;
         }
 
         private static void TryGetFrameFactory()
@@ -100,6 +127,7 @@ namespace VBAudioRouter.Host
             iid = typeof(IApplicationViewCollection).GUID;
             Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr));
             IApplicationViewCollection viewCollection = (IApplicationViewCollection)ptr;
+            IApplicationViewCollectionManagement viewCollectionManagement = (IApplicationViewCollectionManagement)ptr;
             #endregion
 
             Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
@@ -148,10 +176,13 @@ namespace VBAudioRouter.Host
         }
 
         [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, long dwNewLong);
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
 
         [DllImport("user32.dll")]
-        static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+        static extern int SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("user32.dll")]
+        static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
 
         [Flags]
         public enum test

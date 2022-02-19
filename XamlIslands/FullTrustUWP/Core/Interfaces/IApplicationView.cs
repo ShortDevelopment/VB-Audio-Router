@@ -50,9 +50,9 @@ namespace FullTrustUWP.Core.Interfaces
 
 		int SetVirtualDesktopId(ref Guid guid);
 
-		int GetShowInSwitchers(out int flag);
+		int GetShowInSwitchers(out bool flag);
 
-		int SetShowInSwitchers(int flag);
+		int SetShowInSwitchers(bool flag);
 
 		int GetScaleFactor(out int factor);
 
