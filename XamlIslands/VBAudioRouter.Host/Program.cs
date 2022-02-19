@@ -32,6 +32,9 @@ namespace VBAudioRouter.Host
 
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
 
+            // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
+            // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
+
             Guid iid;
             iid = new Guid("bf63999f-7411-40da-861c-df72c0ffee84");
             // var x = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("50fdbb99-5c92-495e-9e81-e2c2f48cddae"))) as IUncloakWindowService;
@@ -39,7 +42,8 @@ namespace VBAudioRouter.Host
             IServiceProvider uncloakWindowService = (IServiceProvider)ptr2; // IFrameFactory
             iid = typeof(IFrameFactory).GUID;
             Guid iidIUnkown = new Guid("00000000-0000-0000-C000-000000000046");
-            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iidIUnkown, out object ptr3));
+            Guid serviceId = new Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e");
+            Marshal.ThrowExceptionForHR(uncloakWindowService.QueryService(ref serviceId, ref iidIUnkown, out object ptr3));
             IFrameFactory frameFactory = (IFrameFactory)ptr3;
 
             Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
@@ -93,11 +97,11 @@ namespace VBAudioRouter.Host
                 {
                     Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
                     // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
-                    Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
-                    if (SetParent(hwndHost, TestForm.Handle) == IntPtr.Zero)
-                    {
-                        // throw new Win32Exception(Marshal.GetLastWin32Error());
-                    }
+                    //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
+                    //if (SetParent(hwndHost, TestForm.Handle) == IntPtr.Zero)
+                    //{
+                    //    // throw new Win32Exception(Marshal.GetLastWin32Error());
+                    //}
                     Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
                     Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
                     // IntPtr frameHWND = titleBar.GetFrameWindow // ToDo: Access-Violation-Exception

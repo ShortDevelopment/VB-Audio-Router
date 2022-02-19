@@ -10,8 +10,19 @@ namespace FullTrustUWP.Core.Interfaces
         int SetCloak(IntPtr hWnd, bool cloak);
     }
 
-    [Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)] // 
     public interface IFrameFactory
     {
+        [PreserveSig]
+        int CreateFrameWithWrapper(out IApplicationFrame frame);
+
+        [PreserveSig]
+        int DestroyFrameWithWrapper(ref IApplicationFrame frame);
+
+        [Obsolete]
+        void RegisterForFrameEvents(ref object handler);
+
+        [Obsolete]
+        void UnregisterForFrameEvents();
     }
 }
