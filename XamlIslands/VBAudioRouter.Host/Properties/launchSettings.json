@@ -2,6 +2,7 @@
   "profiles": {
     "XamlIslands (VBAudioRouter.Host)": {
       "commandName": "Project",
+      "commandLineArgs": "-ServerName:App.AppXfda2ecmmv7vpeq0mkwrj7mkgkg8efffm.mca",
       "nativeDebugging": true
     }
   }

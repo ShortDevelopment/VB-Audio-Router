@@ -3,11 +3,16 @@ using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.ApplicationFrame;
 using FullTrustUWP.Core.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Input;
@@ -20,15 +25,88 @@ namespace VBAudioRouter.Host
 {
     static class Program
     {
+        class App : Windows.UI.Xaml.Application
+        {
+            protected override void OnWindowCreated(WindowCreatedEventArgs args)
+            {
+
+            }
+
+            protected override void OnLaunched(LaunchActivatedEventArgs args)
+            {
+                base.OnLaunched(args);
+            }
+        }
+
+        class Test : IGetActivationFactory
+        {
+            public object GetActivationFactory(string activatableClassId)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [DllImport("combase.dll"), PreserveSig]
+        static extern int RoGetServerActivatableClasses(
+            [MarshalAs(UnmanagedType.HString)] string serverName,
+            out IntPtr activatableClassIds,
+            out uint count
+        );
+
+        [DllImport("combase.dll"), PreserveSig]
+        static extern IntPtr WindowsGetStringRawBuffer(
+            IntPtr hstring,
+            out uint count
+        );
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        delegate int RoGetServerActivatableClassesDelegate(
+            [MarshalAs(UnmanagedType.HString)] string serverName,
+            IntPtr activatableClassIds,
+            out uint count
+        );
+
+        static unsafe int RoGetServerActivatableClassesImpl(
+            string serverName,
+            IntPtr activatableClassIds,
+            out uint count
+        )
+        {
+            List<string> classIds = new List<string>();
+            Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses(serverName, out IntPtr test, out count));
+            IntPtr* hstringPtr = (IntPtr*)test;
+            for (int i = 0; i < count; i++)
+            {
+                string classId = Marshal.PtrToStringUni(WindowsGetStringRawBuffer(hstringPtr[i], out _));
+                classIds.Add(classId);
+            }
+            return 0;
+        }
+
         static Form MainForm;
-        [STAThread]
+        [MTAThread]
         static void Main()
         {
-            MainForm = new();
-            MainForm.Show();
-
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
+
+            new App();
+
+            IntPtr classId = IntPtr.Zero;
+            // Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses("App.AppXfda2ecmmv7vpeq0mkwrj7mkgkg8efffm.mca", classId, out var count));
+
+            var hook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
+                new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
+                null);
+            hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+
+            //var hook2 = EasyHook.LocalHook.Create(
+            //    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", "GetCommandLineW"),
+            //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
+            //    null);
+
+            CoreApplication.RunWithActivationFactories(new Test());
 
             //var windowFactory1 = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("B243A9FD-C57A-4D3E-A7CF-21CAED64CB5A"))) as ICoreWindowFactory;
             //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
@@ -38,7 +116,20 @@ namespace VBAudioRouter.Host
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
             coreWindow.Activate();
 
+            _ = coreWindow.Dispatcher.RunIdleAsync((x) =>
+            {
+                MessageBox.Show("Hallo!");
+            });
+
+            MainForm = new();
+            MainForm.Show();
+
             var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+
+            if (SetParent(MainForm.Handle, hWnd) == IntPtr.Zero)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
@@ -54,9 +145,9 @@ namespace VBAudioRouter.Host
 
             #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            ListAllFrames(frameManager);
+            // ListAllFrames(frameManager);
 
-            var frame = CreateNewFrame(frameManager);
+            // var frame = CreateNewFrame(frameManager);
             //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
 
             #endregion
