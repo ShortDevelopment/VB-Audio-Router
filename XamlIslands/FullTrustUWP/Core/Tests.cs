@@ -1,4 +1,5 @@
-﻿using FullTrustUWP.Core.Activation;
+﻿#if NETCOREAPP3_1
+using FullTrustUWP.Core.Activation;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -58,3 +59,5 @@ namespace FullTrustUWP.Core
         }
     }
 }
+
+#endif

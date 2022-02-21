@@ -13,7 +13,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
@@ -53,33 +52,82 @@ namespace VBAudioRouter.Host
             out uint count
         );
 
-        [DllImport("combase.dll"), PreserveSig]
-        static extern IntPtr WindowsGetStringRawBuffer(
-            IntPtr hstring,
-            out uint count
-        );
-
         [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
         delegate int RoGetServerActivatableClassesDelegate(
             [MarshalAs(UnmanagedType.HString)] string serverName,
-            IntPtr activatableClassIds,
+            out IntPtr activatableClassIds,
             out uint count
         );
 
         static unsafe int RoGetServerActivatableClassesImpl(
             string serverName,
-            IntPtr activatableClassIds,
+            out IntPtr activatableClassIds,
             out uint count
         )
         {
+            //List<string> classIds = new List<string>();
+            //Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses(serverName, out activatableClassIds, out count));
+            //IntPtr* hstringPtr = (IntPtr*)activatableClassIds;
+            //for (int i = 0; i < count; i++)
+            //{
+            //    string classId = new HString(hstringPtr[i]).Value;
+            //    classIds.Add(classId);
+            //}
+            IntPtr[] classIds = new[]
+            {
+                new HString("App").Ptr,
+                new HString(serverName).Ptr
+            };
+
+            fixed (IntPtr* ptr = classIds)
+            {
+                activatableClassIds = (IntPtr)ptr;
+            }
+            count = 2;
+            return 0;
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        delegate int RoRegisterActivationFactoriesDelegate(
+            IntPtr activatableClassIds,
+            IntPtr activationFactoryCallbacks,
+            uint count,
+            out IntPtr cookie
+        );
+
+        static unsafe int RoRegisterActivationFactoriesImpl(
+            IntPtr activatableClassIds,
+            IntPtr activationFactoryCallbacks,
+            uint count,
+            out IntPtr cookie
+        )
+        {
             List<string> classIds = new List<string>();
-            Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses(serverName, out IntPtr test, out count));
-            IntPtr* hstringPtr = (IntPtr*)test;
+            IntPtr* hstringPtr = (IntPtr*)activatableClassIds;
             for (int i = 0; i < count; i++)
             {
-                string classId = Marshal.PtrToStringUni(WindowsGetStringRawBuffer(hstringPtr[i], out _));
+                string classId = new HString(hstringPtr[i]).Value;
                 classIds.Add(classId);
             }
+            cookie = (IntPtr)12345;
+            return 0;
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        delegate int RoGetActivationFactoryDelegate(
+            [MarshalAs(UnmanagedType.HString)] string activatableClassId,
+            ref Guid iid,
+            out IActivationFactory factory
+        );
+
+        static unsafe int RoGetActivationFactoryImpl(
+            [MarshalAs(UnmanagedType.HString)] string activatableClassId,
+            ref Guid iid,
+            out IActivationFactory factory
+        )
+        {
+            InteropHelper.GetActivationFactory(activatableClassId, ref iid, out factory);
+            Debug.Print(activatableClassId);
             return 0;
         }
 
@@ -90,23 +138,33 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
-            new App();
-
-            IntPtr classId = IntPtr.Zero;
-            // Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses("App.AppXfda2ecmmv7vpeq0mkwrj7mkgkg8efffm.mca", classId, out var count));
-
-            var hook = EasyHook.LocalHook.Create(
+            {
+                var hook = EasyHook.LocalHook.Create(
                 EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
                 new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
                 null);
-            hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            }
+            {
+                var hook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoRegisterActivationFactories"),
+                new RoRegisterActivationFactoriesDelegate(RoRegisterActivationFactoriesImpl),
+                null);
+                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            }
+            {
+                var hook = EasyHook.LocalHook.Create(
+                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetActivationFactory"),
+                new RoGetActivationFactoryDelegate(RoGetActivationFactoryImpl),
+                null);
+                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            }
 
             //var hook2 = EasyHook.LocalHook.Create(
             //    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", "GetCommandLineW"),
             //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
             //    null);
 
-            CoreApplication.RunWithActivationFactories(new Test());
 
             //var windowFactory1 = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("B243A9FD-C57A-4D3E-A7CF-21CAED64CB5A"))) as ICoreWindowFactory;
             //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
@@ -132,6 +190,8 @@ namespace VBAudioRouter.Host
             }
 
             SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
+
+            CoreApplication.RunWithActivationFactories(new Test());
 
             {
                 var applicationView = ApplicationView.GetForCurrentView(); // ✔

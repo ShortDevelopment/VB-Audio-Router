@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Forms.UI.XamlHost;
+﻿#if NETCOREAPP3_1
+using Microsoft.Toolkit.Forms.UI.XamlHost;
 using Microsoft.Toolkit.Win32.UI.XamlHost;
 using System;
 using System.Drawing;
@@ -76,3 +77,5 @@ namespace FullTrustUWP
         #endregion
     }
 }
+
+#endif

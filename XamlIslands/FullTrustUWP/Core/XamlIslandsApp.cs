@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETCOREAPP3_1
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Windows.UI.Xaml;
@@ -44,3 +45,5 @@ namespace FullTrustUWP.Core
         bool PreTranslateMessage(ref System.Windows.Forms.Message message);
     }
 }
+
+#endif
