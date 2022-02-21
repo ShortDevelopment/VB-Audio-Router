@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 
 namespace App1
 {
@@ -12,53 +13,35 @@ namespace App1
         private static extern IntPtr GetProcAddress(IntPtr hModule, int ordinal);
 
         static void Main(string[] args)
+            => MainAsync(args).GetAwaiter().GetResult();
+
+        static async Task MainAsync(string[] args)
         {
-            IntPtr hLib = LoadLibrary("windows.ui.dll");
-            IntPtr hProc = GetProcAddress(hLib, 0x5dc);
             var hook = EasyHook.LocalHook.Create(
-                hProc,
-                new PrivateCreateCoreWindow_Sig(RoGetServerActivatableClassesImpl),
+                EasyHook.LocalHook.GetProcAddress("sechost.dll", "CapabilityCheck"),
+                new CapabilityCheck_Sig(CapabilityCheckImpl),
                 null); ;
             hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+
+            var accessStatus = await Geolocator.RequestAccessAsync();
 
             global::Windows.UI.Xaml.Application.Start((p) => new App());
         }
 
-        [DllImport("combase.dll"), PreserveSig]
-        static extern int RoGetServerActivatableClasses(
-            [MarshalAs(UnmanagedType.HString)] string serverName,
-            out IntPtr activatableClassIds,
-            out uint count
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
+        delegate int CapabilityCheck_Sig(
+            IntPtr hUnknown,
+            string capabilityName,
+            out bool hasCapability
         );
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        delegate int PrivateCreateCoreWindow_Sig(
-            int windowType,
-            [MarshalAs(UnmanagedType.BStr)] string windowTitle,
-            int x,
-            int y,
-            uint width,
-            uint height,
-            uint dwAttributes,
-            IntPtr hOwnerWindow,
-            Guid riid,
-            out object windowRef
-        );
-
-        static unsafe int RoGetServerActivatableClassesImpl(
-            int windowType,
-            [MarshalAs(UnmanagedType.BStr)] string windowTitle,
-            int x,
-            int y,
-            uint width,
-            uint height,
-            uint dwAttributes,
-            IntPtr hOwnerWindow,
-            Guid riid,
-            out object windowRef
+        static unsafe int CapabilityCheckImpl(
+            IntPtr hUnknown,
+            string capabilityName,
+            out bool hasCapability
         )
         {
-            windowRef = null;
+            hasCapability = true;
             return 0;
         }
     }

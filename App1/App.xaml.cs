@@ -9,6 +9,7 @@ namespace App1
         public App()
         {
             this.InitializeComponent();
+
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
