@@ -165,9 +165,9 @@ namespace VBAudioRouter.Host
             //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
             //    null);
 
-            var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
-            windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
-            coreWindow2.Activate();
+            //var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
+            //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
+            //coreWindow2.Activate();
 
             #region CoreWindow
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
@@ -190,7 +190,7 @@ namespace VBAudioRouter.Host
 
             SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
-            CoreApplication.RunWithActivationFactories(new Test());
+            //CoreApplication.RunWithActivationFactories(new Test());
 
             {
                 var applicationView = ApplicationView.GetForCurrentView(); // ✔
@@ -204,7 +204,7 @@ namespace VBAudioRouter.Host
 
             #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            // ListAllFrames(frameManager);
+            ListAllFrames(frameManager);
 
             // var frame = CreateNewFrame(frameManager);
             //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
@@ -272,7 +272,18 @@ namespace VBAudioRouter.Host
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
 
-            IApplicationFrameService frameService = serviceProvider.QueryService<IApplicationFrameService>();
+            
+
+            Guid iid;
+            IServiceProvider immersiveApplicationServiceProvider = serviceProvider.QueryService<IImmersiveApplicationManager>() as IServiceProvider;
+            //iid = typeof(IFrameFactory).GUID;
+            //Guid iidIUnkown = new Guid("00000000-0000-0000-C000-000000000046");
+            //Guid serviceId = new Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e");
+            //Marshal.ThrowExceptionForHR(immersiveApplicationServiceProvider.QueryService(ref serviceId, ref iidIUnkown, out object ptr3));
+            //IFrameFactory frameFactory = (IFrameFactory)ptr3;
+
+            IApplicationFrameService frameService = immersiveApplicationServiceProvider.QueryService<IApplicationFrameService>();
+            var x = serviceProvider.QueryService<IUncloakWindowService>();
 
             IApplicationViewCollection viewCollection = serviceProvider.QueryService<IApplicationViewCollection>();
             IApplicationViewCollectionManagement viewCollectionManagement = (IApplicationViewCollectionManagement)viewCollection;

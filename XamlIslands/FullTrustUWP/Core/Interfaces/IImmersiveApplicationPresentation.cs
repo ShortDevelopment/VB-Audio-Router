@@ -10,7 +10,7 @@ namespace FullTrustUWP.Core.Interfaces
         int SetCloak(IntPtr hWnd, bool cloak);
     }
 
-    [Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)] // 
+    [Guid("02ee93d4-448e-469e-9799-0a8a1f70f171"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)] // 
     public interface IFrameFactory
     {
         [PreserveSig]
