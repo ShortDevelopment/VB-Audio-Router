@@ -272,12 +272,10 @@ namespace VBAudioRouter.Host
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
 
-            Guid iid;
+            IApplicationFrameService frameService = serviceProvider.QueryService<IApplicationFrameService>();
 
-            iid = typeof(IApplicationViewCollection).GUID;
-            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr));
-            IApplicationViewCollection viewCollection = (IApplicationViewCollection)ptr;
-            IApplicationViewCollectionManagement viewCollectionManagement = (IApplicationViewCollectionManagement)ptr;
+            IApplicationViewCollection viewCollection = serviceProvider.QueryService<IApplicationViewCollection>();
+            IApplicationViewCollectionManagement viewCollectionManagement = (IApplicationViewCollectionManagement)viewCollection;
             #endregion
 
             Marshal.ThrowExceptionForHR(frameManager.GetFrameArray(out var frameArray));
