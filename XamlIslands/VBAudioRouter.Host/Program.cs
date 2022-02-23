@@ -138,37 +138,36 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
-            {
-                var hook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
-                new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
-                null);
-                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            }
-            {
-                var hook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoRegisterActivationFactories"),
-                new RoRegisterActivationFactoriesDelegate(RoRegisterActivationFactoriesImpl),
-                null);
-                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            }
-            {
-                var hook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetActivationFactory"),
-                new RoGetActivationFactoryDelegate(RoGetActivationFactoryImpl),
-                null);
-                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            }
+            //{
+            //    var hook = EasyHook.LocalHook.Create(
+            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
+            //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
+            //    null);
+            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            //}
+            //{
+            //    var hook = EasyHook.LocalHook.Create(
+            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoRegisterActivationFactories"),
+            //    new RoRegisterActivationFactoriesDelegate(RoRegisterActivationFactoriesImpl),
+            //    null);
+            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            //}
+            //{
+            //    var hook = EasyHook.LocalHook.Create(
+            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetActivationFactory"),
+            //    new RoGetActivationFactoryDelegate(RoGetActivationFactoryImpl),
+            //    null);
+            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            //}
 
             //var hook2 = EasyHook.LocalHook.Create(
             //    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", "GetCommandLineW"),
             //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
             //    null);
 
-
-            //var windowFactory1 = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("B243A9FD-C57A-4D3E-A7CF-21CAED64CB5A"))) as ICoreWindowFactory;
-            //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
-            //coreWindow2.Activate();
+            var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
+            windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
+            coreWindow2.Activate();
 
             #region CoreWindow
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);

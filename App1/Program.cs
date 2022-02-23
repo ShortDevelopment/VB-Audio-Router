@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,24 +17,56 @@ namespace App1
 
         static void Main(string[] args)
         {
-            IntPtr hLib = LoadLibrary("windows.ui.dll");
-            IntPtr hProc = GetProcAddress(hLib, 0x5dc);
-            var hook = EasyHook.LocalHook.Create(
-                hProc,
-                new PrivateCreateCoreWindowSig(PrivateCreateCoreWindowImpl),
-                null); ;
-            // hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            hook.ThreadACL.SetExclusiveACL(new[] { 12345678 });
+            {
+                IntPtr hLib = LoadLibrary("windows.ui.dll");
+                IntPtr hProc = GetProcAddress(hLib, 0x5dc);
+                var hook = EasyHook.LocalHook.Create(
+                    hProc,
+                    new PrivateCreateCoreWindowSig(PrivateCreateCoreWindowImpl),
+                    null); ;
+                // hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+                hook.ThreadACL.SetExclusiveACL(new[] { 12345678 });
+            }
+            {
+                //var hook = EasyHook.LocalHook.Create(
+                //EasyHook.LocalHook.GetProcAddress("Ole32.dll", "CoCreateInstance"),
+                //new CoCreateInstanceSig(CoCreateInstanceSigImpl),
+                //null);
+                //hook.ThreadACL.SetExclusiveACL(new[] { 0 });
+            }
 
             global::Windows.UI.Xaml.Application.Start((p) => new App());
         }
 
-        [DllImport("combase.dll"), PreserveSig]
-        static extern int RoGetServerActivatableClasses(
-            [MarshalAs(UnmanagedType.HString)] string serverName,
-            out IntPtr activatableClassIds,
-            out uint count
+        [DllImport("Ole32", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern int CoCreateInstance(
+            ref Guid rclsid,
+            [MarshalAs(UnmanagedType.Interface)] object pUnkOuter,
+            uint context,
+            ref Guid iid,
+            [MarshalAs(UnmanagedType.Interface)] out object result
         );
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate int CoCreateInstanceSig(
+            ref Guid rclsid,
+            [MarshalAs(UnmanagedType.Interface)] object pUnkOuter,
+            uint context,
+            ref Guid iid,
+            [MarshalAs(UnmanagedType.Interface)] out object result
+        );
+
+        static unsafe int CoCreateInstanceSigImpl(
+            ref Guid rclsid,
+            [MarshalAs(UnmanagedType.Interface)] object pUnkOuter,
+            uint context,
+            ref Guid iid,
+            [MarshalAs(UnmanagedType.Interface)] out object result
+        )
+        {
+            Debug.Print($"CLSID: {rclsid}; IID: {iid}");
+            return CoCreateInstance(ref rclsid, pUnkOuter, context, ref iid, out result);
+        }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         delegate int PrivateCreateCoreWindowSig(
