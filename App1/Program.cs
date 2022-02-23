@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.UI.Core;
 
 namespace App1
 {
@@ -13,35 +15,55 @@ namespace App1
         private static extern IntPtr GetProcAddress(IntPtr hModule, int ordinal);
 
         static void Main(string[] args)
-            => MainAsync(args).GetAwaiter().GetResult();
-
-        static async Task MainAsync(string[] args)
         {
+            IntPtr hLib = LoadLibrary("windows.ui.dll");
+            IntPtr hProc = GetProcAddress(hLib, 0x5dc);
             var hook = EasyHook.LocalHook.Create(
-                EasyHook.LocalHook.GetProcAddress("sechost.dll", "CapabilityCheck"),
-                new CapabilityCheck_Sig(CapabilityCheckImpl),
+                hProc,
+                new PrivateCreateCoreWindowSig(PrivateCreateCoreWindowImpl),
                 null); ;
-            hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-
-            var accessStatus = await Geolocator.RequestAccessAsync();
+            // hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            hook.ThreadACL.SetExclusiveACL(new[] { 12345678 });
 
             global::Windows.UI.Xaml.Application.Start((p) => new App());
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
-        delegate int CapabilityCheck_Sig(
-            IntPtr hUnknown,
-            string capabilityName,
-            out bool hasCapability
+        [DllImport("combase.dll"), PreserveSig]
+        static extern int RoGetServerActivatableClasses(
+            [MarshalAs(UnmanagedType.HString)] string serverName,
+            out IntPtr activatableClassIds,
+            out uint count
         );
 
-        static unsafe int CapabilityCheckImpl(
-            IntPtr hUnknown,
-            string capabilityName,
-            out bool hasCapability
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate int PrivateCreateCoreWindowSig(
+            int windowType,
+            string windowTitle,
+            int x,
+            int y,
+            uint width,
+            uint height,
+            uint dwAttributes,
+            IntPtr hOwnerWindow,
+            Guid riid,
+            [MarshalAs(UnmanagedType.Interface)] out CoreWindow windowRef
+        );
+
+        static unsafe int PrivateCreateCoreWindowImpl(
+            int windowType,
+            string windowTitle,
+            int x,
+            int y,
+            uint width,
+            uint height,
+            uint dwAttributes,
+            IntPtr hOwnerWindow,
+            Guid riid,
+            out CoreWindow windowRef
         )
         {
-            hasCapability = true;
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+            windowRef = null;
             return 0;
         }
     }
