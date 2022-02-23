@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
-		<UseWindowsForms>true</UseWindowsForms>
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
@@ -11,10 +10,13 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 		<PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.1.2" />
+		 
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FullTrustUWP.Core.Activation;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace App1
 {
@@ -18,14 +20,14 @@ namespace App1
         static void Main(string[] args)
         {
             {
-                IntPtr hLib = LoadLibrary("windows.ui.dll");
-                IntPtr hProc = GetProcAddress(hLib, 0x5dc);
-                var hook = EasyHook.LocalHook.Create(
-                    hProc,
-                    new PrivateCreateCoreWindowSig(PrivateCreateCoreWindowImpl),
-                    null); ;
-                // hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-                hook.ThreadACL.SetExclusiveACL(new[] { 12345678 });
+                //IntPtr hLib = LoadLibrary("windows.ui.dll");
+                //IntPtr hProc = GetProcAddress(hLib, 0x5dc);
+                //var hook = EasyHook.LocalHook.Create(
+                //    hProc,
+                //    new PrivateCreateCoreWindowSig(PrivateCreateCoreWindowImpl),
+                //    null); ;
+                //// hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+                //hook.ThreadACL.SetExclusiveACL(new[] { 12345678 });
             }
             {
                 //var hook = EasyHook.LocalHook.Create(
@@ -35,7 +37,13 @@ namespace App1
                 //hook.ThreadACL.SetExclusiveACL(new[] { 0 });
             }
 
-            global::Windows.UI.Xaml.Application.Start((p) => new App());
+            var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
+            windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
+            coreWindow2.Activate();
+
+            Window.Current.Activate();
+
+            // global::Windows.UI.Xaml.Application.Start((p) => new App());
         }
 
         [DllImport("Ole32", CharSet = CharSet.Unicode, SetLastError = true)]
