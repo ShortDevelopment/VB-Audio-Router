@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -173,6 +174,8 @@ namespace VBAudioRouter.Host
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
             coreWindow.Activate();
 
+            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+
             _ = coreWindow.Dispatcher.RunIdleAsync((x) =>
             {
                 MessageBox.Show("Hallo!");
@@ -181,14 +184,20 @@ namespace VBAudioRouter.Host
             MainForm = new();
             MainForm.Show();
 
-            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+            SetWndProc(coreWindow, WndProc);
+
+            using (var g = Graphics.FromHwnd(hWnd))
+            {
+                g.Clear(Color.White);
+            }
+
+
+            SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
             if (SetParent(MainForm.Handle, hWnd) == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
-
-            SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
             //CoreApplication.RunWithActivationFactories(new Test());
 
@@ -204,7 +213,7 @@ namespace VBAudioRouter.Host
 
             #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            ListAllFrames(frameManager);
+            // ListAllFrames(frameManager);
 
             // var frame = CreateNewFrame(frameManager);
             //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
@@ -213,17 +222,32 @@ namespace VBAudioRouter.Host
 
             Window.Current?.Activate();
 
-            DataTransferManager.GetForCurrentView().DataRequested += Program_DataRequested;
-            DataTransferManager.ShowShareUI();
+            //DataTransferManager.GetForCurrentView().DataRequested += Program_DataRequested;
+            //DataTransferManager.ShowShareUI();
 
             Application.Run(MainForm);
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
-        private static void Program_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        #region WndProc
+        private const int GWLP_WNDPROC = -4;
+        public delegate IntPtr WndProcDelegate(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam);
+
+        public static IntPtr SetWndProc(CoreWindow coreWindow, WndProcDelegate newProc)
         {
-            throw new NotImplementedException();
+            IntPtr hwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+            IntPtr functionPointer = Marshal.GetFunctionPointerForDelegate(newProc);
+            return (IntPtr)SetWindowLongPtr(hwnd, GWLP_WNDPROC, functionPointer);
         }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr DefWindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+        static IntPtr WndProc(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam)
+        {
+            return DefWindowProc(hwnd, message, wParam, lParam);
+        }
+        #endregion
 
         static IntPtr hwndNewFrame;
         private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)
@@ -272,7 +296,7 @@ namespace VBAudioRouter.Host
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
 
-            
+
 
             Guid iid;
             IServiceProvider immersiveApplicationServiceProvider = serviceProvider.QueryService<IImmersiveApplicationManager>() as IServiceProvider;
