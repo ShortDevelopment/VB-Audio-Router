@@ -107,6 +107,28 @@ namespace VBAudioRouter.Host
         }
         #endregion
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        delegate int GetProcessUIContextInformationDelegate(
+            uint processToken,
+            ref Int64 info
+        );
+
+        [DllImport("user32")]
+        static extern int GetProcessUIContextInformation(
+            uint processToken,
+            ref Int64 info
+        );
+
+        static unsafe int GetProcessUIContextInformationImpl(
+            uint processToken,
+            ref Int64 info
+        )
+        {
+            GetProcessUIContextInformation(processToken, ref info);
+            info = 1;
+            return 0;
+        }
+
         static Form MainForm;
         [MTAThread]
         static void Main()
@@ -114,6 +136,7 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
+            #region Hooks
             //{
             //    var hook = EasyHook.LocalHook.Create(
             //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
@@ -135,6 +158,15 @@ namespace VBAudioRouter.Host
             //    null);
             //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
             //}
+            #endregion
+
+            {
+                var hook = EasyHook.LocalHook.Create(
+                    EasyHook.LocalHook.GetProcAddress("user32.dll", "GetProcessUIContextInformation"),
+                    new GetProcessUIContextInformationDelegate(GetProcessUIContextInformationImpl),
+                    null);
+                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
+            }
 
             //var hook2 = EasyHook.LocalHook.Create(
             //    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", "GetCommandLineW"),
