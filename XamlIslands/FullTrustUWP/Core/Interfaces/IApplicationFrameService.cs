@@ -9,5 +9,28 @@ namespace FullTrustUWP.Core.Interfaces
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IApplicationFrameService
     {
+        [Obsolete("Not implemented")]
+        void CompleteInitialization();
+
+        [PreserveSig]
+        int Uninitialize();
+
+        [PreserveSig]
+        int EnsureFramePool();
+
+        [PreserveSig]
+        int UnensureFramePool();
+
+        [PreserveSig]
+        int BeginFrameRecovery();
+
+        [PreserveSig]
+        int EndFrameRecovery();
+
+        [PreserveSig]
+        int GetFrame([MarshalAs(UnmanagedType.LPWStr)] string a, IntPtr glomId, out IApplicationFrameProxy frameProxy);
+
+        [PreserveSig]
+        int GetFrameByWindow(IntPtr hWnd, out IApplicationFrame frameProxy);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
-using FullTrustUWP.Core.ApplicationFrame;
 using FullTrustUWP.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,42 +9,17 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Application = System.Windows.Forms.Application;
-using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace VBAudioRouter.Host
 {
     static class Program
     {
-        class App : Windows.UI.Xaml.Application
-        {
-            protected override void OnWindowCreated(WindowCreatedEventArgs args)
-            {
-
-            }
-
-            protected override void OnLaunched(LaunchActivatedEventArgs args)
-            {
-                base.OnLaunched(args);
-            }
-        }
-
-        class Test : IGetActivationFactory
-        {
-            public object GetActivationFactory(string activatableClassId)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
+        #region HookStuff
         [DllImport("combase.dll"), PreserveSig]
         static extern int RoGetServerActivatableClasses(
             [MarshalAs(UnmanagedType.HString)] string serverName,
@@ -131,6 +105,7 @@ namespace VBAudioRouter.Host
             Debug.Print(activatableClassId);
             return 0;
         }
+        #endregion
 
         static Form MainForm;
         [MTAThread]
@@ -207,16 +182,19 @@ namespace VBAudioRouter.Host
             }
             #endregion
 
-            //FolderPicker picker = new();
-            //picker.FileTypeFilter.Add("*");
-            //_ = picker.PickSingleFolderAsync();
-
             #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
+            var immersiveShell = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
+            var uncloakService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IUncloakWindowService;
+            var frameService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IApplicationFrameService;
             // ListAllFrames(frameManager);
 
-            // var frame = CreateNewFrame(frameManager);
-            //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
+            var frame = CreateNewFrame(frameManager);
+            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
+
+            // Marshal.ThrowExceptionForHR(frameService.GetFrame("Test", IntPtr.Zero, out var proxy));
+            //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x207E8, out var proxy));
+            Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
 
             #endregion
 
@@ -264,50 +242,11 @@ namespace VBAudioRouter.Host
             return frame;
         }
 
-        private static void TryGetFrameFactory()
-        {
-            var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
-
-            Guid iid;
-            iid = new Guid("bf63999f-7411-40da-861c-df72c0ffee84");
-            // var x = Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("50fdbb99-5c92-495e-9e81-e2c2f48cddae"))) as IUncloakWindowService;
-            Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr2));
-            IServiceProvider uncloakWindowService = (IServiceProvider)ptr2; // IFrameFactory
-            iid = typeof(IFrameFactory).GUID;
-            Guid iidIUnkown = new Guid("00000000-0000-0000-C000-000000000046");
-            Guid serviceId = new Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e");
-            Marshal.ThrowExceptionForHR(uncloakWindowService.QueryService(ref serviceId, ref iidIUnkown, out object ptr3));
-            IFrameFactory frameFactory = (IFrameFactory)ptr3;
-        }
-
-        private static void UncloakTests(IntPtr hwnd)
-        {
-            CloakingHelper.AcquireIAMKey();
-            CloakingHelper.EnableIAMAccess(true);
-            RemoteThread.UnCloakWindow(hwnd);
-            int value = 0;
-            // Marshal.ThrowExceptionForHR(DwmSetWindowAttribute(hwnd, (DwmWindowAttribute.Cloak), ref value, Marshal.SizeOf<int>()));
-            CloakingHelper.EnableIAMAccess(false);
-        }
-
         #region List Frames
         private static void ListAllFrames(IApplicationFrameManager frameManager)
         {
             #region Immersive Shell
             var serviceProvider = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
-
-
-
-            Guid iid;
-            IServiceProvider immersiveApplicationServiceProvider = serviceProvider.QueryService<IImmersiveApplicationManager>() as IServiceProvider;
-            //iid = typeof(IFrameFactory).GUID;
-            //Guid iidIUnkown = new Guid("00000000-0000-0000-C000-000000000046");
-            //Guid serviceId = new Guid("d8c26227-b75e-4d8b-ac8c-c463a34ed11e");
-            //Marshal.ThrowExceptionForHR(immersiveApplicationServiceProvider.QueryService(ref serviceId, ref iidIUnkown, out object ptr3));
-            //IFrameFactory frameFactory = (IFrameFactory)ptr3;
-
-            IApplicationFrameService frameService = immersiveApplicationServiceProvider.QueryService<IApplicationFrameService>();
-            var x = serviceProvider.QueryService<IUncloakWindowService>();
 
             IApplicationViewCollection viewCollection = serviceProvider.QueryService<IApplicationViewCollection>();
             IApplicationViewCollectionManagement viewCollectionManagement = (IApplicationViewCollectionManagement)viewCollection;
@@ -318,8 +257,8 @@ namespace VBAudioRouter.Host
             bool alreadyGotVictim = false;
             for (uint i = 0; i < count; i++)
             {
-                Guid iid2 = typeof(IApplicationFrame).GUID;
-                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid2, out object frameUnk));
+                Guid iid = typeof(IApplicationFrame).GUID;
+                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid, out object frameUnk));
                 IApplicationFrame frame = frameUnk as IApplicationFrame;
                 Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
                 Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out var hwndHost));
