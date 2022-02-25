@@ -125,7 +125,7 @@ namespace VBAudioRouter.Host
         )
         {
             GetProcessUIContextInformation(processToken, ref info);
-            info = 1;
+            info = 2;
             return 0;
         }
 
@@ -191,13 +191,12 @@ namespace VBAudioRouter.Host
             MainForm = new();
             MainForm.Show();
 
-            SetWndProc(coreWindow, WndProc);
+            //SetWndProc(coreWindow, WndProc);
 
             using (var g = Graphics.FromHwnd(hWnd))
             {
                 g.Clear(Color.White);
             }
-
 
             SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
@@ -217,16 +216,21 @@ namespace VBAudioRouter.Host
             #region ApplicationFrame
             var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
             var immersiveShell = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
+
             var uncloakService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IUncloakWindowService;
             var frameService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IApplicationFrameService;
+            var applicationPresentation = immersiveShell.QueryService<IImmersiveApplicationManager>() as IImmersiveApplicationPresentation;
             // ListAllFrames(frameManager);
+
+            var test = immersiveShell.QueryService<IImmersiveApplicationManager>() as IXamlIslandPopupManager;
 
             var frame = CreateNewFrame(frameManager);
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
 
             // Marshal.ThrowExceptionForHR(frameService.GetFrame("Test", IntPtr.Zero, out var proxy));
             //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x207E8, out var proxy));
-            Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
+            // Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
+            Marshal.ThrowExceptionForHR(applicationPresentation.SetCloak(frameHwnd, false));
 
             #endregion
 
@@ -237,6 +241,12 @@ namespace VBAudioRouter.Host
 
             Application.Run(MainForm);
             // XamlHostApplication<App>.Run<WelcomePage>();
+        }
+
+        [Guid("db4aeb4f-d9af-4ed4-aed4-3ba004c0ffee"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IXamlIslandPopupManager
+        {
+
         }
 
         #region WndProc

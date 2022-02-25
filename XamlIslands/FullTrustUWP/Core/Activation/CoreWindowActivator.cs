@@ -73,8 +73,13 @@ namespace FullTrustUWP.Core.Activation
         }
         #endregion
 
+        /// <summary>
+        /// Not really working?!
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <returns></returns>
         [DllImport("twinapi.appcore.dll", EntryPoint = "#12")]
-        static extern bool IsImmersiveWindow(IntPtr hWnd);
+        public static extern bool IsImmersiveWindow(IntPtr hWnd);
 
         [DllImport("CoreUIComponents.dll", SetLastError = true)]
         public static extern int CoreUICreateICoreWindowFactory(IntPtr a, IntPtr reserved1, IntPtr reserved2, out ICoreWindowFactory coreWindowFactory);

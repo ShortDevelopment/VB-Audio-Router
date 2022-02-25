@@ -11,4 +11,8 @@ namespace FullTrustUWP.Core.Interfaces
         [return: MarshalAs(UnmanagedType.I4)]
         int QueryService(ref Guid guidService, ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out object ppvObject);
     }
+
+    [Guid("5f75d642-3fd3-46f6-86d3-a4aee3c0ffee")] // 
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IIAMServiceProvider : IServiceProvider { }
 }
