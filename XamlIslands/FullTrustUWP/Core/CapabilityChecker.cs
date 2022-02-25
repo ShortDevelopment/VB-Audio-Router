@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static FullTrustUWP.Core.InteropHelper;
 
 namespace FullTrustUWP.Core
 {
@@ -9,12 +8,11 @@ namespace FullTrustUWP.Core
         // CapabilityCheck(0i64, L"shellExperienceComposer", &v58)
         public static bool HasCapability(string capability)
         {
-            CapabilityCheck(IntPtr.Zero, capability, out bool result);
-            ThrowOnError();
+            Marshal.ThrowExceptionForHR(CapabilityCheck(IntPtr.Zero, capability, out bool result));
             return result;
         }
 
-        [DllImport("sechost.dll", SetLastError = true)]
-        private static extern void CapabilityCheck(IntPtr ptr, string capability, out bool result);
+        [DllImport("sechost.dll", SetLastError = true), PreserveSig]
+        private static extern int CapabilityCheck(IntPtr ptr, string capability, out bool result);
     }
 }

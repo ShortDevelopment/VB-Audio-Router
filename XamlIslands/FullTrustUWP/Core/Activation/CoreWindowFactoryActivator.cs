@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FullTrustUWP.Core.Interfaces;
+using System;
 using System.Runtime.InteropServices;
-using IServiceProvider = FullTrustUWP.Core.Interfaces.IServiceProvider;
 
 namespace FullTrustUWP.Core.Activation
 {

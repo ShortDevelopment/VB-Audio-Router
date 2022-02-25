@@ -1,4 +1,5 @@
-﻿using FullTrustUWP.Core.Activation;
+﻿using FullTrustUWP.Core;
+using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using System;
 using System.Diagnostics;

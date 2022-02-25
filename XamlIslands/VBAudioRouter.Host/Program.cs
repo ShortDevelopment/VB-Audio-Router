@@ -289,9 +289,7 @@ namespace VBAudioRouter.Host
             bool alreadyGotVictim = false;
             for (uint i = 0; i < count; i++)
             {
-                Guid iid = typeof(IApplicationFrame).GUID;
-                Marshal.ThrowExceptionForHR(frameArray.GetAt(i, ref iid, out object frameUnk));
-                IApplicationFrame frame = frameUnk as IApplicationFrame;
+                IApplicationFrame frame = frameArray.GetAt<IApplicationFrame>(i);
                 Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
                 Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out var hwndHost));
                 frame.GetPresentedWindow(out var hwndContent);
