@@ -39,6 +39,5 @@
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <ListView ItemsSource="{x:Bind AudioSessions}" />
     </Grid>
 </Page>
