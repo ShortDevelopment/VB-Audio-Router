@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
@@ -193,22 +194,17 @@ namespace VBAudioRouter.Host
 
             //SetWndProc(coreWindow, WndProc);
 
-            using (var g = Graphics.FromHwnd(hWnd))
-            {
-                g.Clear(Color.White);
-            }
+            //SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
 
-            SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
-
-            if (SetParent(MainForm.Handle, hWnd) == IntPtr.Zero)
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
+            //if (SetParent(MainForm.Handle, hWnd) == IntPtr.Zero)
+            //{
+            //    throw new Win32Exception(Marshal.GetLastWin32Error());
+            //}
 
             //CoreApplication.RunWithActivationFactories(new Test());
 
             {
-                var applicationView = ApplicationView.GetForCurrentView(); // ✔
+                var applicationView = ApplicationView.GetForCurrentView(); // ✔                
                 var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
             }
             #endregion
@@ -222,25 +218,44 @@ namespace VBAudioRouter.Host
             var applicationPresentation = immersiveShell.QueryService<IImmersiveApplicationManager>() as IImmersiveApplicationPresentation;
             // ListAllFrames(frameManager);
 
+            //var frameFactory = immersiveShell.QueryService<IApplicationFrameFactory>();
+            //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
+
             var test = immersiveShell.QueryService<IImmersiveApplicationManager>() as IXamlIslandPopupManager;
 
-            var frame = CreateNewFrame(frameManager, hWnd);
-            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
+            var frame = CreateNewFrame(frameManager);
+            { // Show frame
+                Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
+                RemoteThread.UnCloakWindowShell(frameHwnd);
+            }
 
-            // Marshal.ThrowExceptionForHR(frameService.GetFrame("Test", IntPtr.Zero, out var proxy));
             //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x207E8, out var proxy));
-            //Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
-            //Marshal.ThrowExceptionForHR(applicationPresentation.SetCloak(frameHwnd, false));
-            RemoteThread.UnCloakWindowShell(frameHwnd);
+
+            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x1B017C));
+
+            //Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
+            //Marshal.ThrowExceptionForHR(frame.NotifyChromeChange(96));
+            // Marshal.ThrowExceptionForHR(frame.NotifyVisibleButtonsChange());
+
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = Windows.UI.Colors.Red;
+
+            //var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 
             #endregion
-
-            Window.Current?.Activate();
 
             //DataTransferManager.GetForCurrentView().DataRequested += Program_DataRequested;
             //DataTransferManager.ShowShareUI();
 
+            //while (true)
+            //{
+            //    coreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+            //}
+
             Application.Run(MainForm);
+
+            Marshal.ThrowExceptionForHR(frame.Destroy());
+
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
@@ -270,15 +285,13 @@ namespace VBAudioRouter.Host
         }
         #endregion
 
-        static IntPtr hwndNewFrame;
-        private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager, IntPtr coreWindowHwnd)
+        private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)
         {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
-            Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out hwndNewFrame));
 
-            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
-            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(coreWindowHwnd));
+            // Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
+            Marshal.ThrowExceptionForHR(frame.SetOperatingMode(1, 1));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(Color.Green.ToArgb()));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));

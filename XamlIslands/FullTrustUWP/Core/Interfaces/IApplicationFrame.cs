@@ -36,7 +36,7 @@ namespace FullTrustUWP.Core.Interfaces
         int FitToWorkArea();
 
         [PreserveSig]
-        int GetChromeOptions(out APPLICATION_FRAME_CHROME_OPTIONS options);
+        int GetChromeOptions(out int options);
 
         [PreserveSig]
         int SetChromeOptions(int options1, int options2);
@@ -63,7 +63,7 @@ namespace FullTrustUWP.Core.Interfaces
         int GetSystemVisualFadeTime(out uint time);
 
         [PreserveSig]
-        int SetOperatingMode(FRAME_OPERATING_MODE mode);
+        int SetOperatingMode(int mode, int mode2);
 
         [PreserveSig]
         int SetSizeConstraintOverridesPhysical(ref tagSIZE size1, ref tagSIZE size2);
@@ -96,7 +96,7 @@ namespace FullTrustUWP.Core.Interfaces
         int Destroy();
 
         [PreserveSig]
-        int NotifyChromeChange(NotifyChromeChangeFlags flags);
+        int NotifyChromeChange(int flags);
 
         [PreserveSig]
         int NotifyVisibleButtonsChange();
