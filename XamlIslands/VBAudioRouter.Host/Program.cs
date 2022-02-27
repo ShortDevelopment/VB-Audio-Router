@@ -224,13 +224,14 @@ namespace VBAudioRouter.Host
 
             var test = immersiveShell.QueryService<IImmersiveApplicationManager>() as IXamlIslandPopupManager;
 
-            var frame = CreateNewFrame(frameManager);
+            var frame = CreateNewFrame(frameManager, hWnd);
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
 
             // Marshal.ThrowExceptionForHR(frameService.GetFrame("Test", IntPtr.Zero, out var proxy));
             //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x207E8, out var proxy));
-            // Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
-            Marshal.ThrowExceptionForHR(applicationPresentation.SetCloak(frameHwnd, false));
+            //Marshal.ThrowExceptionForHR(uncloakService.UncloakWindow((IntPtr)0x207E8));
+            //Marshal.ThrowExceptionForHR(applicationPresentation.SetCloak(frameHwnd, false));
+            RemoteThread.UnCloakWindowShell(frameHwnd);
 
             #endregion
 
@@ -270,17 +271,18 @@ namespace VBAudioRouter.Host
         #endregion
 
         static IntPtr hwndNewFrame;
-        private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)
+        private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager, IntPtr coreWindowHwnd)
         {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
             Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out hwndNewFrame));
 
             Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Blue.ToArgb()));
-            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(form.Handle));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(System.Drawing.Color.Green.ToArgb()));
+            // Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(coreWindowHwnd));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));
+            Marshal.ThrowExceptionForHR(titleBar.SetVisibleButtons(2, 2));
             return frame;
         }
 

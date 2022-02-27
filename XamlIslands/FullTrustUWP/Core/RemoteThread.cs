@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -138,6 +139,13 @@ namespace FullTrustUWP.Core
             GetWindowThreadProcessId(hWnd, out var pid);
             LoadLibraryRemote(pid, libName);
             CallFunctionRemote(pid, "UncloakHelper.dll", "UnCloakWindow", hWnd);
+        }
+
+        public static void UnCloakWindowShell(IntPtr hWnd)
+        {
+            uint pid = (uint)Process.GetProcessesByName("ApplicationFrameHost")[0].Id;
+            LoadLibraryRemote(pid, libName);
+            CallFunctionRemote(pid, "UncloakHelper.dll", "UnCloakWindowShell", hWnd);
         }
 
         public static void MoveWindowToCurrentDesktop(IntPtr hWnd)
