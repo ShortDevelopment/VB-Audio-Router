@@ -2,177 +2,25 @@
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
 {
     static class Program
     {
-        #region HookStuff
-        [DllImport("combase.dll"), PreserveSig]
-        static extern int RoGetServerActivatableClasses(
-            [MarshalAs(UnmanagedType.HString)] string serverName,
-            out IntPtr activatableClassIds,
-            out uint count
-        );
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        delegate int RoGetServerActivatableClassesDelegate(
-            [MarshalAs(UnmanagedType.HString)] string serverName,
-            out IntPtr activatableClassIds,
-            out uint count
-        );
-
-        static unsafe int RoGetServerActivatableClassesImpl(
-            string serverName,
-            out IntPtr activatableClassIds,
-            out uint count
-        )
-        {
-            //List<string> classIds = new List<string>();
-            //Marshal.ThrowExceptionForHR(RoGetServerActivatableClasses(serverName, out activatableClassIds, out count));
-            //IntPtr* hstringPtr = (IntPtr*)activatableClassIds;
-            //for (int i = 0; i < count; i++)
-            //{
-            //    string classId = new HString(hstringPtr[i]).Value;
-            //    classIds.Add(classId);
-            //}
-            IntPtr[] classIds = new[]
-            {
-                new HString("App").Ptr,
-                new HString(serverName).Ptr
-            };
-
-            fixed (IntPtr* ptr = classIds)
-            {
-                activatableClassIds = (IntPtr)ptr;
-            }
-            count = 2;
-            return 0;
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        delegate int RoRegisterActivationFactoriesDelegate(
-            IntPtr activatableClassIds,
-            IntPtr activationFactoryCallbacks,
-            uint count,
-            out IntPtr cookie
-        );
-
-        static unsafe int RoRegisterActivationFactoriesImpl(
-            IntPtr activatableClassIds,
-            IntPtr activationFactoryCallbacks,
-            uint count,
-            out IntPtr cookie
-        )
-        {
-            List<string> classIds = new List<string>();
-            IntPtr* hstringPtr = (IntPtr*)activatableClassIds;
-            for (int i = 0; i < count; i++)
-            {
-                string classId = new HString(hstringPtr[i]).Value;
-                classIds.Add(classId);
-            }
-            cookie = (IntPtr)12345;
-            return 0;
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        delegate int RoGetActivationFactoryDelegate(
-            [MarshalAs(UnmanagedType.HString)] string activatableClassId,
-            ref Guid iid,
-            out IActivationFactory factory
-        );
-
-        static unsafe int RoGetActivationFactoryImpl(
-            [MarshalAs(UnmanagedType.HString)] string activatableClassId,
-            ref Guid iid,
-            out IActivationFactory factory
-        )
-        {
-            InteropHelper.GetActivationFactory(activatableClassId, ref iid, out factory);
-            Debug.Print(activatableClassId);
-            return 0;
-        }
-        #endregion
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        delegate int GetProcessUIContextInformationDelegate(
-            uint processToken,
-            ref Int64 info
-        );
-
-        [DllImport("user32")]
-        static extern int GetProcessUIContextInformation(
-            uint processToken,
-            ref Int64 info
-        );
-
-        static unsafe int GetProcessUIContextInformationImpl(
-            uint processToken,
-            ref Int64 info
-        )
-        {
-            GetProcessUIContextInformation(processToken, ref info);
-            info = 2;
-            return 0;
-        }
-
         static Form MainForm;
         [MTAThread]
         static void Main()
         {
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
-
-            #region Hooks
-            //{
-            //    var hook = EasyHook.LocalHook.Create(
-            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetServerActivatableClasses"),
-            //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
-            //    null);
-            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            //}
-            //{
-            //    var hook = EasyHook.LocalHook.Create(
-            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoRegisterActivationFactories"),
-            //    new RoRegisterActivationFactoriesDelegate(RoRegisterActivationFactoriesImpl),
-            //    null);
-            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            //}
-            //{
-            //    var hook = EasyHook.LocalHook.Create(
-            //    EasyHook.LocalHook.GetProcAddress("combase.dll", "RoGetActivationFactory"),
-            //    new RoGetActivationFactoryDelegate(RoGetActivationFactoryImpl),
-            //    null);
-            //    hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            //}
-            #endregion
-
-            {
-                var hook = EasyHook.LocalHook.Create(
-                    EasyHook.LocalHook.GetProcAddress("user32.dll", "GetProcessUIContextInformation"),
-                    new GetProcessUIContextInformationDelegate(GetProcessUIContextInformationImpl),
-                    null);
-                hook.ThreadACL.SetInclusiveACL(new int[] { 0 });
-            }
-
-            //var hook2 = EasyHook.LocalHook.Create(
-            //    EasyHook.LocalHook.GetProcAddress("Kernel32.dll", "GetCommandLineW"),
-            //    new RoGetServerActivatableClassesDelegate(RoGetServerActivatableClassesImpl),
-            //    null);
 
             //var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
             //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
@@ -182,31 +30,16 @@ namespace VBAudioRouter.Host
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
             coreWindow.Activate();
 
-            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
-
-            _ = coreWindow.Dispatcher.RunIdleAsync((x) =>
-            {
-                MessageBox.Show("Hallo!");
-            });
-
-            MainForm = new();
-            MainForm.Show();
-
-            //SetWndProc(coreWindow, WndProc);
-
-            //SetWindowLongPtr(hWnd, -16, (IntPtr)0x95CF0000);
-
-            //if (SetParent(MainForm.Handle, hWnd) == IntPtr.Zero)
-            //{
-            //    throw new Win32Exception(Marshal.GetLastWin32Error());
-            //}
-
-            //CoreApplication.RunWithActivationFactories(new Test());
-
             {
                 var applicationView = ApplicationView.GetForCurrentView(); // ✔                
                 var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
             }
+
+            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+
+            MainForm = new();
+            MainForm.Show();
+
             #endregion
 
             #region ApplicationFrame
@@ -221,77 +54,34 @@ namespace VBAudioRouter.Host
             //var frameFactory = immersiveShell.QueryService<IApplicationFrameFactory>();
             //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
 
-            var test = immersiveShell.QueryService<IImmersiveApplicationManager>() as IXamlIslandPopupManager;
-
             var frame = CreateNewFrame(frameManager);
             { // Show frame
                 Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
                 RemoteThread.UnCloakWindowShell(frameHwnd);
             }
 
-            //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x207E8, out var proxy));
+            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x7095E));
 
-            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x1B017C));
-
-            //Marshal.ThrowExceptionForHR(frame.GetChromeOptions(out var options));
-            //Marshal.ThrowExceptionForHR(frame.NotifyChromeChange(96));
-            // Marshal.ThrowExceptionForHR(frame.NotifyVisibleButtonsChange());
-
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = Windows.UI.Colors.Red;
-
-            //var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            //titleBar.BackgroundColor = Windows.UI.Colors.Red
+            var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
 
             #endregion
 
-            //DataTransferManager.GetForCurrentView().DataRequested += Program_DataRequested;
-            //DataTransferManager.ShowShareUI();
-
-            //while (true)
-            //{
-            //    coreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-            //}
-
             Application.Run(MainForm);
 
-            Marshal.ThrowExceptionForHR(frame.Destroy());
+            // Marshal.ThrowExceptionForHR(frame.Destroy());
 
             // XamlHostApplication<App>.Run<WelcomePage>();
         }
-
-        [Guid("db4aeb4f-d9af-4ed4-aed4-3ba004c0ffee"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IXamlIslandPopupManager
-        {
-
-        }
-
-        #region WndProc
-        private const int GWLP_WNDPROC = -4;
-        public delegate IntPtr WndProcDelegate(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam);
-
-        public static IntPtr SetWndProc(CoreWindow coreWindow, WndProcDelegate newProc)
-        {
-            IntPtr hwnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
-            IntPtr functionPointer = Marshal.GetFunctionPointerForDelegate(newProc);
-            return (IntPtr)SetWindowLongPtr(hwnd, GWLP_WNDPROC, functionPointer);
-        }
-
-        [DllImport("user32.dll")]
-        static extern IntPtr DefWindowProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
-        static IntPtr WndProc(IntPtr hwnd, uint message, IntPtr wParam, IntPtr lParam)
-        {
-            return DefWindowProc(hwnd, message, wParam, lParam);
-        }
-        #endregion
 
         private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)
         {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
 
-            // Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
+            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
             Marshal.ThrowExceptionForHR(frame.SetOperatingMode(1, 1));
-            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(Color.Green.ToArgb()));
+            Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(65535));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));
             Marshal.ThrowExceptionForHR(titleBar.SetWindowTitle($"LK Window - {DateTime.Now}"));

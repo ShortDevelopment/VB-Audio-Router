@@ -53,9 +53,15 @@ namespace FullTrustUWP.Core.Interfaces
         [PreserveSig]
         int GetTitleBar(out IApplicationFrameTitleBar titleBar);
 
+        /// <summary>
+        /// Format <c>0x00bbggrr</c>
+        /// </summary>
         [PreserveSig]
         int GetBackgroundColor(out int color);
 
+        /// <summary>
+        /// Format <c>0x00bbggrr</c>
+        /// </summary>
         [PreserveSig]
         int SetBackgroundColor(int color);
 
