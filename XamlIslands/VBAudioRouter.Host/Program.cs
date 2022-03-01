@@ -1,6 +1,7 @@
 ﻿using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
+using FullTrustUWP.Core.Types;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -65,7 +66,7 @@ namespace VBAudioRouter.Host
             //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             //titleBar.BackgroundColor = Windows.UI.Colors.Red
             var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
-
+            // IApplicationFrameTitleBarPersistenceInternal GUID_1f4df06b_6e3b_46ab_9365_55568e176b53
             #endregion
 
             Application.Run(MainForm);

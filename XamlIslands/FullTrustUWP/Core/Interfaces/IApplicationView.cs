@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FullTrustUWP.Core.Types;
+using System;
 using System.Runtime.InteropServices;
 
 namespace FullTrustUWP.Core.Interfaces
@@ -28,7 +29,7 @@ namespace FullTrustUWP.Core.Interfaces
 
 		int InsertAfterWindow(IntPtr hwnd);
 
-		int GetExtendedFramePosition(out Rect rect);
+		int GetExtendedFramePosition(out Win32Rect rect);
 
 		int GetAppUserModelId([MarshalAs(UnmanagedType.LPWStr)] out string id);
 
@@ -66,11 +67,11 @@ namespace FullTrustUWP.Core.Interfaces
 
 		int SetPositionPriority(IntPtr /* IShellPositionerPriority* */ priority);
 
-		int GetSizeConstraints(IntPtr /* IImmersiveMonitor* */ monitor, out Size size1, out Size size2);
+		int GetSizeConstraints(IntPtr /* IImmersiveMonitor* */ monitor, out Win32Size size1, out Win32Size size2);
 
-		int GetSizeConstraintsForDpi(uint uint1, out Size size1, out Size size2);
+		int GetSizeConstraintsForDpi(uint uint1, out Win32Size size1, out Win32Size size2);
 
-		int SetSizeConstraintsForDpi(ref uint uint1, ref Size size1, ref Size size2);
+		int SetSizeConstraintsForDpi(ref uint uint1, ref Win32Size size1, ref Win32Size size2);
 
 		int QuerySizeConstraintsFromApp();
 
@@ -95,38 +96,5 @@ namespace FullTrustUWP.Core.Interfaces
 		int GetEnterpriseId([MarshalAs(UnmanagedType.LPWStr)] out string enterpriseId);
 
 		int IsMirrored(out bool isMirrored);
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public struct Rect
-	{
-		public int Left;
-		public int Top;
-		public int Right;
-		public int Bottom;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public struct Size
-	{
-		public int X;
-		public int Y;
-	}
-
-	[Flags]
-	public enum ApplicationViewCloakType
-	{
-		NONE = 0,
-		DEFAULT = 1,
-		VIRTUAL_DESKTOP = 2
-	}
-
-	public enum ApplicationViewCompatibilityPolicy
-	{
-		NONE = 0,
-		SMALL_SCREEN = 1,
-		TABLET_SMALL_SCREEN = 2,
-		VERY_SMALL_SCREEN = 3,
-		HIGH_SCALE_FACTOR = 4
 	}
 }
