@@ -8,8 +8,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Windows.UI.Core;
+using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
@@ -28,15 +30,19 @@ namespace VBAudioRouter.Host
             //coreWindow2.Activate();
 
             #region CoreWindow
-            CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", IntPtr.Zero, 30, 30, 1024, 768, 0);
+            CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", (IntPtr)0, 30, 30, 1024, 768, 0);
             coreWindow.Activate();
 
             {
                 var applicationView = ApplicationView.GetForCurrentView(); // ✔                
                 var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Program_CloseRequested;
             }
 
             var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+
+            Window.Current?.Activate();
 
             MainForm = new();
             MainForm.Show();
@@ -56,16 +62,24 @@ namespace VBAudioRouter.Host
             //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
 
             var frame = CreateNewFrame(frameManager);
+
+            Win32Size minSize = new()
+            {
+                X = 100,
+                Y = 50
+            };
+            Marshal.ThrowExceptionForHR(frame.SetMinimumSize(ref minSize));
+
             { // Show frame
                 Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
                 RemoteThread.UnCloakWindowShell(frameHwnd);
             }
 
-            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x7095E));
+            //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)hWnd));
 
             //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             //titleBar.BackgroundColor = Windows.UI.Colors.Red
-            var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
+            // var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
             // IApplicationFrameTitleBarPersistenceInternal GUID_1f4df06b_6e3b_46ab_9365_55568e176b53
             #endregion
 
@@ -74,6 +88,11 @@ namespace VBAudioRouter.Host
             // Marshal.ThrowExceptionForHR(frame.Destroy());
 
             // XamlHostApplication<App>.Run<WelcomePage>();
+        }
+
+        private static void Program_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static IApplicationFrame CreateNewFrame(IApplicationFrameManager frameManager)

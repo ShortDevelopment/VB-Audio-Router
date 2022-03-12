@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FullTrustUWP.Core.Types;
+using System;
 using System.Runtime.InteropServices;
 
 namespace FullTrustUWP.Core.Interfaces
@@ -27,10 +28,11 @@ namespace FullTrustUWP.Core.Interfaces
         [PreserveSig] // ToDo: No effect?!
         int SetApplicationId([MarshalAs(UnmanagedType.LPWStr)] string appId);
 
-        [Obsolete("Wrong signature")]
-        void SetMinimumSize();
-        [Obsolete("Wrong signature")]
-        void SetMaximumSize();
+        [PreserveSig]
+        int SetMinimumSize(ref Win32Size size);
+
+        [PreserveSig]
+        int SetMaximumSize(ref Win32Size size);
 
         [PreserveSig]
         int FitToWorkArea();

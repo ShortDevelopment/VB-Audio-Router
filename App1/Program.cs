@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace App1
 {
@@ -39,19 +40,15 @@ namespace App1
 
         static void Main(string[] args)
         {
-            {
-                var hook = EasyHook.LocalHook.Create(
-                    EasyHook.LocalHook.GetProcAddress("user32.dll", "GetProcessUIContextInformation"),
-                    new GetProcessUIContextInformationDelegate(GetProcessUIContextInformationImpl),
-                    null);
-                hook.ThreadACL.SetExclusiveACL(new int[] { 12345 });
-            }
+            //{
+            //    var hook = EasyHook.LocalHook.Create(
+            //        EasyHook.LocalHook.GetProcAddress("user32.dll", "GetProcessUIContextInformation"),
+            //        new GetProcessUIContextInformationDelegate(GetProcessUIContextInformationImpl),
+            //        null);
+            //    hook.ThreadACL.SetExclusiveACL(new int[] { 12345 });
+            //}
 
-            //var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
-            //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
-            //coreWindow2.Activate();
-
-            //Window.Current.Activate();
+            // Application.Start((x) => new App());
 
             global::Windows.UI.Xaml.Application.Start((p) => new App());
         }

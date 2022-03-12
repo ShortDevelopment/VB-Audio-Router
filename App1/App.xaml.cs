@@ -1,4 +1,7 @@
-﻿using Windows.ApplicationModel.Activation;
+﻿using FullTrustUWP.Core.Activation;
+using System;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -9,7 +12,6 @@ namespace App1
         public App()
         {
             this.InitializeComponent();
-
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -39,7 +41,7 @@ namespace App1
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    //rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(BlankPage1), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
