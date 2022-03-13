@@ -44,6 +44,13 @@ namespace FullTrustUWP.Core
         [DllImport("combase.dll", EntryPoint = "RoGetActivationFactory", CharSet = CharSet.Unicode, SetLastError = true), PreserveSig]
         public static extern int GetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, ref Guid iid, out IActivationFactory factory);
 
+        public static T GetActivationFactory<T>(string activatableClassId)
+        {
+            Guid iid = typeof(T).GUID;
+            Marshal.ThrowExceptionForHR(GetActivationFactory(activatableClassId, ref iid, out var ptr));
+            return (T)ptr;
+        }
+
         [DllImport("Ole32", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int CoCreateInstance(
             ref Guid rclsid,

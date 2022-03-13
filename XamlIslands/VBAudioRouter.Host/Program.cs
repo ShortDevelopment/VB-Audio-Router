@@ -1,4 +1,5 @@
-﻿using FullTrustUWP.Core;
+﻿using CoreWindowExample;
+using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using FullTrustUWP.Core.Types;
@@ -12,12 +13,15 @@ using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Hosting;
 using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
 {
     static class Program
     {
+        
+
         static Form MainForm;
         [MTAThread]
         static void Main()
@@ -28,6 +32,19 @@ namespace VBAudioRouter.Host
             //var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
             //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
             //coreWindow2.Activate();
+
+            var applicationFactory = InteropHelper.GetActivationFactory<IFrameworkApplicationStaticsPrivate>("Windows.UI.Xaml.Application");
+            Marshal.ThrowExceptionForHR(applicationFactory.StartInCoreWindowHostingMode(new() {
+                Left = 10,
+                Top = 10,
+                Width = 100,
+                Height = 100,
+                TransparentBackground = true,
+                IsCoreNavigationClient = true
+            }, (x) =>
+            {
+                Debugger.Break();
+            }));
 
             #region CoreWindow
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", (IntPtr)0, 30, 30, 1024, 768, 0);
@@ -75,7 +92,7 @@ namespace VBAudioRouter.Host
                 RemoteThread.UnCloakWindowShell(frameHwnd);
             }
 
-            //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)hWnd));
+            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x1E0838));
 
             //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             //titleBar.BackgroundColor = Windows.UI.Colors.Red

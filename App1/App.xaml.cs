@@ -1,7 +1,5 @@
-﻿using FullTrustUWP.Core.Activation;
-using System;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
+﻿using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -13,6 +11,8 @@ namespace App1
         {
             this.InitializeComponent();
         }
+
+        public static CoreApplicationView CoreApplicationView { get; private set; }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
@@ -36,6 +36,7 @@ namespace App1
 
             if (e.PrelaunchActivated == false)
             {
+                CoreApplicationView = CoreApplication.GetCurrentView();
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,

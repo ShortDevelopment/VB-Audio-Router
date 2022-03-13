@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
+		<TargetPlatformVersion>10.0</TargetPlatformVersion>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,13 +11,16 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 		<PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.1.2" />
-		 
+		<PackageReference Include="Win2D.uwp" Version="1.26.0" />
+		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup>		
 		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+		<PackageReference Include="System.Numerics.Vectors.WindowsRuntime" Version="4.3.0" />
 	</ItemGroup>
 
 </Project>
