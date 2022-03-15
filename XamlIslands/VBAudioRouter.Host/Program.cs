@@ -7,7 +7,13 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
@@ -20,31 +26,22 @@ namespace VBAudioRouter.Host
 {
     static class Program
     {
-        
-
         static Form MainForm;
-        [MTAThread]
+
         static void Main()
+            => MainAsync().GetAwaiter().GetResult();
+
+        [MTAThread]
+        static async Task MainAsync()
         {
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
-            //var windowFactory1 = CoreWindowFactoryActivator.CreateInstance();
-            //windowFactory1.CreateCoreWindow("Test2", out var coreWindow2);
-            //coreWindow2.Activate();
+            var window = await XamlWindowActivator.ActivateXamlWindowAsync("Test", out var thread);
+            
 
-            var applicationFactory = InteropHelper.GetActivationFactory<IFrameworkApplicationStaticsPrivate>("Windows.UI.Xaml.Application");
-            Marshal.ThrowExceptionForHR(applicationFactory.StartInCoreWindowHostingMode(new() {
-                Left = 10,
-                Top = 10,
-                Width = 100,
-                Height = 100,
-                TransparentBackground = true,
-                IsCoreNavigationClient = true
-            }, (x) =>
-            {
-                Debugger.Break();
-            }));
+            thread.Join();
+            return;
 
             #region CoreWindow
             CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", (IntPtr)0, 30, 30, 1024, 768, 0);

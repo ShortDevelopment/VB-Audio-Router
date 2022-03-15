@@ -5,6 +5,7 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
+		<TargetPlatformVersion>10.0.19041</TargetPlatformVersion>
 		<LangVersion>9</LangVersion>
 		<Platforms>AnyCPU;x64</Platforms>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -32,6 +33,7 @@
 		<PackageReference Include="EasyHook" Version="2.7.7097" />
 		<PackageReference Include="EasyHookNativePackage" Version="2.7.7097" />
 		<PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.1.2" />
+		<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
 	</ItemGroup>
 
 	<ItemGroup>
