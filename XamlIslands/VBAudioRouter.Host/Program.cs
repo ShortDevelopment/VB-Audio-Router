@@ -30,7 +30,7 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
             XamlWindowActivator.UseUwp();
-            using (new App1.App())
+            using (new VBAudioRouter.App())
             {
                 XamlWindowActivator.RunOnCurrentThread((window) =>
                 {

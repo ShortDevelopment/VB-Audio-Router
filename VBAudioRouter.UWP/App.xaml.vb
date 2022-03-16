@@ -5,11 +5,11 @@ Imports Windows.UI
 Imports Windows.UI.Core.Preview
 Imports Windows.UI.WindowManagement
 
-NotInheritable Class App
+Public NotInheritable Class App
     Inherits XamlApplication
 
     Public Sub New()
-        Initialize()
+        'Initialize()
         InitializeComponent()
     End Sub
 
