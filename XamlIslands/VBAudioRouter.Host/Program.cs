@@ -1,5 +1,4 @@
-﻿using CoreWindowExample;
-using FullTrustUWP.Core;
+﻿using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using FullTrustUWP.Core.Types;
@@ -7,19 +6,16 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.System;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
@@ -28,19 +24,40 @@ namespace VBAudioRouter.Host
     {
         static Form MainForm;
 
+        [STAThread]
         static void Main()
-            => MainAsync().GetAwaiter().GetResult();
-
-        [MTAThread]
-        static async Task MainAsync()
         {
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
+            XamlWindowActivator.UseUwp();
+            using (new App1.App())
+            {
+                XamlWindowActivator.RunOnCurrentThread((window) =>
+                {
+                    Windows.UI.Xaml.Controls.Button button = new()
+                    {
+                        Content = new Windows.UI.Xaml.Controls.TextBlock()
+                        {
+                            Text = "Hallo!"
+                        }
+                    };
+                    button.Click += async (object sender, RoutedEventArgs e) =>
+                    {
+                        ContentDialog dialog = new();
+                        dialog.IsSecondaryButtonEnabled = true;
+                        await dialog.ShowAsync();
+                        DataTransferManager.ShowShareUI();
+                    };
 
-            var window = await XamlWindowActivator.ActivateXamlWindowAsync("Test", out var thread);
-            
+                    Frame frame = new();
+                    frame.Background = new SolidColorBrush(Windows.UI.Colors.White);
+                    frame.Content = button;
+                    window.Content = frame;
 
-            thread.Join();
+                    //window.Content = new App1.BlankPage1();
+                });
+            }
+
             return;
 
             #region CoreWindow

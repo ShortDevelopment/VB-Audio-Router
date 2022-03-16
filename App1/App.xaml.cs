@@ -1,18 +1,17 @@
-﻿using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
+﻿using Microsoft.Toolkit.Win32.UI.XamlHost;
+using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace App1
 {
-    sealed partial class App : Application
+    public sealed partial class App : XamlApplication
     {
         public App()
         {
+            //this.Initialize();
             this.InitializeComponent();
         }
-
-        public static CoreApplicationView CoreApplicationView { get; private set; }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
@@ -34,19 +33,18 @@ namespace App1
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            //if (e.PrelaunchActivated == false)
+            //{
+            if (rootFrame.Content == null)
             {
-                CoreApplicationView = CoreApplication.GetCurrentView();
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(BlankPage1), e.Arguments);
-                }
-                // Ensure the current window is active
-                Window.Current.Activate();
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                rootFrame.Navigate(typeof(BlankPage1), e.Arguments);
             }
+            // Ensure the current window is active
+            Window.Current.Activate();
+            //}
         }
     }
 }

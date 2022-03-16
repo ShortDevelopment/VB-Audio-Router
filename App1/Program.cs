@@ -1,8 +1,10 @@
-﻿namespace App1
+﻿using System.Threading.Tasks;
+
+namespace App1
 {
     public static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             //var applicationFactory = InteropHelper.GetActivationFactory<IFrameworkApplicationStaticsPrivate>("Windows.UI.Xaml.Application");
             //Marshal.ThrowExceptionForHR(applicationFactory.StartInCoreWindowHostingMode(new WindowCreationParameters()

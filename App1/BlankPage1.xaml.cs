@@ -14,7 +14,7 @@ namespace App1
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             XamlWindowActivator.UseUwp();
-            var window = await XamlWindowActivator.ActivateXamlWindowAsync("Test", out var thread);
+            // var window = await XamlWindowActivator.ActivateXamlWindowAsync("Test", out var thread);
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Markup;
 using XamlApplication = Windows.UI.Xaml.Application;
-using XamlWindow = Windows.UI.Xaml.Window;
 using XamlFrameworkView = Windows.UI.Xaml.FrameworkView;
+using XamlWindow = Windows.UI.Xaml.Window;
 
 namespace FullTrustUWP.Core.Activation
 {
@@ -19,46 +21,12 @@ namespace FullTrustUWP.Core.Activation
         public static void UseUwp()
             => IsAppInitialized = true;
 
-        public static Task<XamlWindow> ActivateXamlWindowAsync(string title)
-            => ActivateXamlWindowAsync(title, out _);
-
-        public static Task<XamlWindow> ActivateXamlWindowAsync(string title, out Thread windowThread)
+        public static void RunOnNewThread(Action<XamlWindow> callback, out Thread windowThread)
         {
-            TaskCompletionSource<XamlWindow> taskCompletion = new();
+            //TaskCompletionSource<XamlWindow> taskCompletion = new();
             Thread thread = new Thread(() =>
             {
-                try
-                {
-                    if (!IsAppInitialized)
-                        new XamlApplicationImpl();
-                    IsAppInitialized = true;
-
-                    CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, title, IntPtr.Zero, 30, 30, 1024, 768, 0);
-                    coreWindow.Activate();
-
-                    CoreApplicationViewImpl coreView = new(coreWindow);
-
-                    XamlFrameworkView view = new();
-                    (view as object as IFrameworkView)!.Initialize(coreView);
-                    view.SetWindow(coreWindow);
-
-                    XamlWindow window = XamlWindow.Current;
-                    window.Activate();
-                    window.Content = new Windows.UI.Xaml.Controls.Button()
-                    {
-                        Content = new Windows.UI.Xaml.Controls.TextBlock()
-                        {
-                            Text = "Hallo!"
-                        }
-                    };
-                    // taskCompletion.SetResult(window);
-
-                    view.Run();
-                }
-                catch (Exception ex)
-                {
-                    taskCompletion.SetException(ex);
-                }
+                RunOnCurrentThread(callback);
             });
             thread.SetApartmentState(ApartmentState.MTA);
             thread.IsBackground = true;
@@ -66,12 +34,37 @@ namespace FullTrustUWP.Core.Activation
 
             windowThread = thread;
 
-            return taskCompletion.Task;
+            //return taskCompletion.Task;
         }
 
-        class XamlApplicationImpl : XamlApplication
+        public static void RunOnCurrentThread(Action<XamlWindow> callback)
         {
+            //if (!IsAppInitialized)
+            //    new XamlApplicationImpl();
+            //IsAppInitialized = true;
 
+            //Windows.UI.Xaml.Hosting.WindowsXamlManager.InitializeForCurrentThread();
+
+            CoreWindow coreWindow = CoreWindow.GetForCurrentThread();
+
+            if (coreWindow == null)
+            {
+                coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "", IntPtr.Zero, 30, 30, 1024, 768, 0);
+                //coreWindow.Activate();
+            }
+
+            CoreApplicationViewImpl coreView = new(coreWindow);
+
+            XamlFrameworkView view = new();
+            (view as object as IFrameworkView)!.Initialize(coreView);
+            view.SetWindow(coreWindow);
+
+            XamlWindow window = XamlWindow.Current;
+            window.Activate();
+
+            callback?.Invoke(window);
+
+            view.Run();
         }
 
         #region CoreApplicationView
@@ -112,6 +105,59 @@ namespace FullTrustUWP.Core.Activation
         {
             [PreserveSig]
             int Initialize(ICoreApplicationView applicationView);
+        }
+
+
+
+        /// <summary>
+        /// <see href="https://github.com/CommunityToolkit/Microsoft.Toolkit.Win32/blob/master/Microsoft.Toolkit.Win32.UI.XamlApplication/XamlApplication.cpp">XamlApplication.cpp</see>
+        /// </summary>
+        class XamlApplicationImpl : XamlApplication, IXamlMetadataProvider
+        {
+            [DllImport("kernel32.dll", SetLastError = true)]
+            static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, int dwFlags);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            static extern bool FreeLibrary(IntPtr hModule);
+
+            List<IntPtr> _loadedModules = new List<IntPtr>();
+            public XamlApplicationImpl()
+            {
+                // Workaround a bug where twinapi.appcore.dll and threadpoolwinrt.dll gets loaded after it has been unloaded
+                // because of a call to GetActivationFactory
+                foreach (var lib in new[] { "twinapi.appcore.dll", "threadpoolwinrt.dll" })
+                {
+                    IntPtr hModule = LoadLibraryEx(lib, IntPtr.Zero, 0);
+                    if (hModule == IntPtr.Zero)
+                        throw new Win32Exception();
+                    _loadedModules.Add(hModule);
+                }
+
+                // Provider = new ReflectionXamlMetadataProvider();
+            }
+
+            protected override void OnLaunched(LaunchActivatedEventArgs args)
+            {
+                // base.OnLaunched(args);
+            }
+
+            ~XamlApplicationImpl()
+            {
+                foreach (IntPtr hModule in _loadedModules)
+                    FreeLibrary(hModule);
+            }
+
+            #region IXamlMetadataProvider
+            IXamlMetadataProvider Provider;
+            public IXamlType GetXamlType(Type type)
+                => Provider.GetXamlType(type);
+
+            public IXamlType GetXamlType(string fullName)
+                => Provider.GetXamlType(fullName);
+
+            public XmlnsDefinition[] GetXmlnsDefinitions()
+                => Provider.GetXmlnsDefinitions();
+            #endregion
         }
     }
 }

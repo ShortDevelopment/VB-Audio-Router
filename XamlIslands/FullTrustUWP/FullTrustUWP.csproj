@@ -23,4 +23,10 @@
 		<PackageReference Include="System.Numerics.Vectors.WindowsRuntime" Version="4.3.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="Microsoft.UI.Xaml.Markup">
+	    <HintPath>C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\XamlCompiler\Microsoft.UI.Xaml.Markup.winmd</HintPath>
+	  </Reference>
+	</ItemGroup>
+
 </Project>
