@@ -79,11 +79,4 @@ namespace FullTrustUWP.Core
     {
         IntPtr ActivateInstance();
     }
-
-    public static class Const
-    {
-        public const string IID_ICoreApplicationPrivate2 = "6090202d-2843-4ba5-9b0d-fc88eecd9ce5";
-        public const string IID_ICoreWindowStatic = "4d239005-3c2a-41b1-9022-536bb9cf93b1";
-        public const string IID_ICoreWindowInterop = "45d64a29-a63e-4cb6-b498-5781d298cb4f";
-    }
 }

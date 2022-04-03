@@ -2,6 +2,7 @@
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using FullTrustUWP.Core.Types;
+using FullTrustUWP.Core.Xaml;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -13,7 +14,6 @@ using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using static FullTrustUWP.Core.Activation.XamlWindowActivator;
 using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
@@ -33,14 +33,7 @@ namespace VBAudioRouter.Host
 
             // XamlHostApplication<App>.Run<VBAudioRouter.GraphViewPage>();
 
-            using (new XamlApplicationWrapper(() => new App()))
-            {
-                var window = XamlWindowActivator.CreateNewWindow(new("Test"));
-                window.Content = new GraphViewPage();
-
-                // Run
-                window.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-            }
+            XamlApplicationWrapper.Run<App, WelcomePage>();
 
             return;
 
