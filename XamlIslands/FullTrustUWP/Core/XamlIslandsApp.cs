@@ -10,7 +10,7 @@ namespace FullTrustUWP.Core
 {
     public class XamlIslandsApp
     {
-        static void Launch<TApp, TPage>() where TApp : IDisposable where TPage : UIElement
+        public static void Launch<TApp, TPage>() where TApp : IDisposable where TPage : UIElement
         {
             Form form = new();
             form.Show();
@@ -19,7 +19,7 @@ namespace FullTrustUWP.Core
             {
                 DesktopWindowXamlSource xamlSource = new();
                 xamlSource.Content = Activator.CreateInstance<TPage>();
-                IDesktopWindowXamlSourceNative2 xamlSourceNative = xamlSource as object as IDesktopWindowXamlSourceNative2;
+                IDesktopWindowXamlSourceNative2 xamlSourceNative = (xamlSource as IDesktopWindowXamlSourceNative2)!;
                 xamlSourceNative.AttachToWindow(form.Handle);
                 IntPtr hWnd = xamlSourceNative.WindowHandle;
                 int flags = GetWindowLong(hWnd, -16);

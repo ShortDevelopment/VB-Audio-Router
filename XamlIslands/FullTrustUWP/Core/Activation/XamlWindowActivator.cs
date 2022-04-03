@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using XamlApplication = Windows.UI.Xaml.Application;
 using XamlFrameworkView = Windows.UI.Xaml.FrameworkView;
 using XamlWindow = Windows.UI.Xaml.Window;
@@ -21,12 +27,12 @@ namespace FullTrustUWP.Core.Activation
         public static void UseUwp()
             => IsAppInitialized = true;
 
-        public static void RunOnNewThread(Action<XamlWindow> callback, out Thread windowThread)
+        public static void RunOnNewThread(XamlWindowConfig config, Action<XamlWindow> callback, out Thread windowThread)
         {
             //TaskCompletionSource<XamlWindow> taskCompletion = new();
             Thread thread = new Thread(() =>
             {
-                RunOnCurrentThread(callback);
+                RunOnCurrentThread(config, callback);
             });
             thread.SetApartmentState(ApartmentState.MTA);
             thread.IsBackground = true;
@@ -37,7 +43,7 @@ namespace FullTrustUWP.Core.Activation
             //return taskCompletion.Task;
         }
 
-        public static void RunOnCurrentThread(Action<XamlWindow> callback)
+        public static void RunOnCurrentThread(XamlWindowConfig config, Action<XamlWindow> callback)
         {
             //if (!IsAppInitialized)
             //    new XamlApplicationImpl();
@@ -45,13 +51,15 @@ namespace FullTrustUWP.Core.Activation
 
             //Windows.UI.Xaml.Hosting.WindowsXamlManager.InitializeForCurrentThread();
 
-            CoreWindow coreWindow = CoreWindow.GetForCurrentThread();
 
+            CoreWindow coreWindow = CoreWindow.GetForCurrentThread();
             if (coreWindow == null)
-            {
-                coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "", IntPtr.Zero, 30, 30, 1024, 768, 0);
-                //coreWindow.Activate();
-            }
+                coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, config.Title, IntPtr.Zero, 30, 30, 1024, 768, 0);
+
+            var test = InteropHelper.GetActivationFactory<Interfaces.ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
+            Marshal.ThrowExceptionForHR(test.CreateNonImmersiveView(out var x));
+
+            CoreApplication.GetCurrentView();
 
             CoreApplicationViewImpl coreView = new(coreWindow);
 
@@ -62,9 +70,34 @@ namespace FullTrustUWP.Core.Activation
             XamlWindow window = XamlWindow.Current;
             window.Activate();
 
-            callback?.Invoke(window);
+            Image splashScreenImage = new()
+            {
+                Source = config.SplashScreenImage
+            };
+            Frame frame = new();
+            frame.Background = new SolidColorBrush(config.SplashScreenBackground);
+            frame.Content = splashScreenImage;
+            window.Content = frame;
 
-            view.Run();
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(config.SplashScreenTime);
+                _ = coreWindow.Dispatcher.RunIdleAsync(async (x) => callback?.Invoke(window));
+            });
+
+            //view.Run();            
+        }
+
+        public sealed class XamlWindowConfig
+        {
+            public XamlWindowConfig(string title)
+                => this.Title = title;
+
+            public string Title { get; private set; } = "";
+
+            public int SplashScreenTime { get; set; } = 1_000;
+            public Color SplashScreenBackground { get; set; } = Colors.White;
+            public ImageSource? SplashScreenImage { get; set; }
         }
 
         #region CoreApplicationView

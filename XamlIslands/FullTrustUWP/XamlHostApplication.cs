@@ -24,7 +24,7 @@ namespace FullTrustUWP
             Application.EnableVisualStyles();
         }
 
-        public static void Run<T>() where T : UIElement => Run<T>(new());
+        public static void Run<TUiElement>() where TUiElement : UIElement => Run<TUiElement>(new());
 
         public static void Run<T>(XamlWindow<T> window) where T : UIElement
         {

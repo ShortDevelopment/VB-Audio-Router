@@ -1,4 +1,5 @@
-﻿using FullTrustUWP.Core;
+﻿using FullTrustUWP;
+using FullTrustUWP.Core;
 using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using FullTrustUWP.Core.Types;
@@ -29,10 +30,14 @@ namespace VBAudioRouter.Host
         {
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
+
+            // XamlIslandsApp.Launch<App, GraphViewPage>();
+            // XamlHostApplication<App>.Run<VBAudioRouter.GraphViewPage>();
+
             XamlWindowActivator.UseUwp();
             using (new VBAudioRouter.App())
             {
-                XamlWindowActivator.RunOnCurrentThread((window) =>
+                XamlWindowActivator.RunOnCurrentThread(new("Test"), (window) =>
                 {
                     Windows.UI.Xaml.Controls.Button button = new()
                     {
@@ -44,18 +49,29 @@ namespace VBAudioRouter.Host
                     button.Click += async (object sender, RoutedEventArgs e) =>
                     {
                         ContentDialog dialog = new();
-                        dialog.IsSecondaryButtonEnabled = true;
+                        dialog.IsPrimaryButtonEnabled = true;
+                        dialog.PrimaryButtonText = "Close";
                         await dialog.ShowAsync();
+
+                        Flyout flyout = new();
+                        flyout.ShowAt(button);
+
+                        //var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                        //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                        //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+                        //picker.FileTypeFilter.Add(".jpg");
+                        //picker.FileTypeFilter.Add(".jpeg");
+                        //picker.FileTypeFilter.Add(".png");
+
+                        //picker.PickSingleFileAsync();
+
                         DataTransferManager.ShowShareUI();
                     };
-
-                    Frame frame = new();
-                    frame.Background = new SolidColorBrush(Windows.UI.Colors.White);
-                    frame.Content = button;
-                    window.Content = frame;
-
-                    //window.Content = new App1.BlankPage1();
+                    window.Content = button;
+                    // return;
+                    window.Content = new VBAudioRouter.GraphViewPage();
                 });
+                System.Windows.Forms.Application.Run();
             }
 
             return;
