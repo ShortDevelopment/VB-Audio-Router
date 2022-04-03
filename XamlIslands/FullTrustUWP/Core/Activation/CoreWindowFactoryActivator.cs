@@ -12,7 +12,7 @@ namespace FullTrustUWP.Core.Activation
             Guid clsid = new(CLSID_CoreUICoreWindowFactoryProxy);
             Guid iid = new("00000000-0000-0000-C000-000000000046");
             Marshal.ThrowExceptionForHR(InteropHelper.CoCreateInstance(ref clsid, null, 1026, ref iid, out object factoryPtr));
-            return factoryPtr as ICoreWindowFactory;
+            return (factoryPtr as ICoreWindowFactory)!;
         }
     }
 }

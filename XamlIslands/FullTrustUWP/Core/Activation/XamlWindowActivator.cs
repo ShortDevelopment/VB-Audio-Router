@@ -34,7 +34,7 @@ namespace FullTrustUWP.Core.Activation
                 coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, config.Title, IntPtr.Zero, 30, 30, 1024, 768, 0);
 
             // Create CoreApplicationView
-            var coreApplicationPrivate = InteropHelper.GetActivationFactory<Interfaces.ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
+            var coreApplicationPrivate = InteropHelper.RoGetActivationFactory<Interfaces.ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
             Marshal.ThrowExceptionForHR(coreApplicationPrivate.CreateNonImmersiveView(out var coreView));
 
             // Mount Xaml rendering

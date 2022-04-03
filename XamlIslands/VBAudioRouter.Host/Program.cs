@@ -31,7 +31,6 @@ namespace VBAudioRouter.Host
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
-            // XamlIslandsApp.Launch<App, GraphViewPage>();
             // XamlHostApplication<App>.Run<VBAudioRouter.GraphViewPage>();
 
             using (new XamlApplicationWrapper(() => new App()))
