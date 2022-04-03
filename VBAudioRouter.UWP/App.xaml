@@ -1,4 +1,4 @@
-﻿<xamlhost:XamlApplication
+﻿<Application
     xmlns:xamlhost="using:Microsoft.Toolkit.Win32.UI.XamlHost"
     x:Class="VBAudioRouter.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -32,4 +32,4 @@
             </controls:XamlControlsResources.MergedDictionaries>
         </controls:XamlControlsResources>
     </Application.Resources>
-</xamlhost:XamlApplication>
+</Application>
