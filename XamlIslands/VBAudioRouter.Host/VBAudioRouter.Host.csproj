@@ -13,25 +13,11 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	<PropertyGroup>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EasyHook" Version="2.7.7097" />
-		<PackageReference Include="EasyHookNativePackage" Version="2.7.7097" />
 		<PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.1.2" />
 		<PackageReference Include="Microsoft.UI.Xaml" Version="2.7.0" />
 	</ItemGroup>
@@ -42,21 +28,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="EasyHook32.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="EasyHook32Svc.exe">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="EasyHook64.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="EasyHook64Svc.exe">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="EasyLoad32.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Include="bin\$(Platform)\$(Configuration)\$(WindowsTargetFramework)\**\*.xbf">
+			<CopyToOutputDirectory>never</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

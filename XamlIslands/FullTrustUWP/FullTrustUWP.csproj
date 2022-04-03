@@ -11,7 +11,6 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 		<PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.1.2" />
-		<PackageReference Include="Win2D.uwp" Version="1.26.0" />
 		<PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />
 	</ItemGroup>
 
@@ -20,7 +19,6 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-		<PackageReference Include="System.Numerics.Vectors.WindowsRuntime" Version="4.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
