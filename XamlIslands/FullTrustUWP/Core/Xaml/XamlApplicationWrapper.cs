@@ -40,6 +40,10 @@ namespace FullTrustUWP.Core.Xaml
                 var window = XamlWindowActivator.CreateNewWindow(new(windowTitle));
                 window.Content = new TContent();
 
+                // Should make XamlWindow click through on transparent elements
+                // Not working (yet)!
+                // new XamlWindowTransparencyHook(window);
+
                 // Run
                 window.Dispatcher.ProcessEvents(Windows.UI.Core.CoreProcessEventsOption.ProcessUntilQuit);
             }
