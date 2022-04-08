@@ -47,7 +47,7 @@ namespace FullTrustUWP.Core.Xaml
             Frame frame = new();
             frame.Background = new SolidColorBrush(config.SplashScreenBackground);
             frame.Content = splashScreenImage;
-            window.Content = frame;
+            // window.Content = frame;
 
             return window;
         }

@@ -7,95 +7,91 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Application = System.Windows.Forms.Application;
 
 namespace VBAudioRouter.Host
 {
     static class Program
     {
-        static Form MainForm;
+        static IntPtr testWindowHwnd;
+
+        [Guid("C805B0C0-6210-4E4F-B76A-E894E8B1A4AD"), InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
+        interface IXamlRuntimeStatics
+        {
+            bool EnableImmersiveColors { get; set; }
+            bool EnableWebView { get; set; }
+        }
 
         [STAThread]
         static void Main()
-            => MainAsync().GetAwaiter().GetResult();
-
-        static async Task MainAsync()
         {
             // https://raw.githubusercontent.com/fboldewin/COM-Code-Helper/master/code/interfaces.txt
             // GOOGLE: "IApplicationViewCollection" site:lise.pnfsoftware.com
 
             // XamlHostApplication<App>.Run<VBAudioRouter.GraphViewPage>();
 
-            XamlApplicationWrapper.Run<App, WelcomePage>();
+            // XamlApplicationWrapper.Run<App, WelcomePage>();
 
-            return;
-
-            #region CoreWindow
-            CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, "Test", (IntPtr)0, 30, 30, 1024, 768, 0);
-            coreWindow.Activate();
-
+            using (XamlApplicationWrapper appWrapper = new(() => new App()))
             {
-                var applicationView = ApplicationView.GetForCurrentView(); // ✔                
-                var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-                SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Program_CloseRequested;
+                var window = XamlWindowActivator.CreateNewWindow(new("Test"));
+                window.Content = new BlankPage1();
+
+                IWindowPrivate windowPrivate = (window as object as IWindowPrivate)!;
+                windowPrivate.TransparentBackground = true;
+
+                IXamlRuntimeStatics xamlRuntime = InteropHelper.RoGetActivationFactory<IXamlRuntimeStatics>("Windows.UI.Xaml.Hosting.XamlRuntime");
+                xamlRuntime.EnableImmersiveColors = true;
+
+                CoreWindow coreWindow = window.CoreWindow;
+
+                var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
+                testWindowHwnd = hWnd;
+
+                #region ApplicationFrame
+                var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
+                var immersiveShell = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
+
+                var uncloakService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IUncloakWindowService;
+                var frameService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IApplicationFrameService;
+                var applicationPresentation = immersiveShell.QueryService<IImmersiveApplicationManager>() as IImmersiveApplicationPresentation;
+                // ListAllFrames(frameManager);
+
+                {
+                    var applicationView = ApplicationView.GetForCurrentView(); // ✔
+                    applicationView.IsScreenCaptureEnabled = false; // ✔
+                    applicationView.TitleBar.BackgroundColor = Windows.UI.Colors.Red; // ❌
+                    applicationView.TryEnterFullScreenMode(); // ❌
+                    var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
+                    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                    SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Program_CloseRequested;
+                }
+
+                //var frameFactory = immersiveShell.QueryService<IApplicationFrameFactory>();
+                //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
+
+                //var frame = CreateNewFrame(frameManager);
+
+                //{ // Show frame
+                //    Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
+                //    RemoteThread.UnCloakWindowShell(frameHwnd);
+                //}
+
+                //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
+
+                //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                //titleBar.BackgroundColor = Windows.UI.Colors.Red
+                //var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
+                // IApplicationFrameTitleBarPersistenceInternal GUID_1f4df06b_6e3b_46ab_9365_55568e176b53
+                #endregion
+
+                coreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+
+                //Marshal.ThrowExceptionForHR(frame.Destroy());
             }
-
-            var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
-
-            Window.Current?.Activate();
-
-            MainForm = new();
-            MainForm.Show();
-
-            #endregion
-
-            #region ApplicationFrame
-            var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
-            var immersiveShell = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
-
-            var uncloakService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IUncloakWindowService;
-            var frameService = immersiveShell.QueryService<IImmersiveApplicationManager>() as IApplicationFrameService;
-            var applicationPresentation = immersiveShell.QueryService<IImmersiveApplicationManager>() as IImmersiveApplicationPresentation;
-            // ListAllFrames(frameManager);
-
-            //var frameFactory = immersiveShell.QueryService<IApplicationFrameFactory>();
-            //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
-
-            var frame = CreateNewFrame(frameManager);
-
-            Win32Size minSize = new()
-            {
-                X = 100,
-                Y = 50
-            };
-            Marshal.ThrowExceptionForHR(frame.SetMinimumSize(ref minSize));
-
-            { // Show frame
-                Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
-                RemoteThread.UnCloakWindowShell(frameHwnd);
-            }
-
-            Marshal.ThrowExceptionForHR(frame.SetPresentedWindow((IntPtr)0x1E0838));
-
-            //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            //titleBar.BackgroundColor = Windows.UI.Colors.Red
-            // var coreTitleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
-            // IApplicationFrameTitleBarPersistenceInternal GUID_1f4df06b_6e3b_46ab_9365_55568e176b53
-            #endregion
-
-            Application.Run(MainForm);
-
-            // Marshal.ThrowExceptionForHR(frame.Destroy());
-
-            // XamlHostApplication<App>.Run<WelcomePage>();
         }
 
         private static void Program_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
@@ -145,7 +141,7 @@ namespace VBAudioRouter.Host
                     Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.DEFAULT, false));
                     Marshal.ThrowExceptionForHR(view.Flash());
                     // Marshal.ThrowExceptionForHR(view.SetCloak(ApplicationViewCloakType.VIRTUAL_DESKTOP, false));
-                    //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(MainForm.Handle));
+                    Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(testWindowHwnd));
 
                     //IntPtr newHwnd = MainForm.Handle;
                     //Marshal.ThrowExceptionForHR(SetWindowLong(newHwnd, -20, GetWindowLong(hwndHost, -20)));
