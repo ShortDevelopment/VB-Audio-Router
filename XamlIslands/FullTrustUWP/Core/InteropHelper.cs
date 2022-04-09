@@ -1,46 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace FullTrustUWP.Core
 {
     public static class InteropHelper
     {
-        #region ThrowOnError
-        public static void ThrowOnError() => ThrowOnError(Marshal.GetLastWin32Error());
-
-        public static void ThrowOnError(int error)
-        {
-            if (error != 0)
-                throw new Win32Exception(error);
-        }
-        #endregion
-
-        #region DynamicLoad
-        public static T DynamicLoad<T>(string libraryName, int ordinal) where T : Delegate
-        {
-            IntPtr hLib = LoadLibrary(libraryName);
-            IntPtr hProc = GetProcAddress(hLib, ordinal);
-            return Marshal.GetDelegateForFunctionPointer<T>(hProc);
-        }
-
-        public static T DynamicLoad<T>(string libraryName, string procName) where T : Delegate
-        {
-            IntPtr hLib = LoadLibrary(libraryName);
-            IntPtr hProc = GetProcAddress(hLib, procName);
-            return Marshal.GetDelegateForFunctionPointer<T>(hProc);
-        }
-
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
-        private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
-
-        [DllImport("kernel32", SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, int ordinal);
-
-        [DllImport("kernel32", SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
-        #endregion
-
         #region RoGetActivationFactory
         [DllImport("combase.dll", EntryPoint = "RoGetActivationFactory", CharSet = CharSet.Unicode, SetLastError = true), PreserveSig]
         public static extern int RoGetActivationFactory([MarshalAs(UnmanagedType.HString)] string activatableClassId, ref Guid iid, out IWinRTActivationFactory factory);

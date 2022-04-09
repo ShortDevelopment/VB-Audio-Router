@@ -1,10 +1,9 @@
 ﻿using FullTrustUWP.Core.Activation;
+using FullTrustUWP.Core.Interfaces;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -25,7 +24,7 @@ namespace FullTrustUWP.Core.Xaml
                 coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, config.Title, IntPtr.Zero, 30, 30, 1024, 768, 0);
 
             // Create CoreApplicationView
-            var coreApplicationPrivate = InteropHelper.RoGetActivationFactory<Interfaces.ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
+            var coreApplicationPrivate = InteropHelper.RoGetActivationFactory<ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
             Marshal.ThrowExceptionForHR(coreApplicationPrivate.CreateNonImmersiveView(out var coreView));
 
             // Mount Xaml rendering
@@ -35,8 +34,25 @@ namespace FullTrustUWP.Core.Xaml
 
             // Get xaml window & activate
             XamlWindow window = XamlWindow.Current;
+
+            // Show win32 frame if requested
+            if (config.HasWin32Frame)
+                window.ShowWin32Frame();
+
+            // Show window
             window.Activate();
 
+            IWindowPrivate? windowPrivate = window as object as IWindowPrivate;
+            Debug.Assert(windowPrivate != null, $"\"{nameof(windowPrivate)}\" is null");
+            if (windowPrivate != null)
+            {
+                // A XamlWindow inside a Win32 process is transparent by default
+                // (See Windows.UI.Xaml.dll!DirectUI::DXamlCore::ConfigureCoreWindow)
+                // This is to provide a consistent behavior across platforms
+                windowPrivate.TransparentBackground = config.TransparentBackground;
+            }
+
+            // Enable async / await
             SynchronizationContext.SetSynchronizationContext(new XamlSynchronizationContext(coreWindow));
 
             // SplashScreen
@@ -50,46 +66,6 @@ namespace FullTrustUWP.Core.Xaml
             // window.Content = frame;
 
             return window;
-        }
-
-        #region CoreApplicationView
-        [ComVisible(true)]
-        sealed class CoreApplicationViewImpl : ICoreApplicationView
-        {
-            CoreWindow _coreWindow;
-            public CoreApplicationViewImpl(CoreWindow coreWindow)
-            {
-                this._coreWindow = coreWindow;
-            }
-
-            public CoreWindow CoreWindow => _coreWindow;
-
-            public bool IsHosted => false;
-
-            public bool IsMain => true;
-
-            public event TypedEventHandler<CoreApplicationView, IActivatedEventArgs> Activated;
-        }
-
-        [ComVisible(true)]
-        [Guid("638bb2db-451d-4661-b099-414f34ffb9f1"), InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
-        interface ICoreApplicationView
-        {
-            CoreWindow CoreWindow { get; }
-
-            event TypedEventHandler<CoreApplicationView, IActivatedEventArgs> Activated;
-
-            bool IsMain { get; }
-
-            bool IsHosted { get; }
-        }
-        #endregion
-
-        [Guid("faab5cd0-8924-45ac-ad0f-a08fae5d0324"), InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
-        interface IFrameworkView
-        {
-            [PreserveSig]
-            int Initialize(ICoreApplicationView applicationView);
         }
     }
 }

@@ -6,4 +6,7 @@
 Public NotInheritable Class BlankPage1
     Inherits Page
 
+    Private Sub BlankPage1_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        Window.Current.SetTitleBar(TitleBarElement)
+    End Sub
 End Class

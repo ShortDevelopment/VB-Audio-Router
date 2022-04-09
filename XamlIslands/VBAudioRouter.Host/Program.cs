@@ -18,13 +18,6 @@ namespace VBAudioRouter.Host
     {
         static IntPtr testWindowHwnd;
 
-        [Guid("C805B0C0-6210-4E4F-B76A-E894E8B1A4AD"), InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
-        interface IXamlRuntimeStatics
-        {
-            bool EnableImmersiveColors { get; set; }
-            bool EnableWebView { get; set; }
-        }
-
         [STAThread]
         static void Main()
         {
@@ -42,9 +35,6 @@ namespace VBAudioRouter.Host
 
                 IWindowPrivate windowPrivate = (window as object as IWindowPrivate)!;
                 windowPrivate.TransparentBackground = true;
-
-                IXamlRuntimeStatics xamlRuntime = InteropHelper.RoGetActivationFactory<IXamlRuntimeStatics>("Windows.UI.Xaml.Hosting.XamlRuntime");
-                xamlRuntime.EnableImmersiveColors = true;
 
                 CoreWindow coreWindow = window.CoreWindow;
 

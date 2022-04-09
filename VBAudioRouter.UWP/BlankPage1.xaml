@@ -18,7 +18,7 @@
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border Background="{StaticResource AcrylicBackgroundBrush}" CornerRadius="10" Grid.Column="0" />
+        <Border Background="{StaticResource AcrylicBackgroundBrush}" CornerRadius="10" Grid.Column="0" x:Name="TitleBarElement" />
         <Border Background="{StaticResource AcrylicBackgroundBrush}" CornerRadius="10" Grid.Column="2" />
     </Grid>
 </Page>
