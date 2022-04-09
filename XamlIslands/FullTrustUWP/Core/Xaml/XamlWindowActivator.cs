@@ -65,6 +65,8 @@ namespace FullTrustUWP.Core.Xaml
             frame.Content = splashScreenImage;
             // window.Content = frame;
 
+            new XamlWindowSubclass(window);
+
             return window;
         }
     }
