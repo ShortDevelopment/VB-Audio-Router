@@ -1,12 +1,9 @@
 ﻿using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using XamlFrameworkView = Windows.UI.Xaml.FrameworkView;
 using XamlWindow = Windows.UI.Xaml.Window;
 
@@ -14,14 +11,17 @@ namespace FullTrustUWP.Core.Xaml
 {
     public sealed class XamlWindowActivator
     {
+        /// <summary>
+        /// Creates new <see cref="XamlWindow"/> on current thread. <br />
+        /// Only one window is allowed per thread! <br/>
+        /// A <see cref="XamlWindowSubclass"/> will be attached automatically.
+        /// </summary>
         public static XamlWindow CreateNewWindow(XamlWindowConfig config)
         {
             if (XamlApplicationWrapper.Current == null)
                 throw new InvalidOperationException($"No instance of \"{nameof(XamlApplicationWrapper)}\" was found!");
 
-            CoreWindow coreWindow = CoreWindow.GetForCurrentThread();
-            if (coreWindow == null)
-                coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, config.Title, IntPtr.Zero, 30, 30, 1024, 768, 0);
+            CoreWindow coreWindow = CoreWindowActivator.CreateCoreWindow(CoreWindowActivator.WindowType.NOT_IMMERSIVE, config.Title, IntPtr.Zero, 30, 30, 1024, 768, 0);
 
             // Create CoreApplicationView
             var coreApplicationPrivate = InteropHelper.RoGetActivationFactory<ICoreApplicationPrivate2>("Windows.ApplicationModel.Core.CoreApplication");
@@ -35,37 +35,32 @@ namespace FullTrustUWP.Core.Xaml
             // Get xaml window & activate
             XamlWindow window = XamlWindow.Current;
 
-            // Show win32 frame if requested
-            if (config.HasWin32Frame)
-                window.ShowWin32Frame();
+            // Enable async / await
+            SynchronizationContext.SetSynchronizationContext(new XamlSynchronizationContext(coreWindow));
 
-            // Show window
-            window.Activate();
-
-            IWindowPrivate? windowPrivate = window as object as IWindowPrivate;
-            Debug.Assert(windowPrivate != null, $"\"{nameof(windowPrivate)}\" is null");
-            if (windowPrivate != null)
+            XamlWindowSubclass subclass = XamlWindowSubclass.Attach(window);
+            if (subclass.WindowPrivate != null)
             {
                 // A XamlWindow inside a Win32 process is transparent by default
                 // (See Windows.UI.Xaml.dll!DirectUI::DXamlCore::ConfigureCoreWindow)
                 // This is to provide a consistent behavior across platforms
-                windowPrivate.TransparentBackground = config.TransparentBackground;
+                subclass.WindowPrivate.TransparentBackground = config.TransparentBackground;
             }
 
-            // Enable async / await
-            SynchronizationContext.SetSynchronizationContext(new XamlSynchronizationContext(coreWindow));
+            // Show win32 frame if requested
+            if (config.HasWin32Frame)
+                subclass.ShowWin32Frame();
 
-            // SplashScreen
-            Image splashScreenImage = new()
-            {
-                Source = config.SplashScreenImage
-            };
-            Frame frame = new();
-            frame.Background = new SolidColorBrush(config.SplashScreenBackground);
-            frame.Content = splashScreenImage;
-            // window.Content = frame;
+            subclass.IsTopMost = config.TopMost;
+            subclass.HasWin32TitleBar = config.HasWin32TitleBar;
 
-            new XamlWindowSubclass(window);
+            //coreWindow.Closed += (CoreWindow window, CoreWindowEventArgs args) =>
+            //{
+            //    subclass.Dispose();
+            //};
+
+            // Show window
+            window.Activate();
 
             return window;
         }
