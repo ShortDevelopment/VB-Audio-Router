@@ -41,6 +41,10 @@ namespace VBAudioRouter.Host
                 var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
                 testWindowHwnd = hWnd;
 
+                var bandId = WindowBandHelper.ZBandID.ImmersiveNotification;
+                Marshal.ThrowExceptionForHR(WindowBandHelper.SetWindowBand(hWnd, IntPtr.Zero, bandId));
+                Marshal.ThrowExceptionForHR(WindowBandHelper.GetWindowBand((IntPtr)hWnd, out var band));
+
                 #region ApplicationFrame
                 var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
                 var immersiveShell = ImmersiveShellActivator.CreateImmersiveShellServiceProvider();
