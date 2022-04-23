@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -154,6 +155,14 @@ namespace FullTrustUWP.Core
             GetWindowThreadProcessId(hWnd, out var pid);
             LoadLibraryRemote(pid, libName);
             CallFunctionRemote(pid, "UncloakHelper.dll", "MoveWindowToCurrentDesktop", hWnd);
+        }
+
+        public static void Test()
+        {
+            uint pid = (uint)Process.GetProcessesByName("StartMenuExperienceHost")[0].Id;
+            const string testLib = @"D:\Programmieren\Visual Studio Projects\UIAutomation\Debug\StartMenuBroker.dll";
+            LoadLibraryRemote(pid, testLib);
+            CallFunctionRemote(pid, "StartMenuBroker.dll", "Test", IntPtr.Zero);
         }
 
         public static void CallFunctionRemote(uint pid, string library, string functionName, IntPtr arg)

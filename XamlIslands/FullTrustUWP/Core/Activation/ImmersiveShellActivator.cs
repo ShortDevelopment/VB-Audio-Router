@@ -14,5 +14,12 @@ namespace FullTrustUWP.Core.Activation
             Marshal.ThrowExceptionForHR(serviceProvider.QueryService(ref iid, ref iid, out object ptr));
             return (T)ptr;
         }
+
+        public static T PrivateQueryService<T>(this Interfaces.IIAMServiceProvider serviceProvider)
+        {
+            Guid iid = typeof(T).GUID;
+            Marshal.ThrowExceptionForHR(serviceProvider.PivateQueryService(ref iid, ref iid, out object ptr));
+            return (T)ptr;
+        }
     }
 }

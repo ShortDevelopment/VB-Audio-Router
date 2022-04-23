@@ -5,6 +5,7 @@ using FullTrustUWP.Core.Types;
 using FullTrustUWP.Core.Xaml;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Windows.UI.Core;
@@ -30,20 +31,23 @@ namespace VBAudioRouter.Host
 
             using (XamlApplicationWrapper appWrapper = new(() => new App()))
             {
+                //XamlWindowActivator.CreateNewThread(() =>
+                //{
+                //    var window2 = XamlWindowActivator.CreateNewFromXaml(new("XamlTest"), File.OpenRead("TestPage.xaml.txt"));
+                //    window2.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+                //});
+
                 var window = XamlWindowActivator.CreateNewWindow(new("Test"));
                 window.Content = new BlankPage1();
-
-                IWindowPrivate windowPrivate = (window as object as IWindowPrivate)!;
-                windowPrivate.TransparentBackground = true;
 
                 CoreWindow coreWindow = window.CoreWindow;
 
                 var hWnd = (coreWindow as object as ICoreWindowInterop).WindowHandle;
                 testWindowHwnd = hWnd;
 
-                var bandId = WindowBandHelper.ZBandID.ImmersiveNotification;
-                Marshal.ThrowExceptionForHR(WindowBandHelper.SetWindowBand(hWnd, IntPtr.Zero, bandId));
-                Marshal.ThrowExceptionForHR(WindowBandHelper.GetWindowBand((IntPtr)hWnd, out var band));
+                //var bandId = WindowBandHelper.ZBandID.ImmersiveNotification;
+                //Marshal.ThrowExceptionForHR(WindowBandHelper.SetWindowBand(hWnd, IntPtr.Zero, bandId));
+                //Marshal.ThrowExceptionForHR(WindowBandHelper.GetWindowBand((IntPtr)hWnd, out var band));
 
                 #region ApplicationFrame
                 var frameManager = ApplicationFrameActivator.CreateApplicationFrameManager();
@@ -54,25 +58,31 @@ namespace VBAudioRouter.Host
                 var applicationPresentation = immersiveShell.QueryService<IImmersiveApplicationManager>() as IImmersiveApplicationPresentation;
                 // ListAllFrames(frameManager);
 
-                {
-                    var applicationView = ApplicationView.GetForCurrentView(); // ✔
-                    applicationView.IsScreenCaptureEnabled = false; // ✔
-                    applicationView.TitleBar.BackgroundColor = Windows.UI.Colors.Red; // ❌
-                    applicationView.TryEnterFullScreenMode(); // ❌
-                    var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
-                    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-                    SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Program_CloseRequested;
-                }
+                //{
+                //    var applicationView = ApplicationView.GetForCurrentView(); // ✔
+                //    applicationView.IsScreenCaptureEnabled = false; // ✔
+                //    applicationView.TitleBar.BackgroundColor = Windows.UI.Colors.Red; // ❌
+                //    applicationView.TryEnterFullScreenMode(); // ❌
+                //    var visualizationSettings = PointerVisualizationSettings.GetForCurrentView(); // ✔
+                //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                //    SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Program_CloseRequested;
+                //}
+
+                //var provider = immersiveShell.QueryService<IIAMServiceProvider>();
+                //frameService = provider.PrivateQueryService<IApplicationFrameService>();
+
+                //Marshal.ThrowExceptionForHR(frameService.GetFrameByWindow((IntPtr)0x80A7A, out var proxy));
+                //proxy.Test();
 
                 //var frameFactory = immersiveShell.QueryService<IApplicationFrameFactory>();
                 //Marshal.ThrowExceptionForHR(frameFactory.CreateFrameWithWrapper(out var frameWrapper));
 
-                //var frame = CreateNewFrame(frameManager);
+                var frame = CreateNewFrame(frameManager);
 
-                //{ // Show frame
-                //    Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
-                //    RemoteThread.UnCloakWindowShell(frameHwnd);
-                //}
+                { // Show frame
+                    Marshal.ThrowExceptionForHR(frame.GetFrameWindow(out IntPtr frameHwnd));
+                    RemoteThread.UnCloakWindowShell(frameHwnd);
+                }
 
                 //Marshal.ThrowExceptionForHR(frame.SetPresentedWindow(hWnd));
 
@@ -97,8 +107,17 @@ namespace VBAudioRouter.Host
         {
             Marshal.ThrowExceptionForHR(frameManager.CreateFrame(out var frame));
 
-            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(97, 97));
-            Marshal.ThrowExceptionForHR(frame.SetOperatingMode(1, 1));
+            // SetApplicationId
+            Marshal.ThrowExceptionForHR(frame.SetOperatingMode(1));
+            // SetMinimumSize
+            // SetSystemVisual
+            // SetPresentedWindow (0)
+            // SetPreferredAspectRatioHint
+            // SetSizeConstraintOverridesPhysical
+            Marshal.ThrowExceptionForHR(frame.SetChromeOptions(0, 0));
+            // SetPosition
+            // Marshal.ThrowExceptionForHR(frame.SetOperatingMode(1));
+            // Marshal.ThrowExceptionForHR(frame.SetSystemVisual(0));
             Marshal.ThrowExceptionForHR(frame.SetBackgroundColor(65535));
 
             Marshal.ThrowExceptionForHR(frame.GetTitleBar(out var titleBar));

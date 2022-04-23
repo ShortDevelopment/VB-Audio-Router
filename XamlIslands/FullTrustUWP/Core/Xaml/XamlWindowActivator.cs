@@ -1,9 +1,13 @@
 ﻿using FullTrustUWP.Core.Activation;
 using FullTrustUWP.Core.Interfaces;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Markup;
 using XamlFrameworkView = Windows.UI.Xaml.FrameworkView;
 using XamlWindow = Windows.UI.Xaml.Window;
 
@@ -63,6 +67,36 @@ namespace FullTrustUWP.Core.Xaml
             window.Activate();
 
             return window;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="XamlWindow"/>, loads xaml from a <see cref="Stream"/> and sets it as <see cref="XamlWindow.Content"/>. <br/>
+        /// The <see cref="Stream"/> will be disposed automatically!
+        /// </summary>
+        public static XamlWindow CreateNewFromXaml(XamlWindowConfig config, Stream xamlStream)
+        {
+            using (xamlStream)
+            using (StreamReader reader = new(xamlStream))
+                return CreateNewFromXaml(config, reader.ReadToEnd());
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="XamlWindow"/> and sets xaml as <see cref="XamlWindow.Content"/>. <br/>
+        /// </summary>
+        public static XamlWindow CreateNewFromXaml(XamlWindowConfig config, string xaml)
+        {
+            var window = CreateNewWindow(config);
+            UIElement content = (UIElement)XamlReader.Load(xaml);
+            window.Content = content;
+            return window;
+        }
+
+        public static void CreateNewThread(Action callback)
+        {
+            Thread thread = new(() => callback());
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.IsBackground = true;
+            thread.Start();
         }
     }
 }

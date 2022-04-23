@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace FullTrustUWP.Core.Interfaces
 {
-    [Guid("94ea2b94-e9cc-49e0-c0ff-ee64ca8f5b90")]
+    [Guid("88b25c81-171b-48b0-91d6-c75846bcf035")] // 94ea2b94-e9cc-49e0-c0ff-ee64ca8f5b90 : 88b25c81-171b-48b0-91d6-c75846bcf035
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IApplicationFrameService
     {
@@ -31,6 +29,15 @@ namespace FullTrustUWP.Core.Interfaces
         int GetFrame([MarshalAs(UnmanagedType.LPWStr)] string a, IntPtr glomId, out IApplicationFrameProxy frameProxy);
 
         [PreserveSig]
-        int GetFrameByWindow(IntPtr hWnd, out IApplicationFrame frameProxy);
+        int GetFrameByWindow(IntPtr hWnd, out IApplicationFrameProxy frameProxy);
+
+        [Obsolete("Not implemented")]
+        void SynchronizeFrameInformation();
+
+        [PreserveSig]
+        int DestroyFrame(ref IApplicationFrameProxy frameProxy);
+
+        [PreserveSig]
+        int SimulateFrameManagerCrash();
     }
 }

@@ -21,7 +21,8 @@ namespace FullTrustUWP.Core.Interfaces
         int SetPresentedWindow(IntPtr hWnd);
 
         [Obsolete("Wrong signature")]
-        void SetSystemVisual();
+        int SetSystemVisual(int x);
+
         [Obsolete("Wrong signature")]
         void GetSystemVisual();
 
@@ -71,7 +72,7 @@ namespace FullTrustUWP.Core.Interfaces
         int GetSystemVisualFadeTime(out uint time);
 
         [PreserveSig]
-        int SetOperatingMode(int mode, int mode2);
+        int SetOperatingMode(int newOperatingMode /* = 1 */);
 
         [PreserveSig]
         int SetSizeConstraintOverridesPhysical(ref tagSIZE size1, ref tagSIZE size2);

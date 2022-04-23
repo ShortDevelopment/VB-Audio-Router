@@ -8,5 +8,6 @@ namespace FullTrustUWP.Core.Interfaces
     public interface IApplicationFrameProxy
     {
         // ??
+        void Test();
     }
 }
