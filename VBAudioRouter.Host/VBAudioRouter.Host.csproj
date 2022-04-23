@@ -23,15 +23,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
-		<ProjectReference Include="..\FullTrustUWP\FullTrustUWP.csproj" />
+	  <ProjectReference Include="..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="TestPage.xaml.txt">
-	    <Generator>MSBuild:Compile</Generator>
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+	  <Reference Include="ShortDev.Uwp.FullTrust">
+	    <HintPath>ShortDev.Uwp.FullTrust.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>
