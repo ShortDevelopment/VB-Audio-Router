@@ -1,4 +1,5 @@
 ﻿Imports VBAudioRouter.AudioGraphControl
+Imports VBAudioRouter.Capture
 Imports Windows.Devices.Enumeration
 Imports Windows.Media.Audio
 Imports Windows.Media.Devices
@@ -42,6 +43,10 @@ Namespace Controls.Nodes
             Dim result = Await graph.CreateDeviceOutputNodeAsync()
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _BaseAudioNode = result.DeviceOutputNode
+
+            'Dim processCapture As New AudioProcessCapture(Process.GetProcessesByName("Microsoft.Media.Player")(0))
+            'Dim audioNode = Await processCapture.CreateAudioNode(graph)
+            'audioNode.AddOutgoingConnection(BaseAudioNode)
         End Function
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub

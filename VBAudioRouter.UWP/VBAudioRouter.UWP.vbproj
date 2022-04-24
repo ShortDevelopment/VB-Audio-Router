@@ -435,7 +435,7 @@
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.0-prerelease.210927001</Version>
+      <Version>2.8.0-prerelease.220413001</Version>
     </PackageReference>
     <PackageReference Include="NAudio.Core">
       <Version>2.0.0</Version>
@@ -452,6 +452,12 @@
     <PackageReference Include="WinUI.Interop">
       <Version>0.1.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VBAudioRouter.Capture\VBAudioRouter.Capture.csproj">
+      <Project>{59159ea3-1470-4ca1-a5ab-c4a21a7c71a2}</Project>
+      <Name>VBAudioRouter.Capture</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
