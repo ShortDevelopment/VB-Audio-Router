@@ -1,5 +1,4 @@
-﻿
-Imports VBAudioRouter.AudioGraphControl
+﻿Imports VBAudioRouter.AudioGraphControl
 Imports VBAudioRouter.Utils
 Imports Windows.Media.Audio
 Imports Windows.Media.Core
@@ -32,7 +31,7 @@ Namespace Controls.Nodes
             Me.Graph = graph
 
             ControlsWrapper = New MediaTransportControlsWrapper(TransportControls)
-            Await Dispatcher.RunIdleAsync(Sub() ControlsWrapper.Initialize())
+            Dim unused = Dispatcher.RunIdleAsync(Sub() ControlsWrapper.Initialize())
 
             InitializePositionTimer()
         End Function
