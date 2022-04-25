@@ -36,27 +36,13 @@ namespace VBAudioRouter.Capture
         WaveFormat format;
 
         // https://github.dev/microsoft/Windows-classic-samples/blob/main/Samples/ApplicationLoopback/cpp/LoopbackCapture.cpp
-        public async Task<AudioFrameInputNode> CreateAudioNode(AudioGraph graph)
+        public AudioFrameInputNode CreateAudioNode(AudioGraph graph)
         {
-            const uint AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM = 0x80000000;
-
             var audioNode = graph.CreateFrameInputNode();
-            client = new(await ActivateAudioClient());
 
             var nodeFormat = audioNode.EncodingProperties;
             int blockAlign = (int)(nodeFormat.ChannelCount * nodeFormat.BitsPerSample / 8);
             format = WaveFormat.CreateCustomFormat(WaveFormatEncoding.IeeeFloat, (int)nodeFormat.SampleRate, (int)nodeFormat.ChannelCount, (int)nodeFormat.SampleRate * blockAlign, blockAlign, (int)nodeFormat.BitsPerSample);
-
-            client.Initialize(
-                AudioClientShareMode.Shared,
-                AudioClientStreamFlags.Loopback,
-                5 * 10_000_000,
-                AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM,
-                format,
-                Guid.Empty);
-
-            captureClient = client.AudioCaptureClient;
-            client.Start();
 
             audioNode.QuantumStarted += AudioNode_QuantumStarted;
             return audioNode;
@@ -67,6 +53,24 @@ namespace VBAudioRouter.Capture
             if (disposed)
                 return;
 
+            // Client need to be activated in here so that we don't run into threading problems
+            // This method get's called on an MTA worker thread from native code
+            if (client == null)
+            {
+                const uint AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM = 0x80000000;
+                client = new(ActivateAudioClientInternal());
+                client.Initialize(
+                    AudioClientShareMode.Shared,
+                    AudioClientStreamFlags.Loopback,
+                    5 * 10_000_000,
+                    AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM,
+                    format,
+                    Guid.Empty);
+
+                captureClient = client.AudioCaptureClient;
+                client.Start();
+            }
+
             int availablePackages = captureClient.GetNextPacketSize();
             if (availablePackages != 0)
             {
@@ -75,10 +79,13 @@ namespace VBAudioRouter.Capture
                 using (AudioBuffer buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
                 using (var reference = buffer.CreateReference())
                 {
-                    ((IMemoryBufferByteAccess)reference).GetBuffer(out byte* targetBuffer, out _);
-                    byte* srcBuffer = (byte*)captureClient.GetBuffer(out var numFrames, out _);
-                    Buffer.MemoryCopy(srcBuffer, targetBuffer, bytesToCapture, bytesToCapture);
-                    captureClient.ReleaseBuffer(numFrames);
+                    unsafe
+                    {
+                        ((IMemoryBufferByteAccess)reference).GetBuffer(out byte* targetBuffer, out _);
+                        byte* srcBuffer = (byte*)captureClient.GetBuffer(out var numFrames, out _);
+                        Buffer.MemoryCopy(srcBuffer, targetBuffer, bytesToCapture, bytesToCapture);
+                        captureClient.ReleaseBuffer(numFrames);
+                    }
                 }
                 sender.AddFrame(frame);
             }
@@ -94,7 +101,7 @@ namespace VBAudioRouter.Capture
             captureClient = null;
         }
 
-        async Task<IAudioClient> ActivateAudioClient()
+        IAudioClient ActivateAudioClientInternal()
         {
             const string VIRTUAL_AUDIO_DEVICE_PROCESS_LOOPBACK = @"VAD\Process_Loopback";
 
@@ -115,16 +122,17 @@ namespace VBAudioRouter.Capture
             propVariant.blobVal.Data = ptr;
             propVariant.blobVal.Length = size;
 
-            Marshal.ThrowExceptionForHR(ActivateAudioInterfaceAsync(VIRTUAL_AUDIO_DEVICE_PROCESS_LOOPBACK, typeof(IAudioClient).GUID, ref propVariant, completionHandler, out _));
-            await completionHandler;
-            return completionHandler.GetResult();
+            Marshal.ThrowExceptionForHR(ActivateAudioInterfaceAsync(VIRTUAL_AUDIO_DEVICE_PROCESS_LOOPBACK, typeof(IAudioClient).GUID, ref propVariant, completionHandler, out var resultHandler));
+            completionHandler.WaitForCompletion();
+            Marshal.ThrowExceptionForHR(resultHandler.GetActivateResult(out _, out var result));
+            return (IAudioClient)result;
         }
 
         [PreserveSig]
         [DllImport("Mmdevapi", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern int ActivateAudioInterfaceAsync(
             [MarshalAs(UnmanagedType.LPWStr)] string deviceInterfacePath,
-             Guid riid,
+            Guid riid,
             ref PropVariant activationParams,
             IActivateAudioInterfaceCompletionHandler completionHandler,
             out IActivateAudioInterfaceAsyncOperation result
@@ -139,7 +147,8 @@ namespace VBAudioRouter.Capture
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IActivateAudioInterfaceAsyncOperation
     {
-        void GetActivateResult(out int activateResult, [MarshalAs(UnmanagedType.IUnknown)] out object activatedInterface);
+        [PreserveSig]
+        int GetActivateResult(out int activateResult, [MarshalAs(UnmanagedType.IUnknown)] out object activatedInterface);
     }
 
     /// <summary>
@@ -157,64 +166,14 @@ namespace VBAudioRouter.Capture
         void ActivateCompleted(IActivateAudioInterfaceAsyncOperation activateOperation);
     }
 
-    public class ActivateAudioInterfaceCompletionHandler<T> : IActivateAudioInterfaceCompletionHandler
+    public class ActivateAudioInterfaceCompletionHandler<T> : IActivateAudioInterfaceCompletionHandler where T : class
     {
-        public ActivateAudioInterfaceCompletionHandler()
-        {
-            globalInterfaceTable = (ComExt.IGlobalInterfaceTable)(Activator.CreateInstance(Type.GetTypeFromCLSID(ComExt.CLSID_StdGlobalInterfaceTable)));
-        }
-
-        ComExt.IGlobalInterfaceTable globalInterfaceTable;
-
-        private TaskCompletionSource<T> taskFactory = new TaskCompletionSource<T>();
-        public TaskAwaiter<T> GetAwaiter()
-            => taskFactory.Task.GetAwaiter();
-
-        public T GetResult()
-        {
-            Marshal.ThrowExceptionForHR(globalInterfaceTable.GetInterfaceFromGlobal(cookie, ComExt.IID_IUnknown, out var result));
-            return (T)result;
-        }
-
-        uint cookie;
+        AutoResetEvent _completionEvent = new(false);
         void IActivateAudioInterfaceCompletionHandler.ActivateCompleted(IActivateAudioInterfaceAsyncOperation activateOperation)
-        {
-            activateOperation.GetActivateResult(out var hr, out object result);
-            if (hr == 0)
-            {
-                Marshal.ThrowExceptionForHR(globalInterfaceTable.RegisterInterfaceInGlobal(result, ComExt.IID_IUnknown, out cookie));
-                taskFactory.SetResult((T)result);
-            }
-            else
-                taskFactory.SetException(new Win32Exception(hr));
-        }
+            => _completionEvent.Set();
 
-        private static class ComExt
-        {
-            static public readonly Guid CLSID_StdGlobalInterfaceTable = new Guid("00000323-0000-0000-c000-000000000046");
-            static public readonly Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
-
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("00000146-0000-0000-C000-000000000046")]
-            public interface IGlobalInterfaceTable
-            {
-                [PreserveSig]
-                int RegisterInterfaceInGlobal(
-                    [MarshalAs(UnmanagedType.IUnknown)] object pUnk,
-                    [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid,
-                    out uint cookie
-                );
-
-                [PreserveSig]
-                int RevokeInterfaceFromGlobal(uint dwCookie);
-
-                [PreserveSig]
-                int GetInterfaceFromGlobal(
-                    uint dwCookie,
-                    Guid riid,
-                    [MarshalAs(UnmanagedType.IUnknown)] out object ppv
-                );
-            }
-        }
+        public void WaitForCompletion()
+            => _completionEvent.WaitOne();
     }
 
     namespace AudioClientHelper
