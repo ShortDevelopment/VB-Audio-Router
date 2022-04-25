@@ -35,13 +35,13 @@ Namespace Controls.Nodes
         End Function
 
         Public Sub ReloadSettings() Implements IAudioNodeSerializable.ReloadSettings
-            RadialGauge.Value = BaseAudioNode.OutgoingGain
+            RadialGauge.Value = BaseAudioNode.OutgoingGain * 100.0
         End Sub
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
 
         Private Sub RadialGauge_ValueChanged(sender As Object, e As RangeBaseValueChangedEventArgs)
-            BaseAudioNode.OutgoingGain = RadialGauge.Value
+            BaseAudioNode.OutgoingGain = RadialGauge.Value / 100.0
         End Sub
 
     End Class
