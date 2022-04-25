@@ -21,11 +21,11 @@ namespace VBAudioRouter.Capture
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-    public class AudioProcessCapture : IDisposable
+    public class ProcessAudioCapture : IDisposable
     {
         public Process Process { get; }
         public bool IncludeProcessTree { get; }
-        public AudioProcessCapture(Process process, bool include = true)
+        public ProcessAudioCapture(Process process, bool include = true)
         {
             this.Process = process;
             this.IncludeProcessTree = include;

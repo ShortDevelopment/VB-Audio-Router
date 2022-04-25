@@ -133,7 +133,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AudioProcessCapture.cs" />
+    <Compile Include="ProcessAudioCapture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\VBAudioRouter.Capture.rd.xml" />
   </ItemGroup>

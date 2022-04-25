@@ -44,9 +44,9 @@ Namespace Controls.Nodes
             If Not result.Status = AudioDeviceNodeCreationStatus.Success Then Throw result.ExtendedError
             _BaseAudioNode = result.DeviceOutputNode
 
-            Dim processCapture As New AudioProcessCapture(Process.GetProcessesByName("Microsoft.Media.Player")(0))
-            Dim audioNode = processCapture.CreateAudioNode(graph)
-            audioNode.AddOutgoingConnection(BaseAudioNode)
+            'Dim processCapture As New ProcessAudioCapture(Process.GetProcessesByName("Microsoft.Media.Player")(0))
+            'Dim audioNode = processCapture.CreateAudioNode(graph)
+            'audioNode.AddOutgoingConnection(BaseAudioNode)
         End Function
 
         Public Sub OnStateChanged(state As GraphState) Implements IAudioNodeControl.OnStateChanged : End Sub
