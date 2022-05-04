@@ -18,6 +18,14 @@ Public NotInheritable Class App
         LaunchApp(args)
     End Sub
 
+    Public Shared Async Function HandleCloseRequest() As Task(Of Boolean)
+        ' Force all legacy dialogs to close
+        Utils.Utils.CloseAllDialogs()
+        ' Show confirmation dialog
+        Dim dialog As New CloseConfirmDialog()
+        Return (Await dialog.ShowAsync()) = ContentDialogResult.Secondary
+    End Function
+
     Private Sub LaunchApp(args As IActivatedEventArgs)
 #Region "TitleBar"
         Dim titlebar = ApplicationView.GetForCurrentView().TitleBar
@@ -37,11 +45,7 @@ Public NotInheritable Class App
         AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
                                                                                           Dim deferral As Deferral = ev.GetDeferral()
                                                                                           Try
-                                                                                              ' Force all legacy dialogs to close
-                                                                                              Utils.Utils.CloseAllDialogs()
-                                                                                              ' Show confirmation dialog
-                                                                                              Dim dialog As New CloseConfirmDialog()
-                                                                                              ev.Handled = (Await dialog.ShowAsync()) = ContentDialogResult.Secondary
+                                                                                              ev.Handled = Await HandleCloseRequest()
                                                                                           Finally
                                                                                               deferral.Complete()
                                                                                           End Try
@@ -86,12 +90,6 @@ Public NotInheritable Class App
 
     Private Sub OnNavigationFailed(sender As Object, e As NavigationFailedEventArgs)
         Throw New Exception("Failed to load Page " + e.SourcePageType.FullName)
-    End Sub
-
-    Private Sub OnSuspending(sender As Object, e As SuspendingEventArgs) Handles Me.Suspending
-        Dim deferral As SuspendingDeferral = e.SuspendingOperation.GetDeferral()
-        ' TODO: Anwendungszustand speichern und alle Hintergrundaktivitäten beenden
-        deferral.Complete()
     End Sub
 
 End Class
