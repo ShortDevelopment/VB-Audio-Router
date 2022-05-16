@@ -5,8 +5,9 @@
     xmlns:local="using:VBAudioRouter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <WebView Source="https://github.com/ShortDevelopment/VB-Audio-Router/wiki" />
+    <controls:WebView2 Source="https://github.com/ShortDevelopment/VB-Audio-Router/wiki" />
 </Page>
