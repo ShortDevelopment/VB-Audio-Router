@@ -1,5 +1,6 @@
 ﻿using Sentry;
 using System;
+using System.Runtime;
 using System.Runtime.InteropServices;
 
 namespace VBAudioRouter.Host
@@ -21,6 +22,7 @@ namespace VBAudioRouter.Host
             {
                 try
                 {
+                    GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                     VBAudioRouter.Program.WinMain(args);
                 }
                 catch (Exception ex)
