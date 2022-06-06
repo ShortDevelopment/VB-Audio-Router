@@ -4,6 +4,8 @@ Partial Public Class Program
 
     Public Shared Sub WinMain(args As String())
         XamlApplicationWrapper.Run(Of App, WelcomePage)(Sub()
+                                                            Dim subclass = XamlWindowSubclass.ForCurrentWindow()
+                                                            subclass.UseDarkMode = True
                                                             AddHandler Window.Current.GetSubclass().CloseRequested, AddressOf Program_CloseRequested
                                                         End Sub)
     End Sub

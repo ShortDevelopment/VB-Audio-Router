@@ -57,7 +57,7 @@ Public NotInheritable Class GraphViewPage
     Public ReadOnly Property BackgroundAudioSession As ExtendedExecutionForegroundSession
 
     Private Async Function EnableBackgroundAudioAsync() As Task
-        If Not WinUI.Interop.InteropHelper.IsUWP() Then Exit Function
+        If Not WinUI.Interop.RuntimeInformation.IsUWP Then Exit Function
         _BackgroundAudioSession = New ExtendedExecutionForegroundSession()
         BackgroundAudioSession.Reason = ExtendedExecutionForegroundReason.BackgroundAudio
         BackgroundAudioSession.Description = "Play Background audio"

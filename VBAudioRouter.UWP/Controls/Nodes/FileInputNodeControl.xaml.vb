@@ -4,6 +4,7 @@ Imports Windows.Media.Audio
 Imports Windows.Media.Core
 Imports Windows.Storage.Pickers
 Imports WinUI.Interop
+Imports WinUI.Interop.CoreWindow
 
 Namespace Controls.Nodes
 
@@ -50,8 +51,8 @@ Namespace Controls.Nodes
 
         Private Async Sub Button_Click(sender As Object, e As RoutedEventArgs)
             Dim filePicker As New FileOpenPicker()
-            If Not InteropHelper.IsUWP() Then
-                DirectCast(filePicker, NativeWindow.IInitializeWithWindow).Initialize(Process.GetCurrentProcess().MainWindowHandle)
+            If Not RuntimeInformation.IsUWP Then
+                DirectCast(filePicker, IInitializeWithWindow).Initialize(Process.GetCurrentProcess().MainWindowHandle)
             End If
 #Region "Picker Init"
             filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary

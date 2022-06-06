@@ -6,7 +6,7 @@
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
 		<TargetPlatformVersion>10.0.19041</TargetPlatformVersion>
 		<LangVersion>9</LangVersion>
-		<Platforms>AnyCPU;x64;x86</Platforms>
+		<Platforms>x64;x86</Platforms>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<!--<SelfContained>true</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
