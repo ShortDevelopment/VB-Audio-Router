@@ -1,7 +1,12 @@
-﻿Imports Windows.System
+﻿Imports System.Runtime.InteropServices
+Imports Windows.System
 
 Public NotInheritable Class WelcomePage
     Inherits Page
+
+    Public Sub New()
+        InitializeComponent()
+    End Sub
 
     Private Sub NavigationView_SelectionChanged(sender As Microsoft.UI.Xaml.Controls.NavigationView, args As Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs)
         Dim navOptions As New FrameNavigationOptions()

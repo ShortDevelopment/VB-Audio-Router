@@ -1,4 +1,5 @@
-﻿Imports VBAudioRouter.Dialogs
+﻿Imports ShortDev.Uwp.FullTrust.Xaml
+Imports VBAudioRouter.Dialogs
 Imports VBAudioRouter.Utils
 Imports Windows.UI
 Imports Windows.UI.Core.Preview
@@ -6,8 +7,19 @@ Imports Windows.UI.Core.Preview
 Public NotInheritable Class App
 
     Public Sub New()
-        'Initialize()
         InitializeComponent()
+
+        Threading.Thread.CurrentThread.Priority = Threading.ThreadPriority.AboveNormal
+    End Sub
+
+    Private Shared Async Sub Program_CloseRequested(ByVal sender As Object, ByVal e As Navigation.XamlWindowCloseRequestedEventArgs)
+        Dim deferral = e.GetDeferral()
+        e.Handled = Await HandleCloseRequest()
+        deferral.Complete()
+    End Sub
+
+    Protected Overrides Sub OnWindowCreated(args As WindowCreatedEventArgs)
+        MyBase.OnWindowCreated(args)
     End Sub
 
     Protected Overrides Async Sub OnLaunched(e As LaunchActivatedEventArgs)
@@ -42,14 +54,20 @@ Public NotInheritable Class App
 #End Region
 
 #Region "Close confirm"
-        AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
-                                                                                          Dim deferral As Deferral = ev.GetDeferral()
-                                                                                          Try
-                                                                                              ev.Handled = Await HandleCloseRequest()
-                                                                                          Finally
-                                                                                              deferral.Complete()
-                                                                                          End Try
-                                                                                      End Sub
+        If Not WinUI.Interop.RuntimeInformation.IsAppContainer Then
+            Dim subclass = XamlWindowSubclass.GetForCurrentView()
+            subclass.UseDarkMode = True
+            AddHandler Window.Current.GetSubclass().CloseRequested, AddressOf Program_CloseRequested
+        Else
+            AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
+                                                                                              Dim deferral As Deferral = ev.GetDeferral()
+                                                                                              Try
+                                                                                                  ev.Handled = Await HandleCloseRequest()
+                                                                                              Finally
+                                                                                                  deferral.Complete()
+                                                                                              End Try
+                                                                                          End Sub
+        End If
 #End Region
 
 #Region "Exception handling"
@@ -73,9 +91,9 @@ Public NotInheritable Class App
 
             AddHandler rootFrame.NavigationFailed, AddressOf OnNavigationFailed
 
-            If args.PreviousExecutionState = ApplicationExecutionState.Terminated Then
-                ' TODO: Zustand von zuvor angehaltener Anwendung laden
-            End If
+            'If args.PreviousExecutionState = ApplicationExecutionState.Terminated Then
+            '    ' TODO: Zustand von zuvor angehaltener Anwendung laden
+            'End If
             Window.Current.Content = rootFrame
         End If
 

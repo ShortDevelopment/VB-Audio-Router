@@ -2,14 +2,16 @@
 using System;
 using System.Runtime;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace VBAudioRouter.Host
 {
     static class Program
     {
-        [STAThread]
+        [MTAThread]
         static void Main(string[] args)
         {
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
             using (SentrySdk.Init(o =>
             {
                 o.Dsn = "https://ba91eccb16f94401895d04e20e0db0f0@o646413.ingest.sentry.io/6409713";
@@ -22,7 +24,6 @@ namespace VBAudioRouter.Host
             {
                 try
                 {
-                    GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                     VBAudioRouter.Program.WinMain(args);
                 }
                 catch (Exception ex)

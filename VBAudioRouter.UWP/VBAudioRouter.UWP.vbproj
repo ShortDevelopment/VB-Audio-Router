@@ -63,7 +63,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>NETFX_CORE,WINDOWS_UWP</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN,NETFX_CORE,WINDOWS_UWP,CODE_ANALYSIS</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -382,7 +382,7 @@
       <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.0-prerelease.220413001</Version>
+      <Version>2.8.0-prerelease.220712001</Version>
     </PackageReference>
     <PackageReference Include="NAudio.Core">
       <Version>2.1.0</Version>
@@ -394,13 +394,13 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="ShortDev.Uwp.FullTrust">
-      <Version>0.1.3</Version>
+      <Version>0.1.6</Version>
     </PackageReference>
     <PackageReference Include="UWPAudioVisualizer">
       <Version>1.0.38</Version>
     </PackageReference>
     <PackageReference Include="WinUI.Interop">
-      <Version>0.2.4</Version>
+      <Version>0.2.6</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
