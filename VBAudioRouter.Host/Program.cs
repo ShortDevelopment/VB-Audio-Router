@@ -2,7 +2,6 @@
 using System;
 using System.Runtime;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace VBAudioRouter.Host
 {
@@ -24,7 +23,7 @@ namespace VBAudioRouter.Host
             {
                 try
                 {
-                    VBAudioRouter.Program.WinMain(args);
+                    VBAudioRouter.Program.Win32Main(args);
                 }
                 catch (Exception ex)
                 {

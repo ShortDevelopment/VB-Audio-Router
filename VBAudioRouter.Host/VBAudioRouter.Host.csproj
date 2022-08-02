@@ -5,11 +5,10 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<AssetTargetFallback>uap10.0.19041</AssetTargetFallback>
 		<TargetPlatformVersion>10.0.19041</TargetPlatformVersion>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<LangVersion>9</LangVersion>
 		<Platforms>x64;x86</Platforms>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<!--<SelfContained>true</SelfContained>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+		<RuntimeIdentifiers>win10-x64;win-x64;win10-x86;win-x86</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -18,7 +17,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Toolkit.Win32.UI.SDK" Version="6.1.2" />
-		<PackageReference Include="Sentry" Version="3.17.1" />
+		<PackageReference Include="Sentry" Version="3.20.1" />
 	</ItemGroup>
 
 	<ItemGroup>
