@@ -56,7 +56,6 @@ Public NotInheritable Class App
 #Region "Close confirm"
         If Not WinUI.Interop.RuntimeInformation.IsAppContainer Then
             Dim subclass = XamlWindowSubclass.GetForCurrentView()
-            subclass.UseDarkMode = True
             AddHandler Window.Current.GetSubclass().CloseRequested, AddressOf Program_CloseRequested
         Else
             AddHandler SystemNavigationManagerPreview.GetForCurrentView().CloseRequested, Async Sub(sender As Object, ev As SystemNavigationCloseRequestedPreviewEventArgs)
