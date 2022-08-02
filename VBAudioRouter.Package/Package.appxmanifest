@@ -13,7 +13,7 @@
 	<Identity
 	  Name="33942ShortDevelopment.VBAudioRouter"
 	  Publisher="CN=8E251084-44E9-4A7C-AB50-C78A32C26285"
-	  Version="0.1.0.0" />
+	  Version="0.3.0.0" />
 
 	<mp:PhoneIdentity PhoneProductId="01b3c67a-5047-40be-a169-edc3d6902f11" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

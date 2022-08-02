@@ -41,14 +41,14 @@
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
             <controls:NavigationViewItemSeparator />
-            <controls:NavigationViewItem Content="How To" Tag="Help">
+            <controls:NavigationViewItem Content="How To" Tag="Help" Visibility="Collapsed">
                 <controls:NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xe897;" />
                 </controls:NavigationViewItem.Icon>
             </controls:NavigationViewItem>
         </controls:NavigationView.MenuItems>
         <controls:NavigationView.FooterMenuItems>
-            <controls:NavigationViewItem Content="New Instance" Tag="NewInstance"
+            <controls:NavigationViewItem Content="New Instance" Tag="NewInstance" Visibility="Collapsed"
                                          SelectsOnInvoked="False" Tapped="NewInstance_Tapped">
                 <controls:NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xe78b;" />

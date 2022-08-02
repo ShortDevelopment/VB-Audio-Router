@@ -29,7 +29,7 @@ Public NotInheritable Class SpeakerControlPage
                                                                                 MeterInformation.GetChannelsPeakValues(meters.Length, metersRef.AddrOfPinnedObject)
                                                                                 metersRef.Free()
                                                                                 LeftMeter.ScaleY = meters(0)
-                                                                                RightMeter.ScaleY = meters(1)
+                                                                                If meters.Length > 1 Then RightMeter.ScaleY = meters(1)
                                                                             End Sub)
                                   End Sub
         timer.Enabled = True
