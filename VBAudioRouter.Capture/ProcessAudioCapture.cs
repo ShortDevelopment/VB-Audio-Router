@@ -2,12 +2,9 @@
 using NAudio.CoreAudioApi.Interfaces;
 using NAudio.Wave;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Audio;
 
@@ -21,7 +18,7 @@ namespace VBAudioRouter.Capture
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-    public class ProcessAudioCapture : IDisposable
+    public sealed class ProcessAudioCapture : IDisposable
     {
         public Process Process { get; }
         public bool IncludeProcessTree { get; }
@@ -166,7 +163,7 @@ namespace VBAudioRouter.Capture
         void ActivateCompleted(IActivateAudioInterfaceAsyncOperation activateOperation);
     }
 
-    public class ActivateAudioInterfaceCompletionHandler<T> : IActivateAudioInterfaceCompletionHandler where T : class
+    public sealed class ActivateAudioInterfaceCompletionHandler<T> : IActivateAudioInterfaceCompletionHandler where T : class
     {
         AutoResetEvent _completionEvent = new(false);
         void IActivateAudioInterfaceCompletionHandler.ActivateCompleted(IActivateAudioInterfaceAsyncOperation activateOperation)

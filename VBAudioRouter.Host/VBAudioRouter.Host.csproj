@@ -13,6 +13,7 @@
 
 	<PropertyGroup>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,11 +22,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
+		<ProjectReference Include="..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
+		<PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
 	</ItemGroup>
 
 </Project>

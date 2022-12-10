@@ -114,7 +114,6 @@
     <ProjectReference Include="..\VBAudioRouter.Host\VBAudioRouter.Host.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-    <ProjectReference Include="..\VBAudioRouter.UWP\VBAudioRouter.UWP.vbproj" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs,Version=14.0">
