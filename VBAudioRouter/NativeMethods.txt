@@ -1,0 +1,6 @@
+IAudioEndpointVolume
+IAudioMeterInformation
+IAudioSessionManager
+IAudioSessionManager2
+ActivateAudioInterfaceAsync
+IMemoryBufferByteAccess

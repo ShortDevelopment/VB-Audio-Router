@@ -1,0 +1,23 @@
+﻿<Application
+    x:Class="VBAudioRouter.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+
+                <ResourceDictionary>
+                    <Color x:Key="DarkThemeColor">#232323</Color>
+                    <Color x:Key="LightThemeColor">#272727</Color>
+                    <Color x:Key="MenuBackground">#333333</Color>
+                    <Color x:Key="NodeTitleBarColor">#9E343E</Color>
+                    <Color x:Key="NodeTitleBarColor2">#8D802F</Color>
+                    <Color x:Key="PositiveColor">#89D185</Color>
+                    <Color x:Key="NegativeColor">#D97C6A</Color>
+                    <Color x:Key="NodeBackgroundColor">#3F3F3F</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Threading;
-using NAudio.CoreAudioApi;
+﻿using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 using NAudio.Wave;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Com.StructuredStorage;
 using Windows.Win32.System.Variant;
 using Windows.Win32.System.WinRT;
+using WinRT;
 using static Windows.Win32.PInvoke;
 using IActivateAudioInterfaceAsyncOperation = Windows.Win32.Media.Audio.IActivateAudioInterfaceAsyncOperation;
 using IActivateAudioInterfaceCompletionHandler = Windows.Win32.Media.Audio.IActivateAudioInterfaceCompletionHandler;
@@ -79,7 +78,7 @@ public sealed partial class ProcessAudioCapture(Process process, bool include = 
                 unsafe
                 {
                     byte* targetBuffer = default;
-                    ((IMemoryBufferByteAccess)reference).GetBuffer(&targetBuffer, out _);
+                    reference.As<IMemoryBufferByteAccess>().GetBuffer(&targetBuffer, out _);
                     byte* srcBuffer = (byte*)captureClient.GetBuffer(out var numFrames, out _);
                     Buffer.MemoryCopy(srcBuffer, targetBuffer, bytesToCapture, bytesToCapture);
                     captureClient.ReleaseBuffer(numFrames);

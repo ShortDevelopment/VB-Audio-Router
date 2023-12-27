@@ -1,0 +1,42 @@
+﻿<UserControl
+    x:Class="VBAudioRouter.Controls.Nodes.FileInputNodeControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:VBAudioRouter.Controls"
+    xmlns:utils="using:VBAudioRouter.Utils"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    RequestedTheme="Dark">
+
+    <UserControl.Resources>
+        <utils:SliderTimeSpanValueConverter x:Key="SliderTimeSpanValueConverter" />
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Left">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="15" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" IsReadOnly="True" x:Name="PathDisplay" Margin="0,0,10,0" />
+                <Button Grid.Column="1" Content="Browse" Click="Button_Click" x:Name="BrowseButton" />
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <local:ConnectorControl x:Name="OutgoingConnectorControl" Margin="0,5,0,5" IsOutgoing="True">
+                <local:ConnectorControl.RenderTransform>
+                    <CompositeTransform TranslateX="18" />
+                </local:ConnectorControl.RenderTransform>
+            </local:ConnectorControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

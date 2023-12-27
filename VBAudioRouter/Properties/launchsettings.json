@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "VBAudioRouter (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "VBAudioRouter (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
